@@ -1,12 +1,19 @@
 {
   "name": "gzhegow/calendar",
-  
+  "type": "library",
+
   "authors": [
     {
       "name": "gzhegow",
       "email": "6562680@gmail.com"
     }
-  ],
+  ],  
+  
+  "require": {
+    "php": "^7.2|^8.0",
+    
+    "ext-json": "*"
+  },
   
   "autoload": {
     "psr-4": {
@@ -19,9 +26,12 @@
     ]
   },
   
-  "require": {
-    "php": "^7.2|^8.0",
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  
+  "config": {
+    "optimize-autoloader": true,
     
-    "ext-json": "*"
+    "sort-packages": false
   }
 }

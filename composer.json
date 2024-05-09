@@ -1,0 +1,27 @@
+{
+  "name": "gzhegow/calendar",
+  
+  "authors": [
+    {
+      "name": "gzhegow",
+      "email": "6562680@gmail.com"
+    }
+  ],
+  
+  "autoload": {
+    "psr-4": {
+      "Gzhegow\\Calendar\\": "src/"
+    },
+    "files": [
+      "helpers/assert.php",
+      "helpers/calendar.php",
+      "helpers/php.php"
+    ]
+  },
+  
+  "require": {
+    "php": "^7.2|^8.0",
+    
+    "ext-json": "*"
+  }
+}

@@ -2,6 +2,7 @@
 
 use Gzhegow\Calendar\Calendar;
 use function Gzhegow\Calendar\_calendar;
+use function Gzhegow\Calendar\_php_dump;
 use function Gzhegow\Calendar\_assert_true;
 use function Gzhegow\Calendar\_calendar_now;
 use function Gzhegow\Calendar\_calendar_diff;
@@ -23,7 +24,11 @@ set_error_handler(function ($errno, $errstr, $errfile, $errline) {
         throw new \ErrorException($errstr, -1, $errno, $errfile, $errline);
     }
 });
-set_exception_handler('dd');
+set_exception_handler(function (\Throwable $throwable) {
+    var_dump($throwable);
+
+    die();
+});
 
 
 function main()
@@ -35,6 +40,12 @@ function main()
 
     $tests[ '_calendar_date_immutable' ] = _calendar_date_immutable($datetime = 'now', $formats = null, $timezoneIfParsed = null);
     _assert_true('is_a', [ $tests[ '_calendar_date_immutable' ], DateTimeImmutable::class ]);
+    $tests[ '_calendar_date_immutable_add' ] = $tests[ '_calendar_date_immutable' ]->add(new \DateInterval('P1D'));
+    _assert_true('is_a', [ $tests[ '_calendar_date_immutable_add' ], DateTimeImmutable::class ]);
+    $tests[ '_calendar_date_immutable_sub' ] = $tests[ '_calendar_date_immutable' ]->sub(new \DateInterval('P1D'));
+    _assert_true('is_a', [ $tests[ '_calendar_date_immutable_sub' ], DateTimeImmutable::class ]);
+    $tests[ '_calendar_date_immutable_modify' ] = $tests[ '_calendar_date_immutable' ]->modify('+ 10 hours');
+    _assert_true('is_a', [ $tests[ '_calendar_date_immutable_modify' ], DateTimeImmutable::class ]);
 
     $tests[ '_calendar_now' ] = _calendar_now($timezone = null);
     _assert_true('is_a', [ $tests[ '_calendar_now' ], DateTime::class ]);
@@ -73,150 +84,59 @@ function main()
         return 'PT10H' === $tests[ '_calendar_diff' ]->jsonSerialize();
     });
 
-    var_dump($tests);
+    var_dump(json_encode($tests, JSON_PRETTY_PRINT));
 
-    // array(10) {
+    // string(730) "{
+    //     "_calendar_date": "2024-05-09T19:47:39.074+03:00",
+    //     "_calendar_date_immutable": "2024-05-09T19:47:39.074+03:00",
+    //     "_calendar_date_immutable_add": "2024-05-10T19:47:39.074+03:00",
+    //     "_calendar_date_immutable_sub": "2024-05-08T19:47:39.074+03:00",
+    //     "_calendar_date_immutable_modify": "2024-05-10T05:47:39.074+03:00",
+    //     "_calendar_now": "2024-05-09T19:47:39.074+03:00",
+    //     "_calendar_now_immutable": "2024-05-09T19:47:39.074+03:00",
+    //     "_calendar_now_fixed0": "2024-05-09T19:47:39.074+03:00",
+    //     "_calendar_now_fixed1": "2024-05-09T19:47:39.074+03:00",
+    //     "_calendar_now_fixed2": "2024-05-09T19:47:39.074+03:00",
+    //     "_calendar_timezone": "UTC",
+    //     "_calendar_interval": "P0D",
+    //     "_calendar_diff": "PT10H"
+    // }"
+
+    $dump = [];
+    foreach ( $tests as $i => $test ) {
+        $dump[ $i ] = _php_dump($test);
+    }
+    var_dump($dump);
+
+    // array(13) {
     //   ["_calendar_date"]=>
-    //   object(Gzhegow\Calendar\Struct\DateTime)#7 (3) {
-    //     ["date"]=>
-    //     string(26) "2024-05-09 19:12:16.183649"
-    //     ["timezone_type"]=>
-    //     int(3)
-    //     ["timezone"]=>
-    //     string(13) "Europe/Moscow"
-    //   }
+    //   string(48) "{ object(Gzhegow\Calendar\Struct\DateTime # 8) }"
     //   ["_calendar_date_immutable"]=>
-    //   object(Gzhegow\Calendar\Struct\DateTimeImmutable)#8 (3) {
-    //     ["date"]=>
-    //     string(26) "2024-05-09 19:12:16.183667"
-    //     ["timezone_type"]=>
-    //     int(3)
-    //     ["timezone"]=>
-    //     string(13) "Europe/Moscow"
-    //   }
+    //   string(57) "{ object(Gzhegow\Calendar\Struct\DateTimeImmutable # 9) }"
+    //   ["_calendar_date_immutable_add"]=>
+    //   string(58) "{ object(Gzhegow\Calendar\Struct\DateTimeImmutable # 10) }"
+    //   ["_calendar_date_immutable_sub"]=>
+    //   string(58) "{ object(Gzhegow\Calendar\Struct\DateTimeImmutable # 11) }"
+    //   ["_calendar_date_immutable_modify"]=>
+    //   string(57) "{ object(Gzhegow\Calendar\Struct\DateTimeImmutable # 7) }"
     //   ["_calendar_now"]=>
-    //   object(Gzhegow\Calendar\Struct\DateTime)#6 (3) {
-    //     ["date"]=>
-    //     string(26) "2024-05-09 19:12:16.183785"
-    //     ["timezone_type"]=>
-    //     int(3)
-    //     ["timezone"]=>
-    //     string(13) "Europe/Moscow"
-    //   }
+    //   string(49) "{ object(Gzhegow\Calendar\Struct\DateTime # 12) }"
     //   ["_calendar_now_immutable"]=>
-    //   object(Gzhegow\Calendar\Struct\DateTimeImmutable)#9 (3) {
-    //     ["date"]=>
-    //     string(26) "2024-05-09 19:12:16.183788"
-    //     ["timezone_type"]=>
-    //     int(3)
-    //     ["timezone"]=>
-    //     string(13) "Europe/Moscow"
-    //   }
+    //   string(58) "{ object(Gzhegow\Calendar\Struct\DateTimeImmutable # 13) }"
     //   ["_calendar_now_fixed0"]=>
-    //   object(Gzhegow\Calendar\Struct\DateTimeImmutable)#10 (3) {
-    //     ["date"]=>
-    //     string(26) "2024-05-09 19:12:16.183790"
-    //     ["timezone_type"]=>
-    //     int(3)
-    //     ["timezone"]=>
-    //     string(13) "Europe/Moscow"
-    //   }
+    //   string(58) "{ object(Gzhegow\Calendar\Struct\DateTimeImmutable # 14) }"
     //   ["_calendar_now_fixed1"]=>
-    //   object(Gzhegow\Calendar\Struct\DateTimeImmutable)#11 (3) {
-    //     ["date"]=>
-    //     string(26) "2024-05-09 19:12:16.183793"
-    //     ["timezone_type"]=>
-    //     int(3)
-    //     ["timezone"]=>
-    //     string(13) "Europe/Moscow"
-    //   }
+    //   string(58) "{ object(Gzhegow\Calendar\Struct\DateTimeImmutable # 15) }"
     //   ["_calendar_now_fixed2"]=>
-    //   object(Gzhegow\Calendar\Struct\DateTimeImmutable)#11 (3) {
-    //     ["date"]=>
-    //     string(26) "2024-05-09 19:12:16.183793"
-    //     ["timezone_type"]=>
-    //     int(3)
-    //     ["timezone"]=>
-    //     string(13) "Europe/Moscow"
-    //   }
+    //   string(58) "{ object(Gzhegow\Calendar\Struct\DateTimeImmutable # 15) }"
     //   ["_calendar_timezone"]=>
-    //   object(Gzhegow\Calendar\Struct\DateTimeZone)#12 (2) {
-    //     ["timezone_type"]=>
-    //     int(3)
-    //     ["timezone"]=>
-    //     string(3) "UTC"
-    //   }
+    //   string(53) "{ object(Gzhegow\Calendar\Struct\DateTimeZone # 16) }"
     //   ["_calendar_interval"]=>
-    //   object(Gzhegow\Calendar\Struct\DateInterval)#13 (16) {
-    //     ["y"]=>
-    //     int(0)
-    //     ["m"]=>
-    //     int(0)
-    //     ["d"]=>
-    //     int(0)
-    //     ["h"]=>
-    //     int(0)
-    //     ["i"]=>
-    //     int(0)
-    //     ["s"]=>
-    //     int(0)
-    //     ["f"]=>
-    //     float(0)
-    //     ["weekday"]=>
-    //     int(0)
-    //     ["weekday_behavior"]=>
-    //     int(0)
-    //     ["first_last_day_of"]=>
-    //     int(0)
-    //     ["invert"]=>
-    //     int(0)
-    //     ["days"]=>
-    //     bool(false)
-    //     ["special_type"]=>
-    //     int(0)
-    //     ["special_amount"]=>
-    //     int(0)
-    //     ["have_weekday_relative"]=>
-    //     int(0)
-    //     ["have_special_relative"]=>
-    //     int(0)
-    //   }
+    //   string(53) "{ object(Gzhegow\Calendar\Struct\DateInterval # 17) }"
     //   ["_calendar_diff"]=>
-    //   object(Gzhegow\Calendar\Struct\DateInterval)#16 (16) {
-    //     ["weekday"]=>
-    //     int(0)
-    //     ["weekday_behavior"]=>
-    //     int(0)
-    //     ["first_last_day_of"]=>
-    //     int(0)
-    //     ["days"]=>
-    //     bool(false)
-    //     ["special_type"]=>
-    //     int(0)
-    //     ["special_amount"]=>
-    //     int(0)
-    //     ["have_weekday_relative"]=>
-    //     int(0)
-    //     ["have_special_relative"]=>
-    //     int(0)
-    //     ["y"]=>
-    //     int(0)
-    //     ["m"]=>
-    //     int(0)
-    //     ["d"]=>
-    //     int(0)
-    //     ["h"]=>
-    //     int(10)
-    //     ["i"]=>
-    //     int(0)
-    //     ["s"]=>
-    //     int(0)
-    //     ["f"]=>
-    //     float(0)
-    //     ["invert"]=>
-    //     int(1)
-    //   }
+    //   string(53) "{ object(Gzhegow\Calendar\Struct\DateInterval # 20) }"
     // }
+
 }
 
 main();

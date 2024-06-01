@@ -43,17 +43,6 @@ function _calendar_now_immutable($timezone = null) : ?DateTimeImmutable
 }
 
 
-function _calendar_now_fixed($datetime = null, $timezone = null) : ?DateTimeImmutable
-{
-    return _calendar()->nowFixed($datetime, $timezone);
-}
-
-function _calendar_now_fixed_clear() : ?DateTimeImmutable
-{
-    return _calendar()->clearNowFixed();
-}
-
-
 function _calendar_timezone($timezone = 'UTC') : ?DateTimeZone
 {
     return _calendar()->parseDateTimeZone($timezone);

@@ -124,7 +124,7 @@ class Calendar implements CalendarInterface
         }
         catch ( \Throwable $e ) {
             throw new \LogicException(
-                'INVALID_DATE_TIME: ' . _php_dump($datetime),
+                'INVALID_DATE_TIME: ' . Lib::php_dump($datetime),
                 -1, $e
             );
         }
@@ -141,14 +141,14 @@ class Calendar implements CalendarInterface
         }
         catch ( \Throwable $e ) {
             throw new \LogicException(
-                'INVALID_DATE_TIME: ' . _php_dump($object),
+                'INVALID_DATE_TIME: ' . Lib::php_dump($object),
                 -1, $e
             );
         }
 
         if (null === $dt) {
             throw new \LogicException(
-                'INVALID_DATE_TIME: ' . _php_dump($object),
+                'INVALID_DATE_TIME: ' . Lib::php_dump($object),
                 -1
             );
         }
@@ -165,14 +165,14 @@ class Calendar implements CalendarInterface
         }
         catch ( \Throwable $e ) {
             throw new \LogicException(
-                'INVALID_DATE_TIME: ' . _php_dump($datetime),
+                'INVALID_DATE_TIME: ' . Lib::php_dump($datetime),
                 -1, $e
             );
         }
 
         if (null === $dt) {
             throw new \LogicException(
-                'INVALID_DATE_TIME: ' . _php_dump($datetime),
+                'INVALID_DATE_TIME: ' . Lib::php_dump($datetime),
                 -1
             );
         }
@@ -188,7 +188,7 @@ class Calendar implements CalendarInterface
         }
         catch ( \Throwable $e ) {
             throw new \LogicException(
-                'INVALID_DATE_TIME: ' . _php_dump($datetime),
+                'INVALID_DATE_TIME: ' . Lib::php_dump($datetime),
                 -1, $e
             );
         }
@@ -205,14 +205,14 @@ class Calendar implements CalendarInterface
         }
         catch ( \Throwable $e ) {
             throw new \LogicException(
-                'INVALID_DATE_TIME: ' . _php_dump($object),
+                'INVALID_DATE_TIME: ' . Lib::php_dump($object),
                 -1, $e
             );
         }
 
         if (null === $dt) {
             throw new \LogicException(
-                'INVALID_DATE_TIME: ' . _php_dump($object),
+                'INVALID_DATE_TIME: ' . Lib::php_dump($object),
                 -1
             );
         }
@@ -229,14 +229,14 @@ class Calendar implements CalendarInterface
         }
         catch ( \Throwable $e ) {
             throw new \LogicException(
-                'INVALID_DATE_TIME: ' . _php_dump($datetime),
+                'INVALID_DATE_TIME: ' . Lib::php_dump($datetime),
                 -1, $e
             );
         }
 
         if (null === $dt) {
             throw new \LogicException(
-                'INVALID_DATE_TIME: ' . _php_dump($datetime),
+                'INVALID_DATE_TIME: ' . Lib::php_dump($datetime),
                 -1
             );
         }
@@ -252,7 +252,7 @@ class Calendar implements CalendarInterface
         }
         catch ( \Throwable $e ) {
             throw new \LogicException(
-                'INVALID_DATE_TIME_ZONE: ' . _php_dump($timezone),
+                'INVALID_DATE_TIME_ZONE: ' . Lib::php_dump($timezone),
                 -1, $e
             );
         }
@@ -269,14 +269,14 @@ class Calendar implements CalendarInterface
         }
         catch ( \Throwable $e ) {
             throw new \LogicException(
-                'INVALID_DATE_TIME_ZONE: ' . _php_dump($object),
+                'INVALID_DATE_TIME_ZONE: ' . Lib::php_dump($object),
                 -1, $e
             );
         }
 
         if (null === $tz) {
             throw new \LogicException(
-                'INVALID_DATE_TIME_ZONE: ' . _php_dump($object),
+                'INVALID_DATE_TIME_ZONE: ' . Lib::php_dump($object),
                 -1
             );
         }
@@ -292,7 +292,7 @@ class Calendar implements CalendarInterface
         }
         catch ( \Throwable $e ) {
             throw new \LogicException(
-                'INVALID_DATE_INTERVAL: ' . _php_dump($duration),
+                'INVALID_DATE_INTERVAL: ' . Lib::php_dump($duration),
                 -1, $e
             );
         }
@@ -310,14 +310,14 @@ class Calendar implements CalendarInterface
         }
         catch ( \Throwable $e ) {
             throw new \LogicException(
-                'INVALID_DATE_INTERVAL: ' . _php_dump($object),
+                'INVALID_DATE_INTERVAL: ' . Lib::php_dump($object),
                 -1, $e
             );
         }
 
         if (null === $interval) {
             throw new \LogicException(
-                'INVALID_DATE_INTERVAL: ' . _php_dump($object),
+                'INVALID_DATE_INTERVAL: ' . Lib::php_dump($object),
                 -1
             );
         }
@@ -335,14 +335,14 @@ class Calendar implements CalendarInterface
         }
         catch ( \Throwable $e ) {
             throw new \LogicException(
-                'INVALID_DATE_INTERVAL: ' . _php_dump($datetime),
+                'INVALID_DATE_INTERVAL: ' . Lib::php_dump($datetime),
                 -1, $e
             );
         }
 
         if (null === $interval) {
             throw new \LogicException(
-                'INVALID_DATE_INTERVAL: ' . _php_dump($datetime),
+                'INVALID_DATE_INTERVAL: ' . Lib::php_dump($datetime),
                 -1
             );
         }
@@ -449,29 +449,6 @@ class Calendar implements CalendarInterface
     }
 
 
-    public function nowFixed($datetime = null, $timezone = null) : DateTimeImmutable
-    {
-        if (false === $datetime) {
-            $this->nowFixed = null;
-
-        } elseif (isset($datetime)) {
-            $this->nowFixed = $this->dateTimeImmutable($datetime, $timezone);
-        }
-
-        return $this->nowFixed = $this->nowFixed
-            ?? $this->dateTimeImmutable('now', $timezone);
-    }
-
-    public function clearNowFixed() : ?DateTimeImmutable
-    {
-        $lastNowFixed = $this->nowFixed;
-
-        $this->nowFixed = null;
-
-        return $lastNowFixed;
-    }
-
-
     public function parseDateTime($datetime, array $formats = null, $timezoneIfParsed = null) : ?DateTime
     {
         if (null === $datetime) {
@@ -484,7 +461,7 @@ class Calendar implements CalendarInterface
             return $dt;
         }
 
-        if (null !== ($_num = _filter_num($datetime))) {
+        if (null !== ($_num = Lib::filter_num($datetime))) {
             if ($dt = $this->parseDateTimeFromNum($_num, $timezoneIfParsed)) {
                 $dt = $this->newDateTimeFromInterface($dt);
 
@@ -518,7 +495,7 @@ class Calendar implements CalendarInterface
         }
 
         throw new \LogicException(
-            'UNSUPPORTED_DATE_TIME: ' . _php_dump($datetime),
+            'UNSUPPORTED_DATE_TIME: ' . Lib::php_dump($datetime),
             -1
         );
     }
@@ -535,7 +512,7 @@ class Calendar implements CalendarInterface
             return $dt;
         }
 
-        if (null !== ($_num = _filter_num($datetime))) {
+        if (null !== ($_num = Lib::filter_num($datetime))) {
             if ($dt = $this->parseDateTimeFromNum($_num, $timezoneIfParsed)) {
                 $dt = $this->newDateTimeImmutableFromInterface($dt);
 
@@ -569,14 +546,14 @@ class Calendar implements CalendarInterface
         }
 
         throw new \LogicException(
-            'UNSUPPORTED_DATE_TIME: ' . _php_dump($datetime)
+            'UNSUPPORTED_DATE_TIME: ' . Lib::php_dump($datetime)
         );
     }
 
 
     public function parseDateTimeFromNum($num, $timezoneIfParsed = null) : ?DateTime
     {
-        if (null === ($_num = _filter_num($num))) {
+        if (null === ($_num = Lib::filter_num($num))) {
             return null;
         }
 
@@ -604,7 +581,7 @@ class Calendar implements CalendarInterface
 
     public function parseDateTimeFromString($datetime, $timezoneIfParsed = null) : ?DateTime
     {
-        if (null === ($_string = _filter_string($datetime))) {
+        if (null === ($_string = Lib::filter_string($datetime))) {
             return null;
         }
 
@@ -622,7 +599,7 @@ class Calendar implements CalendarInterface
 
     public function parseDateTimeFromStringByFormat(string $format, $datetime, $timezoneIfParsed = null) : ?DateTime
     {
-        if (null === ($_string = _filter_string($datetime))) {
+        if (null === ($_string = Lib::filter_string($datetime))) {
             return null;
         }
 
@@ -662,14 +639,14 @@ class Calendar implements CalendarInterface
         }
 
         throw new \LogicException(
-            'UNSUPPORTED_DATE_TIME_ZONE: ' . _php_dump($timezone),
+            'UNSUPPORTED_DATE_TIME_ZONE: ' . Lib::php_dump($timezone),
             -1
         );
     }
 
     public function parseDateTimeZoneFromStringTimezone($timezone) : ?DateTimeZone
     {
-        if (null === ($_string = _filter_string($timezone))) {
+        if (null === ($_string = Lib::filter_string($timezone))) {
             return null;
         }
 
@@ -696,7 +673,7 @@ class Calendar implements CalendarInterface
             return $_interval;
         }
 
-        if (null !== ($_int = _filter_int($interval))) {
+        if (null !== ($_int = Lib::filter_int($interval))) {
             if ($_interval = $this->parseDateIntervalFromInt($_int)) {
                 return $_interval;
             }
@@ -727,14 +704,14 @@ class Calendar implements CalendarInterface
         }
 
         throw new \LogicException(
-            'UNSUPPORTED_DATE_INTERVAL: ' . _php_dump($interval),
+            'UNSUPPORTED_DATE_INTERVAL: ' . Lib::php_dump($interval),
             -1
         );
     }
 
     public function parseDateIntervalFromInt($int) : ?DateInterval
     {
-        if (null === ($_int = _filter_int($int))) {
+        if (null === ($_int = Lib::filter_int($int))) {
             return null;
         }
 
@@ -767,7 +744,7 @@ class Calendar implements CalendarInterface
 
     public function parseDateIntervalFromStringDuration($duration) : ?DateInterval
     {
-        if (null === ($_string = _filter_string($duration))) {
+        if (null === ($_string = Lib::filter_string($duration))) {
             return null;
         }
 
@@ -783,7 +760,7 @@ class Calendar implements CalendarInterface
 
     public function parseDateIntervalFromStringByFormat(string $format, $datetime) : ?DateInterval
     {
-        if (null === ($_string = _filter_string($datetime))) {
+        if (null === ($_string = Lib::filter_string($datetime))) {
             return null;
         }
 
@@ -805,7 +782,7 @@ class Calendar implements CalendarInterface
 
     public function parseDateIntervalFromStringDatetime($datetime) : ?DateInterval
     {
-        if (null === ($_string = _filter_string($datetime))) {
+        if (null === ($_string = Lib::filter_string($datetime))) {
             return null;
         }
 

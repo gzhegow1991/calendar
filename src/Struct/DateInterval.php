@@ -2,8 +2,7 @@
 
 namespace Gzhegow\Calendar\Struct;
 
-use function Gzhegow\Calendar\_assert;
-use function Gzhegow\Calendar\_assert_true;
+use Gzhegow\Calendar\Lib;
 
 
 class DateInterval extends \DateInterval implements
@@ -18,7 +17,7 @@ class DateInterval extends \DateInterval implements
             return clone $object;
         }
 
-        _assert_true('is_a', [ $object, \DateInterval::class ]);
+        Lib::assert_true('is_a', [ $object, \DateInterval::class ]);
 
         (function ($state) {
             foreach ( $state as $key => $value ) {
@@ -34,7 +33,7 @@ class DateInterval extends \DateInterval implements
      */
     public static function createFromDateString($datetime)
     {
-        _assert('_filter_string', [ $datetime ]);
+        Lib::assert([ Lib::class, 'filter_string' ], [ $datetime ]);
 
         $object = parent::createFromDateString($datetime);
 
@@ -52,7 +51,7 @@ class DateInterval extends \DateInterval implements
     {
         // $dt = new \DateInterval();
         // var_dump($dt, $var = json_encode($dt), json_decode($var));
-        // 
+        //
         // > string(88) "{"y":0,"m":0,"d":0,"h":0,"i":10,"s":0,"f":0,"invert":0,"days":false,"from_string":false}"
         // > object(stdClass)#2 (10) {
         // >   ["y"]=>

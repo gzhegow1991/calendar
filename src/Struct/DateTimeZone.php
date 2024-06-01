@@ -2,7 +2,7 @@
 
 namespace Gzhegow\Calendar\Struct;
 
-use function Gzhegow\Calendar\_assert_true;
+use Gzhegow\Calendar\Lib;
 
 
 class DateTimeZone extends \DateTimeZone implements
@@ -17,7 +17,7 @@ class DateTimeZone extends \DateTimeZone implements
             return clone $object;
         }
 
-        _assert_true('is_a', [ $object, \DateTimeZone::class ]);
+        Lib::assert_true('is_a', [ $object, \DateTimeZone::class ]);
 
         (function ($state) {
             foreach ( $state as $key => $value ) {
@@ -32,7 +32,7 @@ class DateTimeZone extends \DateTimeZone implements
     public function jsonSerialize() // : mixed
     {
         // var_dump($tz, $var = json_encode($tz));
-        // 
+        //
         // > string(72) "{"timezone_type":3,"timezone":"UTC"}"
         // > object(stdClass)#2 (3) {
         // >   ["timezone_type"]=>
@@ -43,7 +43,7 @@ class DateTimeZone extends \DateTimeZone implements
         //
         // vs
         //
-        // > string(29) "UTC"         
+        // > string(29) "UTC"
 
         return $this->getName();
     }

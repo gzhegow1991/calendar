@@ -7,31 +7,26 @@
       "name": "gzhegow",
       "email": "6562680@gmail.com"
     }
-  ],  
-  
+  ],
+
   "require": {
     "php": "^7.2|^8.0",
-    
+
     "ext-json": "*"
   },
-  
+
   "autoload": {
     "psr-4": {
       "Gzhegow\\Calendar\\": "src/"
-    },
-    "files": [
-      "helpers/assert.php",
-      "helpers/calendar.php",
-      "helpers/php.php"
-    ]
+    }
   },
-  
+
   "minimum-stability": "dev",
   "prefer-stable": true,
-  
+
   "config": {
     "optimize-autoloader": true,
-    
+
     "sort-packages": false
   }
 }

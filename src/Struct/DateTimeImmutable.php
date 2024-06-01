@@ -2,9 +2,8 @@
 
 namespace Gzhegow\Calendar\Struct;
 
+use Gzhegow\Calendar\Lib;
 use Gzhegow\Calendar\Calendar;
-use function Gzhegow\Calendar\_assert;
-use function Gzhegow\Calendar\_assert_true;
 
 
 class DateTimeImmutable extends \DateTimeImmutable implements DateTimeInterface,
@@ -19,7 +18,7 @@ class DateTimeImmutable extends \DateTimeImmutable implements DateTimeInterface,
             return clone $object;
         }
 
-        _assert_true('is_a', [ $object, \DateTimeInterface::class ]);
+        Lib::assert_true('is_a', [ $object, \DateTimeInterface::class ]);
 
         $microseconds = str_pad($object->format('u'), 6, '0');
 
@@ -42,9 +41,9 @@ class DateTimeImmutable extends \DateTimeImmutable implements DateTimeInterface,
      */
     public static function createFromFormat($format, $datetime, $timezone = null)
     {
-        _assert('_filter_string', [ $format ]);
-        _assert('_filter_string', [ $datetime ]);
-        _assert_true('is_a', [ $timezone, \DateTimeZone::class ]);
+        Lib::assert([ Lib::class, 'filter_string' ], [ $format ]);
+        Lib::assert([ Lib::class, 'filter_string' ], [ $datetime ]);
+        Lib::assert_true('is_a', [ $timezone, \DateTimeZone::class ]);
 
         $object = parent::createFromFormat($format, $datetime, $timezone);
 
@@ -77,7 +76,7 @@ class DateTimeImmutable extends \DateTimeImmutable implements DateTimeInterface,
     public function jsonSerialize() // : mixed
     {
         // var_dump($date, $var = json_encode($date));
-        // 
+        //
         // > string(72) "{"date":"1970-01-01 00:00:00.000000","timezone_type":3,"timezone":"UTC"}"
         // > object(stdClass)#2 (3) {
         // >   ["date"]=>
@@ -90,7 +89,7 @@ class DateTimeImmutable extends \DateTimeImmutable implements DateTimeInterface,
         //
         // vs
         //
-        // > string(29) "2024-04-08T08:42:04.037+00:00"        
+        // > string(29) "2024-04-08T08:42:04.037+00:00"
 
         return $this->format(Calendar::FORMAT_JAVASCRIPT_MILLISECONDS);
     }

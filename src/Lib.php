@@ -179,11 +179,11 @@ class Lib
         if (null === $result) {
             if (('' === $error) || (null === $error)) {
                 if (! $errors) {
-                    $error = [ '[ ' . __FUNCTION__ . ' ] ' . Lib::php_dump($fn), $args ];
+                    $error = [ '[ ' . __FUNCTION__ . ' ] ' . static::php_dump($fn), $args ];
                 }
             }
 
-            throw Lib::php_throw($error, ...$errors);
+            throw static::php_throw($error, ...$errors);
         }
 
         return $result;
@@ -204,11 +204,11 @@ class Lib
         if (true !== $bool) {
             if (('' === $error) || (null === $error)) {
                 if (! $errors) {
-                    $error = [ '[ ' . __FUNCTION__ . ' ] ' . Lib::php_dump($fn), $args ];
+                    $error = [ '[ ' . __FUNCTION__ . ' ] ' . static::php_dump($fn), $args ];
                 }
             }
 
-            throw Lib::php_throw($error, ...$errors);
+            throw static::php_throw($error, ...$errors);
         }
 
         return $args[ 0 ] ?? null;
@@ -230,7 +230,7 @@ class Lib
         $valueOriginal = $value;
 
         if (! is_scalar($valueOriginal)) {
-            if (null === ($_valueOriginal = Lib::filter_str($valueOriginal))) {
+            if (null === ($_valueOriginal = static::filter_str($valueOriginal))) {
                 return null;
             }
 
@@ -279,7 +279,7 @@ class Lib
         $valueOriginal = $value;
 
         if (! is_scalar($valueOriginal)) {
-            if (null === ($_valueOriginal = Lib::filter_str($valueOriginal))) {
+            if (null === ($_valueOriginal = static::filter_str($valueOriginal))) {
                 return null;
             }
 
@@ -347,7 +347,7 @@ class Lib
 
     public static function filter_string($value) : ?string
     {
-        if (null === ($_value = Lib::filter_str($value))) {
+        if (null === ($_value = static::filter_str($value))) {
             return null;
         }
 
@@ -360,7 +360,7 @@ class Lib
 
     public static function filter_trim($value) : ?string
     {
-        if (null === ($_value = Lib::filter_str($value))) {
+        if (null === ($_value = static::filter_str($value))) {
             return null;
         }
 
@@ -375,7 +375,7 @@ class Lib
 
     public static function filter_word($value) : ?string
     {
-        if (null === ($_value = Lib::filter_trim($value))) {
+        if (null === ($_value = static::filter_trim($value))) {
             return null;
         }
 

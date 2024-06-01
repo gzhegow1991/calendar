@@ -168,7 +168,7 @@ class Lib
      * > gzhegow, вызывает произвольный колбэк с аргументами, если результат NULL - бросает исключение
      * > _assert('_filter_strlen', [ $input ], 'Переменная `input` должна быть не-пустой строкой')
      *
-     * @param callable $fn
+     * @param callable|null $fn
      */
     public static function assert($fn, array $args = [], $error = '', ...$errors)
     {
@@ -193,7 +193,7 @@ class Lib
      * > gzhegow, вызывает произвольный колбэк с аргументами, если колбэк вернул не TRUE, бросает исключение, иначе $args[0]
      * > _assert_true('is_int', [ $input ], 'Переменная `input` должна быть числом')
      *
-     * @param callable $fn
+     * @param callable|bool $fn
      */
     public static function assert_true($fn, array $args = [], $error = '', ...$errors) // : mixed
     {

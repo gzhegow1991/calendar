@@ -2,20 +2,9 @@
 
 use Gzhegow\Calendar\Lib;
 use Gzhegow\Calendar\Calendar;
-use function Gzhegow\Calendar\_calendar;
-use function Gzhegow\Calendar\_calendar_now;
-use function Gzhegow\Calendar\_calendar_diff;
-use function Gzhegow\Calendar\_calendar_date;
-use function Gzhegow\Calendar\_calendar_interval;
-use function Gzhegow\Calendar\_calendar_timezone;
-use function Gzhegow\Calendar\_calendar_now_immutable;
-use function Gzhegow\Calendar\_calendar_date_immutable;
 
 
 require_once __DIR__ . '/vendor/autoload.php';
-
-// > подключение хелперов не обязательно, используется в демонстрационных целях
-require_once __DIR__ . '/helpers/calendar.example.php';
 
 
 // > настраиваем PHP
@@ -38,14 +27,14 @@ set_exception_handler(function ($e) {
 
 
 // > создаем календарь
-_calendar($calendar = new Calendar());
+$calendar = new Calendar();
 
 // > создаем дату
-$tests[ '_calendar_date' ] = _calendar_date($datetime = 'now', $formats = null, $timezoneIfParsed = null);
+$tests[ '_calendar_date' ] = $calendar->parseDateTime($datetime = 'now', $formats = null, $timezoneIfParsed = null);
 Lib::assert_true('is_a', [ $tests[ '_calendar_date' ], DateTime::class ]);
 
 // > создаем/распознаем дату
-$tests[ '_calendar_date_immutable' ] = _calendar_date_immutable($datetime = 'now', $formats = null, $timezoneIfParsed = null);
+$tests[ '_calendar_date_immutable' ] = $calendar->parseDateTimeImmutable($datetime = 'now', $formats = null, $timezoneIfParsed = null);
 Lib::assert_true('is_a', [ $tests[ '_calendar_date_immutable' ], DateTimeImmutable::class ]);
 
 // > проводим действия над датой, чтобы убедится что Immutable работает
@@ -60,29 +49,29 @@ if ($tests[ '_calendar_date_immutable_sub' ] === $tests[ '_calendar_date_immutab
 if ($tests[ '_calendar_date_immutable_add' ] === $tests[ '_calendar_date_immutable_modify' ]) throw new \RuntimeException();
 
 // > создает дату "сейчас", просто alias для _calendar_date($date)
-$tests[ '_calendar_now' ] = _calendar_now($timezone = null);
-$tests[ '_calendar_now_immutable' ] = _calendar_now_immutable($timezone = null);
+$tests[ '_calendar_now' ] = $calendar->now($timezone = null);
+$tests[ '_calendar_now_immutable' ] = $calendar->nowImmutable($timezone = null);
 Lib::assert_true('is_a', [ $tests[ '_calendar_now' ], DateTime::class ]);
 Lib::assert_true('is_a', [ $tests[ '_calendar_now_immutable' ], DateTimeImmutable::class ]);
 
 // > создает/распознает временную зону
-$tests[ '_calendar_timezone' ] = _calendar_timezone($timezone = 'UTC');
+$tests[ '_calendar_timezone' ] = $calendar->parseDateTimeZone($timezone = 'UTC');
 Lib::assert_true('is_a', [ $tests[ '_calendar_timezone' ], DateTimeZone::class ]);
 Lib::assert_true(function () use ($tests) {
     return 'UTC' === $tests[ '_calendar_timezone' ]->getName();
 });
 
 // > создает/распознает интервал
-$tests[ '_calendar_interval' ] = _calendar_interval($interval = 'P0D', $formats = null);
+$tests[ '_calendar_interval' ] = $calendar->parseDateInterval($interval = 'P0D', $formats = null);
 Lib::assert_true('is_a', [ $tests[ '_calendar_interval' ], DateInterval::class ]);
 Lib::assert_true(function () use ($tests) {
     return 'P0D' === $tests[ '_calendar_interval' ]->jsonSerialize();
 });
 
 // > возвращает разницу между датами
-$now = _calendar_now_immutable();
+$now = $calendar->nowImmutable();
 $past = $now->modify('- 10 hours');
-$tests[ '_calendar_diff' ] = _calendar_diff($now, $past, $absolute = false); // : ?DateInterval;
+$tests[ '_calendar_diff' ] = $calendar->diff($now, $past, $absolute = false); // : ?DateInterval;
 Lib::assert_true('is_a', [ $tests[ '_calendar_diff' ], DateInterval::class ]);
 Lib::assert_true(function () use ($tests) {
     return 'PT10H' === $tests[ '_calendar_diff' ]->jsonSerialize();

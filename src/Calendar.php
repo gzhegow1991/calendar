@@ -474,7 +474,7 @@ class Calendar implements CalendarInterface
                 return null;
             }
 
-            if ($dt = $this->parseDateTimeFromString($datetime)) {
+            if ($dt = $this->parseDateTimeFromString($datetime, $timezoneIfParsed)) {
                 $dt = $this->newDateTimeFromInterface($dt);
 
                 return $dt;
@@ -525,7 +525,7 @@ class Calendar implements CalendarInterface
                 return null;
             }
 
-            if ($dt = $this->parseDateTimeFromString($datetime)) {
+            if ($dt = $this->parseDateTimeFromString($datetime, $timezoneIfParsed)) {
                 $dt = $this->newDateTimeImmutableFromInterface($dt);
 
                 return $dt;

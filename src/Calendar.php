@@ -2,6 +2,9 @@
 
 namespace Gzhegow\Calendar;
 
+use Gzhegow\Calendar\Exception\LogicException;
+
+
 class Calendar implements CalendarInterface
 {
     const INTERVAL_MINUTE = 60;
@@ -72,7 +75,7 @@ class Calendar implements CalendarInterface
 
 
     /**
-     * @var string
+     * @var \DateTimeZone
      */
     protected $timezoneDefault = 'UTC';
 
@@ -111,271 +114,6 @@ class Calendar implements CalendarInterface
     }
 
 
-    public function newDateTime($datetime = 'now', $timezone = null) : \DateTime
-    {
-        try {
-            $dtClass = Type::dateTime();
-            $dt = new $dtClass($datetime, $timezone);
-        }
-        catch ( \Throwable $e ) {
-            throw new \LogicException(
-                'Invalid input: ' . Lib::php_dump([ $datetime, $timezone ]),
-                -1, $e
-            );
-        }
-
-        return $dt;
-    }
-
-    public function newDateTimeFromInterface($object) : \DateTime
-    {
-        try {
-            $dtClass = Type::dateTime();
-            $dt = $dtClass::{'createFromInterface'}($object);
-
-            $dt = $dt ?: null;
-        }
-        catch ( \Throwable $e ) {
-            throw new \LogicException(
-                'Invalid `object`: ' . Lib::php_dump($object),
-                -1, $e
-            );
-        }
-
-        if (null === $dt) {
-            throw new \LogicException(
-                'Invalid `object`: ' . Lib::php_dump($object),
-                -1
-            );
-        }
-
-        return $dt;
-    }
-
-    public function newDateTimeFromFormat($format, $datetime = 'now', $timezone = null) : \DateTime
-    {
-        try {
-            $dtClass = Type::dateTime();
-            $dt = $dtClass::{'createFromFormat'}($format, $datetime, $timezone);
-
-            $dt = $dt ?: null;
-        }
-        catch ( \Throwable $e ) {
-            throw new \LogicException(
-                'Invalid input: ' . Lib::php_dump([ $format, $datetime, $timezone ]),
-                -1, $e
-            );
-        }
-
-        if (null === $dt) {
-            throw new \LogicException(
-                'Invalid input: ' . Lib::php_dump([ $format, $datetime, $timezone ]),
-                -1
-            );
-        }
-
-        return $dt;
-    }
-
-
-    public function newDateTimeImmutable($datetime = 'now', $timezone = null) : \DateTimeImmutable
-    {
-        try {
-            $dtClass = Type::dateTimeImmutable();
-            $dt = new $dtClass($datetime, $timezone);
-        }
-        catch ( \Throwable $e ) {
-            throw new \LogicException(
-                'Invalid input: ' . Lib::php_dump([ $datetime, $timezone ]),
-                -1, $e
-            );
-        }
-
-        return $dt;
-    }
-
-    public function newDateTimeImmutableFromInterface($instanceInterface) : \DateTimeImmutable
-    {
-        try {
-            $dtClass = Type::dateTimeImmutable();
-            $dt = $dtClass::{'createFromInterface'}($instanceInterface);
-
-            $dt = $dt ?: null;
-        }
-        catch ( \Throwable $e ) {
-            throw new \LogicException(
-                'Invalid `instance`: ' . Lib::php_dump($instanceInterface),
-                -1, $e
-            );
-        }
-
-        if (null === $dt) {
-            throw new \LogicException(
-                'Invalid `instance`: ' . Lib::php_dump($instanceInterface),
-                -1
-            );
-        }
-
-        return $dt;
-    }
-
-    public function newDateTimeImmutableFromFormat($format, $dtFormattedString, $timezoneIfParsed = null) : \DateTimeImmutable
-    {
-        try {
-            $dtClass = Type::dateTimeImmutable();
-            $dt = $dtClass::{'createFromFormat'}($format, $dtFormattedString, $timezoneIfParsed);
-
-            $dt = $dt ?: null;
-        }
-        catch ( \Throwable $e ) {
-            throw new \LogicException(
-                'Invalid input: ' . Lib::php_dump([ $format, $dtFormattedString, $timezoneIfParsed ]),
-                -1, $e
-            );
-        }
-
-        if (null === $dt) {
-            throw new \LogicException(
-                'Invalid input: ' . Lib::php_dump([ $format, $dtFormattedString, $timezoneIfParsed ]),
-                -1
-            );
-        }
-
-        return $dt;
-    }
-
-
-    public function newDateTimeZone($timezone = 'UTC') : \DateTimeZone
-    {
-        try {
-            $tzClass = Type::dateTimeZone();
-            $tz = new $tzClass($timezone);
-        }
-        catch ( \Throwable $e ) {
-            throw new \LogicException(
-                'Invalid input: ' . Lib::php_dump([ $timezone ]),
-                -1, $e
-            );
-        }
-
-        return $tz;
-    }
-
-    public function newDateTimeZoneFromInstance($instance) : \DateTimeZone
-    {
-        try {
-            $tzClass = Type::dateTimeZone();
-            $tz = $tzClass::{'createFromInstance'}($instance);
-
-            $tz = $tz ?: null;
-        }
-        catch ( \Throwable $e ) {
-            throw new \LogicException(
-                'Invalid `instance`: ' . Lib::php_dump($instance),
-                -1, $e
-            );
-        }
-
-        if (null === $tz) {
-            throw new \LogicException(
-                'Invalid `instance`: ' . Lib::php_dump($instance),
-                -1
-            );
-        }
-
-        return $tz;
-    }
-
-
-    public function newDateInterval($duration = 'P0D') : \DateInterval
-    {
-        try {
-            $dtiClass = Type::dateInterval();
-            $dti = new $dtiClass($duration);
-        }
-        catch ( \Throwable $e ) {
-            throw new \LogicException(
-                'Invalid input: ' . Lib::php_dump([ $duration ]),
-                -1, $e
-            );
-        }
-
-        return $dti;
-    }
-
-    public function newDateIntervalFromInstance($instance)
-    {
-        try {
-            $dtiClass = Type::dateInterval();
-            $dti = $dtiClass::{'createFromInstance'}($instance);
-
-            // > gzhegow, convert false to null
-            $dti = $dti ?: null;
-        }
-        catch ( \Throwable $e ) {
-            throw new \LogicException(
-                'Invalid `instance`: ' . Lib::php_dump($instance),
-                -1, $e
-            );
-        }
-
-        if (null === $dti) {
-            throw new \LogicException(
-                'Invalid `instance`: ' . Lib::php_dump($instance),
-                -1
-            );
-        }
-
-        return $dti;
-    }
-
-    public function newDateIntervalFromDateString($dtiString)
-    {
-        try {
-            $dtiClass = Type::dateInterval();
-            $dti = $dtiClass::{'createFromDateString'}($dtiString);
-
-            // > gzhegow, convert false to null
-            $dti = $dti ?: null;
-        }
-        catch ( \Throwable $e ) {
-            throw new \LogicException(
-                'Invalid `dtiString`: ' . Lib::php_dump($dtiString),
-                -1, $e
-            );
-        }
-
-        if (null === $dti) {
-            throw new \LogicException(
-                'Invalid `dtiString`: ' . Lib::php_dump($dtiString),
-                -1
-            );
-        }
-
-        return $dti;
-    }
-
-
-    /**
-     * @param string|\DateTimeZone $timezoneDefault
-     */
-    public function setTimezoneDefault($timezoneDefault) : void
-    {
-        $timezoneDefault = $this->parseDateTimeZone($timezoneDefault);
-
-        $this->timezoneDefault = $timezoneDefault;
-    }
-
-
-    /**
-     * @param array|string[] $parseFormatsDefault
-     */
-    public function setParseFormatsDefault(array $parseFormatsDefault) : void
-    {
-        $this->parseDateTimeFormatsDefault = $parseFormatsDefault;
-    }
-
-
     /**
      * @param callable|null $fnDateFormatter
      */
@@ -393,13 +131,293 @@ class Calendar implements CalendarInterface
     }
 
 
+    /**
+     * @return \DateTimeZone
+     */
+    public function getTimezoneDefault() : \DateTimeZone
+    {
+        return $this->timezoneDefault;
+    }
+
+    /**
+     * @param string|\DateTimeZone $timezoneDefault
+     */
+    public function setTimezoneDefault($timezoneDefault) : void
+    {
+        if (null === ($_timezoneDefault = $this->parseDateTimeZone($timezoneDefault))) {
+            throw new LogicException(
+                'Invalid `timezoneDefault` passed: ' . Lib::debug_dump($timezoneDefault)
+            );
+        }
+
+        $this->timezoneDefault = $timezoneDefault;
+    }
+
+    /**
+     * @param array|string[] $parseFormatsDefault
+     */
+    public function setParseFormatsDefault(array $parseFormatsDefault) : void
+    {
+        $this->parseDateTimeFormatsDefault = $parseFormatsDefault;
+    }
+
+
+    public function newDateTime($datetime = 'now', $timezone = null) : \DateTime
+    {
+        try {
+            $dtClass = CalendarType::dateTime();
+            $dt = new $dtClass($datetime, $timezone);
+        }
+        catch ( \Throwable $e ) {
+            throw new LogicException(
+                'Invalid input: ' . Lib::debug_dump([ $datetime, $timezone ]),
+                -1, $e
+            );
+        }
+
+        return $dt;
+    }
+
+    protected function newDateTimeFromInterface($object) : \DateTime
+    {
+        try {
+            $dtClass = CalendarType::dateTime();
+            $dt = $dtClass::{'createFromInterface'}($object);
+
+            $dt = $dt ?: null;
+        }
+        catch ( \Throwable $e ) {
+            throw new LogicException(
+                'Invalid `object`: ' . Lib::debug_dump($object),
+                -1, $e
+            );
+        }
+
+        if (null === $dt) {
+            throw new LogicException(
+                'Invalid `object`: ' . Lib::debug_dump($object),
+                -1
+            );
+        }
+
+        return $dt;
+    }
+
+    protected function newDateTimeFromFormat($format, $datetime = 'now', $timezone = null) : \DateTime
+    {
+        try {
+            $dtClass = CalendarType::dateTime();
+            $dt = $dtClass::{'createFromFormat'}($format, $datetime, $timezone);
+
+            $dt = $dt ?: null;
+        }
+        catch ( \Throwable $e ) {
+            throw new LogicException(
+                'Invalid input: ' . Lib::debug_dump([ $format, $datetime, $timezone ]),
+                -1, $e
+            );
+        }
+
+        if (null === $dt) {
+            throw new LogicException(
+                'Invalid input: ' . Lib::debug_dump([ $format, $datetime, $timezone ]),
+                -1
+            );
+        }
+
+        return $dt;
+    }
+
+
+    public function newDateTimeImmutable($datetime = 'now', $timezone = null) : \DateTimeImmutable
+    {
+        try {
+            $dtClass = CalendarType::dateTimeImmutable();
+            $dt = new $dtClass($datetime, $timezone);
+        }
+        catch ( \Throwable $e ) {
+            throw new LogicException(
+                'Invalid input: ' . Lib::debug_dump([ $datetime, $timezone ]),
+                -1, $e
+            );
+        }
+
+        return $dt;
+    }
+
+    protected function newDateTimeImmutableFromInterface($instanceInterface) : \DateTimeImmutable
+    {
+        try {
+            $dtClass = CalendarType::dateTimeImmutable();
+            $dt = $dtClass::{'createFromInterface'}($instanceInterface);
+
+            $dt = $dt ?: null;
+        }
+        catch ( \Throwable $e ) {
+            throw new LogicException(
+                'Invalid `instance`: ' . Lib::debug_dump($instanceInterface),
+                -1, $e
+            );
+        }
+
+        if (null === $dt) {
+            throw new LogicException(
+                'Invalid `instance`: ' . Lib::debug_dump($instanceInterface),
+                -1
+            );
+        }
+
+        return $dt;
+    }
+
+    protected function newDateTimeImmutableFromFormat($format, $dtFormattedString, $timezoneIfParsed = null) : \DateTimeImmutable
+    {
+        try {
+            $dtClass = CalendarType::dateTimeImmutable();
+            $dt = $dtClass::{'createFromFormat'}($format, $dtFormattedString, $timezoneIfParsed);
+
+            $dt = $dt ?: null;
+        }
+        catch ( \Throwable $e ) {
+            throw new LogicException(
+                'Invalid input: ' . Lib::debug_dump([ $format, $dtFormattedString, $timezoneIfParsed ]),
+                -1, $e
+            );
+        }
+
+        if (null === $dt) {
+            throw new LogicException(
+                'Invalid input: ' . Lib::debug_dump([ $format, $dtFormattedString, $timezoneIfParsed ]),
+                -1
+            );
+        }
+
+        return $dt;
+    }
+
+
+    public function newDateTimeZone($timezone = 'UTC') : \DateTimeZone
+    {
+        try {
+            $tzClass = CalendarType::dateTimeZone();
+            $tz = new $tzClass($timezone);
+        }
+        catch ( \Throwable $e ) {
+            throw new LogicException(
+                'Invalid input: ' . Lib::debug_dump([ $timezone ]),
+                -1, $e
+            );
+        }
+
+        return $tz;
+    }
+
+    protected function newDateTimeZoneFromInstance($instance) : \DateTimeZone
+    {
+        try {
+            $tzClass = CalendarType::dateTimeZone();
+            $tz = $tzClass::{'createFromInstance'}($instance);
+
+            $tz = $tz ?: null;
+        }
+        catch ( \Throwable $e ) {
+            throw new LogicException(
+                'Invalid `instance`: ' . Lib::debug_dump($instance),
+                -1, $e
+            );
+        }
+
+        if (null === $tz) {
+            throw new LogicException(
+                'Invalid `instance`: ' . Lib::debug_dump($instance),
+                -1
+            );
+        }
+
+        return $tz;
+    }
+
+
+    public function newDateInterval($duration = 'P0D') : \DateInterval
+    {
+        try {
+            $dtiClass = CalendarType::dateInterval();
+            $dti = new $dtiClass($duration);
+        }
+        catch ( \Throwable $e ) {
+            throw new LogicException(
+                'Invalid input: ' . Lib::debug_dump([ $duration ]),
+                -1, $e
+            );
+        }
+
+        return $dti;
+    }
+
+    protected function newDateIntervalFromInstance($instance)
+    {
+        try {
+            $dtiClass = CalendarType::dateInterval();
+            $dti = $dtiClass::{'createFromInstance'}($instance);
+
+            // > gzhegow, convert false to null
+            $dti = $dti ?: null;
+        }
+        catch ( \Throwable $e ) {
+            throw new LogicException(
+                'Invalid `instance`: ' . Lib::debug_dump($instance),
+                -1, $e
+            );
+        }
+
+        if (null === $dti) {
+            throw new LogicException(
+                'Invalid `instance`: ' . Lib::debug_dump($instance),
+                -1
+            );
+        }
+
+        return $dti;
+    }
+
+    protected function newDateIntervalFromDateString($dtiString)
+    {
+        try {
+            $dtiClass = CalendarType::dateInterval();
+            $dti = $dtiClass::{'createFromDateString'}($dtiString);
+
+            // > gzhegow, convert false to null
+            $dti = $dti ?: null;
+        }
+        catch ( \Throwable $e ) {
+            throw new LogicException(
+                'Invalid `dtiString`: ' . Lib::debug_dump($dtiString),
+                -1, $e
+            );
+        }
+
+        if (null === $dti) {
+            throw new LogicException(
+                'Invalid `dtiString`: ' . Lib::debug_dump($dtiString),
+                -1
+            );
+        }
+
+        return $dti;
+    }
+
+
     public function dateTime($datetime = 'now', $timezone = null) : \DateTime
     {
         if ('' === $timezone) {
             $timezone = $this->timezoneDefault;
 
-        } elseif ($timezone) {
-            $timezone = $this->parseDateTimeZone($timezone);
+        } elseif (null !== $timezone) {
+            if (null === ($timezone = $this->parseDateTimeZone($timezone))) {
+                throw new LogicException(
+                    'Invalid `timezone` passed: ' . Lib::debug_dump($timezone)
+                );
+            }
         }
 
         $dt = $this->newDateTime($datetime, $timezone);
@@ -412,8 +430,12 @@ class Calendar implements CalendarInterface
         if ('' === $timezone) {
             $timezone = $this->timezoneDefault;
 
-        } elseif ($timezone) {
-            $timezone = $this->parseDateTimeZone($timezone);
+        } elseif (null !== $timezone) {
+            if (null === ($timezone = $this->parseDateTimeZone($timezone))) {
+                throw new LogicException(
+                    'Invalid `timezone` passed: ' . Lib::debug_dump($timezone)
+                );
+            }
         }
 
         $dt = $this->newDateTimeImmutable($datetime, $timezone);
@@ -425,9 +447,6 @@ class Calendar implements CalendarInterface
     {
         if ('' === $timezone) {
             $timezone = $this->timezoneDefault;
-
-        } elseif ($timezone) {
-            $timezone = $this->parseDateTimeZone($timezone);
         }
 
         $tz = $this->newDateTimeZone($timezone);
@@ -499,8 +518,8 @@ class Calendar implements CalendarInterface
             }
         }
 
-        throw new \LogicException(
-            'UNSUPPORTED_DATE_TIME: ' . Lib::php_dump($datetime),
+        throw new LogicException(
+            'UNSUPPORTED_DATE_TIME: ' . Lib::debug_dump($datetime),
             -1
         );
     }
@@ -550,13 +569,13 @@ class Calendar implements CalendarInterface
             }
         }
 
-        throw new \LogicException(
-            'UNSUPPORTED_DATE_TIME: ' . Lib::php_dump($datetime)
+        throw new LogicException(
+            'UNSUPPORTED_DATE_TIME: ' . Lib::debug_dump($datetime)
         );
     }
 
 
-    public function parseDateTimeFromNum($num, $timezoneIfParsed = null) : ?\DateTime
+    protected function parseDateTimeFromNum($num, $timezoneIfParsed = null) : ?\DateTime
     {
         if (null === ($_num = Lib::parse_num($num))) {
             return null;
@@ -584,7 +603,7 @@ class Calendar implements CalendarInterface
         return $dt;
     }
 
-    public function parseDateTimeFromString($datetime, $timezoneIfParsed = null) : ?\DateTime
+    protected function parseDateTimeFromString($datetime, $timezoneIfParsed = null) : ?\DateTime
     {
         if (null === ($_string = Lib::parse_astring($datetime))) {
             return null;
@@ -602,7 +621,7 @@ class Calendar implements CalendarInterface
         return $dt;
     }
 
-    public function parseDateTimeFromStringByFormat(string $format, $datetime, $timezoneIfParsed = null) : ?\DateTime
+    protected function parseDateTimeFromStringByFormat(string $format, $datetime, $timezoneIfParsed = null) : ?\DateTime
     {
         if (null === ($_string = Lib::parse_astring($datetime))) {
             return null;
@@ -643,13 +662,13 @@ class Calendar implements CalendarInterface
             }
         }
 
-        throw new \LogicException(
-            'UNSUPPORTED_DATE_TIME_ZONE: ' . Lib::php_dump($timezone),
+        throw new LogicException(
+            'UNSUPPORTED_DATE_TIME_ZONE: ' . Lib::debug_dump($timezone),
             -1
         );
     }
 
-    public function parseDateTimeZoneFromStringTimezone($timezone) : ?\DateTimeZone
+    protected function parseDateTimeZoneFromStringTimezone($timezone) : ?\DateTimeZone
     {
         if (null === ($_timezone = Lib::parse_astring($timezone))) {
             return null;
@@ -708,13 +727,13 @@ class Calendar implements CalendarInterface
             }
         }
 
-        throw new \LogicException(
-            'UNSUPPORTED_DATE_INTERVAL: ' . Lib::php_dump($interval),
+        throw new LogicException(
+            'UNSUPPORTED_DATE_INTERVAL: ' . Lib::debug_dump($interval),
             -1
         );
     }
 
-    public function parseDateIntervalFromInt($int) : ?\DateInterval
+    protected function parseDateIntervalFromInt($int) : ?\DateInterval
     {
         if (null === ($_int = Lib::parse_int($int))) {
             return null;
@@ -747,7 +766,7 @@ class Calendar implements CalendarInterface
         return $interval;
     }
 
-    public function parseDateIntervalFromStringDuration($duration) : ?\DateInterval
+    protected function parseDateIntervalFromStringDuration($duration) : ?\DateInterval
     {
         if (null === ($_string = Lib::parse_astring($duration))) {
             return null;
@@ -763,7 +782,7 @@ class Calendar implements CalendarInterface
         return $interval;
     }
 
-    public function parseDateIntervalFromStringByFormat(string $format, $datetime) : ?\DateInterval
+    protected function parseDateIntervalFromStringByFormat(string $format, $datetime) : ?\DateInterval
     {
         if (null === ($_string = Lib::parse_astring($datetime))) {
             return null;
@@ -785,7 +804,7 @@ class Calendar implements CalendarInterface
         return $interval;
     }
 
-    public function parseDateIntervalFromStringDatetime($datetime) : ?\DateInterval
+    protected function parseDateIntervalFromStringDatetime($datetime) : ?\DateInterval
     {
         if (null === ($_string = Lib::parse_astring($datetime))) {
             return null;

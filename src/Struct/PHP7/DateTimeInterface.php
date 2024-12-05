@@ -1,6 +1,6 @@
 <?php
 
-namespace Gzhegow\Calendar\Struct;
+namespace Gzhegow\Calendar\Struct\PHP7;
 
 
 interface DateTimeInterface extends \DateTimeInterface

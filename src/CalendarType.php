@@ -2,13 +2,8 @@
 
 namespace Gzhegow\Calendar;
 
-use Gzhegow\Calendar\Struct\DateTime;
-use Gzhegow\Calendar\Struct\DateInterval;
-use Gzhegow\Calendar\Struct\DateTimeZone;
-use Gzhegow\Calendar\Struct\DateTimeImmutable;
 
-
-class Type
+class CalendarType
 {
     /**
      * @return class-string<\DateInterval>
@@ -48,7 +43,9 @@ class Type
      */
     protected function _dateInterval() : string
     {
-        return DateInterval::class;
+        return PHP_VERSION_ID >= 80000
+            ? \Gzhegow\Calendar\Struct\PHP8\DateInterval::class
+            : \Gzhegow\Calendar\Struct\PHP7\DateInterval::class;
     }
 
     /**
@@ -56,7 +53,9 @@ class Type
      */
     protected function _dateTime() : string
     {
-        return DateTime::class;
+        return PHP_VERSION_ID >= 80000
+            ? \Gzhegow\Calendar\Struct\PHP8\DateTime::class
+            : \Gzhegow\Calendar\Struct\PHP7\DateTime::class;
     }
 
     /**
@@ -64,7 +63,9 @@ class Type
      */
     protected function _dateTimeImmutable() : string
     {
-        return DateTimeImmutable::class;
+        return PHP_VERSION_ID >= 80000
+            ? \Gzhegow\Calendar\Struct\PHP8\DateTimeImmutable::class
+            : \Gzhegow\Calendar\Struct\PHP7\DateTimeImmutable::class;
     }
 
     /**
@@ -72,7 +73,9 @@ class Type
      */
     protected function _dateTimeZone() : string
     {
-        return DateTimeZone::class;
+        return PHP_VERSION_ID >= 80000
+            ? \Gzhegow\Calendar\Struct\PHP8\DateTimeZone::class
+            : \Gzhegow\Calendar\Struct\PHP7\DateTimeZone::class;
     }
 
 
@@ -81,7 +84,9 @@ class Type
      */
     public static function getInstance() : self
     {
-        return static::$instance = static::$instance ?? new static();
+        return static::$instance = null
+            ?? static::$instance
+            ?? new static();
     }
 
     public static function setInstance(self $instance) : void

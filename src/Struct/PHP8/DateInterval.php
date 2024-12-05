@@ -1,8 +1,9 @@
 <?php
 
-namespace Gzhegow\Calendar\Struct;
+namespace Gzhegow\Calendar\Struct\PHP8;
 
 use Gzhegow\Calendar\Lib;
+use Gzhegow\Calendar\Exception\LogicException;
 
 
 class DateInterval extends \DateInterval implements
@@ -18,9 +19,9 @@ class DateInterval extends \DateInterval implements
         }
 
         if (! is_a($object, \DateInterval::class)) {
-            throw new \LogicException('The `object` should be instance of: '
+            throw new LogicException('The `object` should be instance of: '
                 . \DateInterval::class
-                . ' / ' . Lib::php_dump($object)
+                . ' / ' . Lib::debug_dump($object)
             );
         }
 
@@ -39,8 +40,8 @@ class DateInterval extends \DateInterval implements
     public static function createFromDateString($datetime)
     {
         if (null === Lib::parse_astring($datetime)) {
-            throw  new \LogicException(
-                'The `datetime` should be a non-empty string: ' . Lib::php_dump($datetime)
+            throw new LogicException(
+                'The `datetime` should be a non-empty string: ' . Lib::debug_dump($datetime)
             );
         }
 
@@ -56,7 +57,7 @@ class DateInterval extends \DateInterval implements
     }
 
 
-    public function jsonSerialize() // : mixed
+    public function jsonSerialize() : mixed
     {
         // $dti = new \DateInterval();
         // var_dump($dti, $var = json_encode($dti));

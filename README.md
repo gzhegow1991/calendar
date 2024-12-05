@@ -2,25 +2,10 @@
 
 ## Что это
 
-В PHP работать с датами это сущий ад.
-Каждое действие требует преобразовывать к дате в три-четыре строки, каждое может выбросить исключение, каждое светится в PHPStorm как предупреждение...
+Этот пакет сделан, чтобы сделать работу с датами более удобной.
 
-Этот пакет сделан, чтобы сделать работу с датами более удобной. Плюс в нем можно посмотреть, как сделать грамотное наследование имеющищегося в коробке PHP ужаса, чтобы этим управлять или добавить своё. 
-
-## Old good times
-
-Сначала ты просто пользуешься классами Date и уверен, что нужно просто "правильно готовить".
-
-Потом ты знакомишься с Immutable, понимаешь, что сложность удваивается, пока не поймешь когда какое нужно выбирать. Начинаешь приводить одно в другое, и натыкаться на заботливо расставленные мины в виде исключений и обратной совместимости версий PHP.
-
-Потом знакомишься с фреймворком Laravel, где используется пакет Carbon на уровне ядра, который на инициализацию со своими регулярками тратит 60 мс. Хочешь избавиться от него, и не можешь. Потом сможешь)
-
-Когда наконец избавился, хочешь, чтобы в API твоя дата выглядела так, чтобы Frontend её мог без проблем парсить, и чтобы при этом не пришлось настраивать целый `symfony/serializer`.
-Начинаешь наследоваться от имеющихся классов и понимаешь, что половина функций по прежнему возвращает встроенные объекты и сериализацию твою игнорирует.
-
-К сожалению, даты совмещают как работу над ними, так и хранение состояния внутри, и постоянно косячат по микросекундам. Нужно быть трижды осторожным, чтобы написать стабильный код.
-
-Это история про то, что ООП это та еще беда... Иногда нужно просто делать как в Javascript - наращивать объекты функционалом, использовать композицию... И тут же понимать, что композиция отвязывает тебя от Структур данных, и привязывает к Поведению. В общем танцы с бубном каждый день.
+- Позволяет передавать в конструкторы дат строки без необходимости создавать объект ради объекта
+- В нем можно посмотреть, как сделать грамотное наследование имеющищегося в коробке PHP ужаса, чтобы этим управлять или добавить своё.
 
 ## Установка
 
@@ -33,15 +18,12 @@ composer require gzhegow/calendar;
 ```php
 <?php
 
-use Gzhegow\Calendar\Lib;
-use Gzhegow\Calendar\Calendar;
-
-
 require_once __DIR__ . '/vendor/autoload.php';
 
 
 // > настраиваем PHP
 ini_set('memory_limit', '32M');
+
 
 // > настраиваем обработку ошибок
 error_reporting(E_ALL);
@@ -50,111 +32,242 @@ set_error_handler(function ($errno, $errstr, $errfile, $errline) {
         throw new \ErrorException($errstr, -1, $errno, $errfile, $errline);
     }
 });
-set_exception_handler(function ($e) {
-    var_dump(Lib::php_dump($e));
-    var_dump($e->getMessage());
-    var_dump(($e->getFile() ?? '{file}') . ': ' . ($e->getLine() ?? '{line}'));
+set_exception_handler(function (\Throwable $e) {
+    $current = $e;
+    do {
+        echo "\n";
+
+        echo \Gzhegow\Calendar\Lib::debug_var_dump($current) . PHP_EOL;
+        echo $current->getMessage() . PHP_EOL;
+
+        foreach ( $e->getTrace() as $traceItem ) {
+            echo "{$traceItem['file']} : {$traceItem['line']}" . PHP_EOL;
+        }
+
+        echo PHP_EOL;
+    } while ( $current = $current->getPrevious() );
 
     die();
 });
 
 
+// > добавляем несколько функция для тестирования
+function _dump($value, ...$values) : void
+{
+    echo \Gzhegow\Calendar\Lib::debug_line([ 'with_ids' => false, 'with_objects' => false ], $value, ...$values);
+}
+
+function _dump_ln($value, ...$values) : void
+{
+    echo \Gzhegow\Calendar\Lib::debug_line([ 'with_ids' => false, 'with_objects' => false ], $value, ...$values) . PHP_EOL;
+}
+
+function _assert_call(\Closure $fn, array $expectResult = [], string $expectOutput = null) : void
+{
+    $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
+
+    $expect = (object) [];
+
+    if (count($expectResult)) {
+        $expect->result = $expectResult[ 0 ];
+    }
+
+    if (null !== $expectOutput) {
+        $expect->output = $expectOutput;
+    }
+
+    $status = \Gzhegow\Calendar\Lib::assert_call($trace, $fn, $expect, $error, STDOUT);
+
+    if (! $status) {
+        throw new \Gzhegow\Calendar\Exception\LogicException();
+    }
+}
+
+
+// >>> ЗАПУСКАЕМ!
+
+// > сначала всегда фабрика
+$factory = new \Gzhegow\Calendar\CalendarFactory();
+
 // > создаем календарь
-$calendar = new Calendar();
+$calendar = $factory->newCalendar();
 
 // > можно изменить классы дат на свои собственные реализации
-// \Gzhegow\Calendar\Type::setInstance(new \Gzhegow\Calendar\Type());
+// $calendarType = new \Gzhegow\Calendar\CalendarType();
+// \Gzhegow\Calendar\CalendarType::setInstance($calendarType);
 
-// > создаем дату
-$tests[ '_calendar_date' ] = $calendar->parseDateTime($datetime = 'now', $formats = null, $timezoneIfParsed = null);
-Lib::assert_true('is_a', [ $tests[ '_calendar_date' ], DateTime::class ]);
 
-// > создаем/распознаем дату
-$tests[ '_calendar_date_immutable' ] = $calendar->parseDateTimeImmutable($datetime = 'now', $formats = null, $timezoneIfParsed = null);
-Lib::assert_true('is_a', [ $tests[ '_calendar_date_immutable' ], DateTimeImmutable::class ]);
+// > TEST
+// > создаем дату, временную зону и интервал
+$fn = function () use ($calendar) {
+    _dump_ln('TEST 1');
 
-// > проводим действия над датой, чтобы убедится что Immutable работает
-$tests[ '_calendar_date_immutable_add' ] = $tests[ '_calendar_date_immutable' ]->add(new \DateInterval('P1D'));
-$tests[ '_calendar_date_immutable_sub' ] = $tests[ '_calendar_date_immutable' ]->sub(new \DateInterval('P1D'));
-$tests[ '_calendar_date_immutable_modify' ] = $tests[ '_calendar_date_immutable' ]->modify('+ 10 hours');
-Lib::assert_true('is_a', [ $tests[ '_calendar_date_immutable_add' ], DateTimeImmutable::class ]);
-Lib::assert_true('is_a', [ $tests[ '_calendar_date_immutable_sub' ], DateTimeImmutable::class ]);
-Lib::assert_true('is_a', [ $tests[ '_calendar_date_immutable_modify' ], DateTimeImmutable::class ]);
-if ($tests[ '_calendar_date_immutable_add' ] === $tests[ '_calendar_date_immutable_sub' ]) throw new \RuntimeException();
-if ($tests[ '_calendar_date_immutable_sub' ] === $tests[ '_calendar_date_immutable_modify' ]) throw new \RuntimeException();
-if ($tests[ '_calendar_date_immutable_add' ] === $tests[ '_calendar_date_immutable_modify' ]) throw new \RuntimeException();
+    $result = $calendar->dateTime($datetime = 'now', $timezone = null);
+    _dump_ln(get_class($result));
 
-// > создает дату "сейчас", просто alias для _calendar_date($date)
-$tests[ '_calendar_now' ] = $calendar->now($timezone = null);
-$tests[ '_calendar_now_immutable' ] = $calendar->nowImmutable($timezone = null);
-Lib::assert_true('is_a', [ $tests[ '_calendar_now' ], DateTime::class ]);
-Lib::assert_true('is_a', [ $tests[ '_calendar_now_immutable' ], DateTimeImmutable::class ]);
+    $result = $calendar->dateTimeImmutable($datetime = 'now', $timezone = null);
+    _dump_ln(get_class($result));
 
-// > создает/распознает временную зону
-$tests[ '_calendar_timezone' ] = $calendar->parseDateTimeZone($timezone = 'UTC');
-Lib::assert_true('is_a', [ $tests[ '_calendar_timezone' ], DateTimeZone::class ]);
-Lib::assert_true(function () use ($tests) {
-    return 'UTC' === $tests[ '_calendar_timezone' ]->getName();
-});
+    $result = $calendar->dateTimeZone($timezone = 'UTC');
+    _dump_ln(get_class($result));
 
-// > создает/распознает интервал
-$tests[ '_calendar_interval' ] = $calendar->parseDateInterval($interval = 'P0D', $formats = null);
-Lib::assert_true('is_a', [ $tests[ '_calendar_interval' ], DateInterval::class ]);
-Lib::assert_true(function () use ($tests) {
-    return 'P0D' === $tests[ '_calendar_interval' ]->jsonSerialize();
-});
+    $result = $calendar->dateInterval($duration = 'P1D');
+    _dump_ln(get_class($result));
 
-// > возвращает разницу между датами
-$now = $calendar->nowImmutable();
-$past = $now->modify('- 10 hours');
-$tests[ '_calendar_diff' ] = $calendar->diff($now, $past, $absolute = false); // : ?DateInterval;
-Lib::assert_true('is_a', [ $tests[ '_calendar_diff' ], DateInterval::class ]);
-Lib::assert_true(function () use ($tests) {
-    return 'PT10H' === $tests[ '_calendar_diff' ]->jsonSerialize();
-});
+    _dump('');
+};
+_assert_call($fn, [], PHP_VERSION_ID >= 80000
+    ? <<<HEREDOC
+"TEST 1"
+"Gzhegow\Calendar\Struct\PHP8\DateTime"
+"Gzhegow\Calendar\Struct\PHP8\DateTimeImmutable"
+"Gzhegow\Calendar\Struct\PHP8\DateTimeZone"
+"Gzhegow\Calendar\Struct\PHP8\DateInterval"
+""
+HEREDOC
+    : <<<HEREDOC
+"TEST 1"
+"Gzhegow\Calendar\Struct\PHP7\DateTime"
+"Gzhegow\Calendar\Struct\PHP7\DateTimeImmutable"
+"Gzhegow\Calendar\Struct\PHP7\DateTimeZone"
+"Gzhegow\Calendar\Struct\PHP7\DateInterval"
+""
+HEREDOC
+);
 
-var_dump(json_encode($tests, JSON_PRETTY_PRINT));
 
-// string(730) "{
-//     "_calendar_date": "2024-05-09T19:47:39.074+03:00",
-//     "_calendar_date_immutable": "2024-05-09T19:47:39.074+03:00",
-//     "_calendar_date_immutable_add": "2024-05-10T19:47:39.074+03:00",
-//     "_calendar_date_immutable_sub": "2024-05-08T19:47:39.074+03:00",
-//     "_calendar_date_immutable_modify": "2024-05-10T05:47:39.074+03:00",
-//     "_calendar_now": "2024-05-09T19:47:39.074+03:00",
-//     "_calendar_now_immutable": "2024-05-09T19:47:39.074+03:00",
-//     "_calendar_timezone": "UTC",
-//     "_calendar_interval": "P0D",
-//     "_calendar_diff": "PT10H"
-// }"
+// > TEST
+// > распознаем дату, временную зону и интервал
+$fn = function () use ($calendar) {
+    _dump_ln('TEST 2');
 
-$dump = [];
-foreach ( $tests as $i => $test ) {
-    $dump[ $i ] = Lib::php_dump($test);
-}
-var_dump($dump);
+    $result = $calendar->parseDateTime($datetime = '1970-01-01 00:00:00', $formats = [ 'Y-m-d H:i:s' ], $timezoneIfParsed = 'UTC');
+    _dump_ln(get_class($result));
 
-// array(13) {
-//   ["_calendar_date"]=>
-//   string(48) "{ object(Gzhegow\Calendar\Struct\DateTime # 8) }"
-//   ["_calendar_date_immutable"]=>
-//   string(57) "{ object(Gzhegow\Calendar\Struct\DateTimeImmutable # 9) }"
-//   ["_calendar_date_immutable_add"]=>
-//   string(58) "{ object(Gzhegow\Calendar\Struct\DateTimeImmutable # 10) }"
-//   ["_calendar_date_immutable_sub"]=>
-//   string(58) "{ object(Gzhegow\Calendar\Struct\DateTimeImmutable # 11) }"
-//   ["_calendar_date_immutable_modify"]=>
-//   string(57) "{ object(Gzhegow\Calendar\Struct\DateTimeImmutable # 7) }"
-//   ["_calendar_now"]=>
-//   string(49) "{ object(Gzhegow\Calendar\Struct\DateTime # 12) }"
-//   ["_calendar_now_immutable"]=>
-//   string(58) "{ object(Gzhegow\Calendar\Struct\DateTimeImmutable # 13) }"
-//   string(58) "{ object(Gzhegow\Calendar\Struct\DateTimeImmutable # 15) }"
-//   ["_calendar_timezone"]=>
-//   string(53) "{ object(Gzhegow\Calendar\Struct\DateTimeZone # 16) }"
-//   ["_calendar_interval"]=>
-//   string(53) "{ object(Gzhegow\Calendar\Struct\DateInterval # 17) }"
-//   ["_calendar_diff"]=>
-//   string(53) "{ object(Gzhegow\Calendar\Struct\DateInterval # 20) }"
-// }
+    $result = $calendar->parseDateTimeImmutable($datetime = '1970-01-01 00:00:00', $formats = [ 'Y-m-d H:i:s' ], $timezoneIfParsed = 'UTC');
+    _dump_ln(get_class($result));
+
+    $result = $calendar->parseDateTimeZone($timezone = 'UTC');
+    _dump_ln(get_class($result));
+
+    $result = $calendar->parseDateInterval($interval = 'P0D', $formats = null);
+    _dump_ln(get_class($result));
+
+    _dump('');
+};
+_assert_call($fn, [], PHP_VERSION_ID >= 80000
+    ? <<<HEREDOC
+"TEST 2"
+"Gzhegow\Calendar\Struct\PHP8\DateTime"
+"Gzhegow\Calendar\Struct\PHP8\DateTimeImmutable"
+"Gzhegow\Calendar\Struct\PHP8\DateTimeZone"
+"Gzhegow\Calendar\Struct\PHP8\DateInterval"
+""
+HEREDOC
+    : <<<HEREDOC
+"TEST 2"
+"Gzhegow\Calendar\Struct\PHP7\DateTime"
+"Gzhegow\Calendar\Struct\PHP7\DateTimeImmutable"
+"Gzhegow\Calendar\Struct\PHP7\DateTimeZone"
+"Gzhegow\Calendar\Struct\PHP7\DateInterval"
+""
+HEREDOC
+);
+
+
+// > TEST
+// > проводим действия над датой
+$fn = function () use ($calendar) {
+    _dump_ln('TEST 3');
+
+    $dt = $calendar->parseDateTimeImmutable($datetime = 'now', $formats = null, $timezoneIfParsed = null);
+    _dump_ln(get_class($dt));
+
+    $result = $dt->modify('+ 10 hours');
+    _dump_ln(get_class($result));
+    $result = $result->diff($dt);
+    _dump_ln(get_class($result));
+    _dump_ln(json_encode($result));
+
+    $result = $dt->add(new \DateInterval('P1D'));
+    _dump_ln(get_class($result));
+    $result = $result->diff($dt);
+    _dump_ln(get_class($result));
+    _dump_ln(json_encode($result));
+    _dump_ln((bool) $result->invert);
+
+    $result = $dt->sub(new \DateInterval('P1D'));
+    _dump_ln(get_class($result));
+    $result = $result->diff($dt);
+    _dump_ln(get_class($result));
+    _dump_ln(json_encode($result));
+    _dump_ln((bool) $result->invert);
+
+    _dump('');
+};
+_assert_call($fn, [], PHP_VERSION_ID >= 80000
+    ? <<<HEREDOC
+"TEST 3"
+"Gzhegow\Calendar\Struct\PHP8\DateTimeImmutable"
+"Gzhegow\Calendar\Struct\PHP8\DateTimeImmutable"
+"Gzhegow\Calendar\Struct\PHP8\DateInterval"
+""PT10H""
+"Gzhegow\Calendar\Struct\PHP8\DateTimeImmutable"
+"Gzhegow\Calendar\Struct\PHP8\DateInterval"
+""P1D""
+TRUE
+"Gzhegow\Calendar\Struct\PHP8\DateTimeImmutable"
+"Gzhegow\Calendar\Struct\PHP8\DateInterval"
+""P1D""
+FALSE
+""
+HEREDOC
+    : <<<HEREDOC
+"TEST 3"
+"Gzhegow\Calendar\Struct\PHP7\DateTimeImmutable"
+"Gzhegow\Calendar\Struct\PHP7\DateTimeImmutable"
+"Gzhegow\Calendar\Struct\PHP7\DateInterval"
+""PT10H""
+"Gzhegow\Calendar\Struct\PHP7\DateTimeImmutable"
+"Gzhegow\Calendar\Struct\PHP7\DateInterval"
+""P1D""
+TRUE
+"Gzhegow\Calendar\Struct\PHP7\DateTimeImmutable"
+"Gzhegow\Calendar\Struct\PHP7\DateInterval"
+""P1D""
+FALSE
+""
+HEREDOC
+);
+
+
+// > TEST
+// > считаем разницу времени
+$fn = function () use ($calendar) {
+    _dump_ln('TEST 4');
+
+    $now = $calendar->nowImmutable();
+
+    $past = $now->modify('- 10 hours');
+
+    $result = $calendar->diff($now, $past, $absolute = false);
+    _dump_ln(get_class($result));
+    _dump_ln('"PT10H"' === json_encode($result));
+
+    _dump('');
+};
+_assert_call($fn, [], PHP_VERSION_ID >= 80000
+    ? <<<HEREDOC
+"TEST 4"
+"Gzhegow\Calendar\Struct\PHP8\DateInterval"
+TRUE
+""
+HEREDOC
+    : <<<HEREDOC
+"TEST 4"
+"Gzhegow\Calendar\Struct\PHP7\DateInterval"
+TRUE
+""
+HEREDOC
+);
 ```

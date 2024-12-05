@@ -1,8 +1,9 @@
 <?php
 
-namespace Gzhegow\Calendar\Struct;
+namespace Gzhegow\Calendar\Struct\PHP8;
 
 use Gzhegow\Calendar\Lib;
+use Gzhegow\Calendar\Exception\LogicException;
 
 
 class DateTimeZone extends \DateTimeZone implements
@@ -18,9 +19,9 @@ class DateTimeZone extends \DateTimeZone implements
         }
 
         if (! is_a($object, \DateTimeZone::class)) {
-            throw new \LogicException('The `object` should be instance of: '
+            throw new LogicException('The `object` should be instance of: '
                 . \DateTimeZone::class
-                . ' / ' . Lib::php_dump($object)
+                . ' / ' . Lib::debug_dump($object)
             );
         }
 
@@ -34,7 +35,7 @@ class DateTimeZone extends \DateTimeZone implements
     }
 
 
-    public function jsonSerialize() // : mixed
+    public function jsonSerialize() : mixed
     {
         // var_dump($tz, $var = json_encode($tz));
         //

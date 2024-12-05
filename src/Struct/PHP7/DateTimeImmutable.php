@@ -1,10 +1,12 @@
 <?php
 
-namespace Gzhegow\Calendar\Struct;
+namespace Gzhegow\Calendar\Struct\PHP7;
 
 use Gzhegow\Calendar\Lib;
-use Gzhegow\Calendar\Type;
+use Gzhegow\Calendar\CalendarType;
 use Gzhegow\Calendar\Calendar;
+use Gzhegow\Calendar\Exception\LogicException;
+use Gzhegow\Calendar\Exception\RuntimeException;
 
 
 class DateTimeImmutable extends \DateTimeImmutable implements DateTimeInterface,
@@ -20,9 +22,9 @@ class DateTimeImmutable extends \DateTimeImmutable implements DateTimeInterface,
         }
 
         if (! is_a($object, \DateTimeInterface::class)) {
-            throw new \LogicException('The `object` should be instance of: '
+            throw new LogicException('The `object` should be instance of: '
                 . \DateTimeInterface::class
-                . ' / ' . Lib::php_dump($object)
+                . ' / ' . Lib::debug_dump($object)
             );
         }
 
@@ -35,7 +37,7 @@ class DateTimeImmutable extends \DateTimeImmutable implements DateTimeInterface,
             ;
         }
         catch ( \Throwable $e ) {
-            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+            throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
         }
 
         return $dt;
@@ -48,22 +50,22 @@ class DateTimeImmutable extends \DateTimeImmutable implements DateTimeInterface,
     public static function createFromFormat($format, $datetime, $timezone = null)
     {
         if (null === Lib::parse_astring($format)) {
-            throw  new \LogicException(
-                'The `format` should be a non-empty string: ' . Lib::php_dump($format)
+            throw new LogicException(
+                'The `format` should be a non-empty string: ' . Lib::debug_dump($format)
             );
         }
 
         if (null === Lib::parse_astring($datetime)) {
-            throw  new \LogicException(
-                'The `datetime` should be a non-empty string: ' . Lib::php_dump($datetime)
+            throw new LogicException(
+                'The `datetime` should be a non-empty string: ' . Lib::debug_dump($datetime)
             );
         }
 
         if (null !== $timezone) {
             if (! is_a($timezone, \DateTimeZone::class)) {
-                throw new \LogicException('The `object` should be instance of: '
+                throw new LogicException('The `object` should be instance of: '
                     . \DateTimeZone::class
-                    . ' / ' . Lib::php_dump($timezone)
+                    . ' / ' . Lib::debug_dump($timezone)
                 );
             }
         }
@@ -79,7 +81,7 @@ class DateTimeImmutable extends \DateTimeImmutable implements DateTimeInterface,
             ;
         }
         catch ( \Throwable $e ) {
-            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+            throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
         }
 
         return $dt;
@@ -90,7 +92,7 @@ class DateTimeImmutable extends \DateTimeImmutable implements DateTimeInterface,
     {
         $dti = parent::diff($targetObject, $absolute);
 
-        $dtiClass = Type::dateInterval();
+        $dtiClass = CalendarType::dateInterval();
         $dti = $dtiClass::{'createFromInstance'}($dti);
 
         return $dti;

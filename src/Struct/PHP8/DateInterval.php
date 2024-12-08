@@ -2,7 +2,7 @@
 
 namespace Gzhegow\Calendar\Struct\PHP8;
 
-use Gzhegow\Calendar\Lib;
+use Gzhegow\Calendar\Lib\Lib;
 use Gzhegow\Calendar\Exception\LogicException;
 
 
@@ -19,9 +19,11 @@ class DateInterval extends \DateInterval implements
         }
 
         if (! is_a($object, \DateInterval::class)) {
-            throw new LogicException('The `object` should be instance of: '
-                . \DateInterval::class
-                . ' / ' . Lib::debug_dump($object)
+            throw new LogicException(
+                [
+                    'The `object` should be instance of: ' . \DateInterval::class,
+                    $object,
+                ]
             );
         }
 
@@ -41,7 +43,10 @@ class DateInterval extends \DateInterval implements
     {
         if (null === Lib::parse_astring($datetime)) {
             throw new LogicException(
-                'The `datetime` should be a non-empty string: ' . Lib::debug_dump($datetime)
+                [
+                    'The `datetime` should be a non-empty string',
+                    $datetime,
+                ]
             );
         }
 

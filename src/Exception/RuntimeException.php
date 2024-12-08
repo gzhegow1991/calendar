@@ -2,6 +2,8 @@
 
 namespace Gzhegow\Calendar\Exception;
 
+use Gzhegow\Calendar\Lib\Lib;
+
 
 class RuntimeException extends \RuntimeException
     implements ExceptionInterface
@@ -32,7 +34,7 @@ class RuntimeException extends \RuntimeException
 
     public function __construct(...$errors)
     {
-        foreach ( \Gzhegow\Calendar\Lib::php_throwable_args(...$errors) as $k => $v ) {
+        foreach ( Lib::php_throwable_args(...$errors) as $k => $v ) {
             if (property_exists($this, $k)) {
                 $this->{$k} = $v;
             }

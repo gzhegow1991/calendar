@@ -6,9 +6,9 @@ namespace Gzhegow\Calendar;
 interface CalendarAwareInterface
 {
     /**
-     * @param null|CalendarInterface $calendar
+     * @param null|CalendarFacadeInterface $calendar
      *
      * @return void
      */
-    public function setCalendar(?CalendarInterface $calendar) : void;
+    public function setCalendar(?CalendarFacadeInterface $calendar) : void;
 }

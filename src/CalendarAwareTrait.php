@@ -6,12 +6,12 @@ namespace Gzhegow\Calendar;
 trait CalendarAwareTrait
 {
     /**
-     * @var Calendar
+     * @var CalendarFacade
      */
     protected $calendar;
 
 
-    public function setCalendar(?CalendarInterface $calendar) : void
+    public function setCalendar(?CalendarFacadeInterface $calendar) : void
     {
         $this->calendar = $calendar;
     }

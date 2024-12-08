@@ -1,5 +1,8 @@
 <?php
 
+use Gzhegow\Calendar\Calendar;
+
+
 require_once __DIR__ . '/vendor/autoload.php';
 
 
@@ -15,11 +18,14 @@ set_error_handler(function ($errno, $errstr, $errfile, $errline) {
     }
 });
 set_exception_handler(function (\Throwable $e) {
+    // require_once getenv('COMPOSER_HOME') . '/vendor/autoload.php';
+    // dd();
+
     $current = $e;
     do {
         echo "\n";
 
-        echo \Gzhegow\Calendar\Lib::debug_var_dump($current) . PHP_EOL;
+        echo \Gzhegow\Calendar\Lib\Lib::debug_var_dump($current) . PHP_EOL;
         echo $current->getMessage() . PHP_EOL;
 
         foreach ( $e->getTrace() as $traceItem ) {
@@ -34,14 +40,14 @@ set_exception_handler(function (\Throwable $e) {
 
 
 // > добавляем несколько функция для тестирования
-function _dump($value, ...$values) : void
+function _dump(...$values) : void
 {
-    echo \Gzhegow\Calendar\Lib::debug_line([ 'with_ids' => false, 'with_objects' => false ], $value, ...$values);
+    echo implode(' | ', array_map([ \Gzhegow\Calendar\Lib\Lib::class, 'debug_value' ], $values));
 }
 
-function _dump_ln($value, ...$values) : void
+function _dump_ln(...$values) : void
 {
-    echo \Gzhegow\Calendar\Lib::debug_line([ 'with_ids' => false, 'with_objects' => false ], $value, ...$values) . PHP_EOL;
+    echo implode(' | ', array_map([ \Gzhegow\Calendar\Lib\Lib::class, 'debug_value' ], $values)) . PHP_EOL;
 }
 
 function _assert_call(\Closure $fn, array $expectResult = [], string $expectOutput = null) : void
@@ -58,7 +64,7 @@ function _assert_call(\Closure $fn, array $expectResult = [], string $expectOutp
         $expect->output = $expectOutput;
     }
 
-    $status = \Gzhegow\Calendar\Lib::assert_call($trace, $fn, $expect, $error, STDOUT);
+    $status = \Gzhegow\Calendar\Lib\Lib::assert_call($trace, $fn, $expect, $error, STDOUT);
 
     if (! $status) {
         throw new \Gzhegow\Calendar\Exception\LogicException();
@@ -71,12 +77,52 @@ function _assert_call(\Closure $fn, array $expectResult = [], string $expectOutp
 // > сначала всегда фабрика
 $factory = new \Gzhegow\Calendar\CalendarFactory();
 
-// > создаем календарь
-$calendar = $factory->newCalendar();
+// > создаем конфигурацию
+$config = new \Gzhegow\Calendar\CalendarConfig();
+$config->configure(function (\Gzhegow\Calendar\CalendarConfig $config) {
+    // > можно указать форматы для разбора даты, если таковые не переданы прямо в функцию
+    $config->parser->parseDateTimeFormatsDefault = [
+        Calendar::FORMAT_SQL,
+        Calendar::FORMAT_JAVASCRIPT,
+    ];
+    // > можно указать форматы для разбора интервалов, если таковые не переданы прямо в функцию
+    $config->parser->parseDateIntervalFormatsDefault = [
+        Calendar::FORMAT_SQL_TIME,
+    ];
+
+    // > можно указать "дату по-умолчанию", которая будет создана, если не передать аргументов вовсе
+    $config->manager->dateTimeDefault = '1970-01-01 midnight';
+    // > можно указать "временную зону по-умолчанию", которая будет установлена, если при разборе даты не удалось определить временную зону
+    $config->manager->dateTimeZoneDefault = 'Europe/Minsk';
+    // > можно указать "интервал по-умолчанию", который будет создаваться, если не передать аргументов
+    $config->manager->dateIntervalDefault = 'P0D';
+
+    // > использовать ли INTL, если такое расширение подключено (в целях тестирования установлено в FALSE)
+    $config->formatter->useIntl = false;
+});
 
 // > можно изменить классы дат на свои собственные реализации
 // $calendarType = new \Gzhegow\Calendar\CalendarType();
 // \Gzhegow\Calendar\CalendarType::setInstance($calendarType);
+
+// > создаем парсер
+$parser = new \Gzhegow\Calendar\CalendarParser($factory, $config->parser);
+
+// > создаем менеджер
+$manager = new \Gzhegow\Calendar\CalendarManager($factory, $parser, $config->manager);
+
+// > создаем форматтер
+$formatter = new \Gzhegow\Calendar\CalendarFormatter($factory, $config->formatter);
+
+// > создаем фасад
+$calendar = $factory->newFacade(
+    $parser,
+    $manager,
+    $formatter
+);
+
+// > сохраняем фасад статически (чтобы вызывать без привязки к контейнеру)
+Calendar::setFacade($calendar);
 
 
 // > TEST
@@ -84,35 +130,58 @@ $calendar = $factory->newCalendar();
 $fn = function () use ($calendar) {
     _dump_ln('TEST 1');
 
-    $result = $calendar->dateTime($datetime = 'now', $timezone = null);
-    _dump_ln(get_class($result));
+    $result = $calendar->dateTime($datetime = '', $timezone = null);
+    _dump_ln($result, json_encode($result));
 
-    $result = $calendar->dateTimeImmutable($datetime = 'now', $timezone = null);
-    _dump_ln(get_class($result));
+    $result = $calendar->dateTime($datetime = '1970-01-01 00:00:00', $timezone = null);
+    _dump_ln($result, json_encode($result));
+
+
+    $result = $calendar->dateTimeImmutable($datetime = '', $timezone = null);
+    _dump_ln($result, json_encode($result));
+
+    $result = $calendar->dateTimeImmutable($datetime = '1970-01-01 00:00:00', $timezone = null);
+    _dump_ln($result, json_encode($result));
+
+
+    $result = $calendar->dateTimeZone($timezone = '');
+    _dump_ln($result, json_encode($result));
 
     $result = $calendar->dateTimeZone($timezone = 'UTC');
-    _dump_ln(get_class($result));
+    _dump_ln($result, json_encode($result));
+
+
+    $result = $calendar->dateInterval($duration = '');
+    _dump_ln($result, json_encode($result));
 
     $result = $calendar->dateInterval($duration = 'P1D');
-    _dump_ln(get_class($result));
+    _dump_ln($result, json_encode($result));
 
     _dump('');
 };
 _assert_call($fn, [], PHP_VERSION_ID >= 80000
     ? <<<HEREDOC
 "TEST 1"
-"Gzhegow\Calendar\Struct\PHP8\DateTime"
-"Gzhegow\Calendar\Struct\PHP8\DateTimeImmutable"
-"Gzhegow\Calendar\Struct\PHP8\DateTimeZone"
-"Gzhegow\Calendar\Struct\PHP8\DateInterval"
+{ object # Gzhegow\Calendar\Struct\PHP8\DateTime } | ""1970-01-01T00:00:00.000+03:00""
+{ object # Gzhegow\Calendar\Struct\PHP8\DateTime } | ""1970-01-01T00:00:00.000+03:00""
+{ object # Gzhegow\Calendar\Struct\PHP8\DateTimeImmutable } | ""1970-01-01T00:00:00.000+03:00""
+{ object # Gzhegow\Calendar\Struct\PHP8\DateTimeImmutable } | ""1970-01-01T00:00:00.000+03:00""
+{ object # Gzhegow\Calendar\Struct\PHP8\DateTimeZone } | ""Europe\/Minsk""
+{ object # Gzhegow\Calendar\Struct\PHP8\DateTimeZone } | ""UTC""
+{ object # Gzhegow\Calendar\Struct\PHP8\DateInterval } | ""P0D""
+{ object # Gzhegow\Calendar\Struct\PHP8\DateInterval } | ""P1D""
 ""
 HEREDOC
     : <<<HEREDOC
 "TEST 1"
-"Gzhegow\Calendar\Struct\PHP7\DateTime"
-"Gzhegow\Calendar\Struct\PHP7\DateTimeImmutable"
-"Gzhegow\Calendar\Struct\PHP7\DateTimeZone"
-"Gzhegow\Calendar\Struct\PHP7\DateInterval"
+{ object # Gzhegow\Calendar\Struct\PHP7\DateTime } | ""1970-01-01T00:00:00.000+03:00""
+{ object # Gzhegow\Calendar\Struct\PHP7\DateTime } | ""1970-01-01T00:00:00.000+03:00""
+{ object # Gzhegow\Calendar\Struct\PHP7\DateTimeImmutable } | ""1970-01-01T00:00:00.000+03:00""
+{ object # Gzhegow\Calendar\Struct\PHP7\DateTimeImmutable } | ""1970-01-01T00:00:00.000+03:00""
+{ object # Gzhegow\Calendar\Struct\PHP7\DateTimeZone } | ""Europe\/Minsk""
+{ object # Gzhegow\Calendar\Struct\PHP7\DateTimeZone } | ""UTC""
+{ object # Gzhegow\Calendar\Struct\PHP7\DateInterval } | ""P0D""
+{ object # Gzhegow\Calendar\Struct\PHP7\DateInterval } | ""P1D""
 ""
 HEREDOC
 );
@@ -124,34 +193,34 @@ $fn = function () use ($calendar) {
     _dump_ln('TEST 2');
 
     $result = $calendar->parseDateTime($datetime = '1970-01-01 00:00:00', $formats = [ 'Y-m-d H:i:s' ], $timezoneIfParsed = 'UTC');
-    _dump_ln(get_class($result));
+    _dump_ln($result, json_encode($result));
 
     $result = $calendar->parseDateTimeImmutable($datetime = '1970-01-01 00:00:00', $formats = [ 'Y-m-d H:i:s' ], $timezoneIfParsed = 'UTC');
-    _dump_ln(get_class($result));
+    _dump_ln($result, json_encode($result));
 
     $result = $calendar->parseDateTimeZone($timezone = 'UTC');
-    _dump_ln(get_class($result));
+    _dump_ln($result, json_encode($result));
 
     $result = $calendar->parseDateInterval($interval = 'P0D', $formats = null);
-    _dump_ln(get_class($result));
+    _dump_ln($result, json_encode($result));
 
     _dump('');
 };
 _assert_call($fn, [], PHP_VERSION_ID >= 80000
     ? <<<HEREDOC
 "TEST 2"
-"Gzhegow\Calendar\Struct\PHP8\DateTime"
-"Gzhegow\Calendar\Struct\PHP8\DateTimeImmutable"
-"Gzhegow\Calendar\Struct\PHP8\DateTimeZone"
-"Gzhegow\Calendar\Struct\PHP8\DateInterval"
+{ object # Gzhegow\Calendar\Struct\PHP8\DateTime } | ""1970-01-01T00:00:00.000+00:00""
+{ object # Gzhegow\Calendar\Struct\PHP8\DateTimeImmutable } | ""1970-01-01T00:00:00.000+00:00""
+{ object # Gzhegow\Calendar\Struct\PHP8\DateTimeZone } | ""UTC""
+{ object # Gzhegow\Calendar\Struct\PHP8\DateInterval } | ""P0D""
 ""
 HEREDOC
     : <<<HEREDOC
 "TEST 2"
-"Gzhegow\Calendar\Struct\PHP7\DateTime"
-"Gzhegow\Calendar\Struct\PHP7\DateTimeImmutable"
-"Gzhegow\Calendar\Struct\PHP7\DateTimeZone"
-"Gzhegow\Calendar\Struct\PHP7\DateInterval"
+{ object # Gzhegow\Calendar\Struct\PHP7\DateTime } | ""1970-01-01T00:00:00.000+00:00""
+{ object # Gzhegow\Calendar\Struct\PHP7\DateTimeImmutable } | ""1970-01-01T00:00:00.000+00:00""
+{ object # Gzhegow\Calendar\Struct\PHP7\DateTimeZone } | ""UTC""
+{ object # Gzhegow\Calendar\Struct\PHP7\DateInterval } | ""P0D""
 ""
 HEREDOC
 );
@@ -162,93 +231,85 @@ HEREDOC
 $fn = function () use ($calendar) {
     _dump_ln('TEST 3');
 
-    $dt = $calendar->parseDateTimeImmutable($datetime = 'now', $formats = null, $timezoneIfParsed = null);
-    _dump_ln(get_class($dt));
+    $dateTimeImmutable11 = $calendar->parseDateTimeImmutable($datetime = '2000-01-01 midnight', $formats = null, $timezoneIfParsed = null);
+    $dateTimeImmutable12 = $dateTimeImmutable11->modify('+ 10 hours');
+    $dateTimeImmutableDiff13 = $dateTimeImmutable11->diff($dateTimeImmutable12);
+    _dump_ln($dateTimeImmutable11, json_encode($dateTimeImmutable11));
+    _dump_ln($dateTimeImmutable12, json_encode($dateTimeImmutable12));
+    _dump_ln($dateTimeImmutableDiff13, $calendar->formatIntervalAgo($dateTimeImmutableDiff13));
 
-    $result = $dt->modify('+ 10 hours');
-    _dump_ln(get_class($result));
-    $result = $result->diff($dt);
-    _dump_ln(get_class($result));
-    _dump_ln(json_encode($result));
+    $dateTimeImmutable21 = $calendar->parseDateTimeImmutable($datetime = '2000-01-01 midnight', $formats = null, $timezoneIfParsed = null);
+    $dateTimeImmutable22 = $dateTimeImmutable21->add(new \DateInterval('PT10H'));
+    $dateTimeImmutableDiff23 = $dateTimeImmutable21->diff($dateTimeImmutable22);
+    _dump_ln($dateTimeImmutable21, json_encode($dateTimeImmutable21));
+    _dump_ln($dateTimeImmutable22, json_encode($dateTimeImmutable22));
+    _dump_ln($dateTimeImmutableDiff23, $calendar->formatIntervalAgo($dateTimeImmutableDiff23));
 
-    $result = $dt->add(new \DateInterval('P1D'));
-    _dump_ln(get_class($result));
-    $result = $result->diff($dt);
-    _dump_ln(get_class($result));
-    _dump_ln(json_encode($result));
-    _dump_ln((bool) $result->invert);
-
-    $result = $dt->sub(new \DateInterval('P1D'));
-    _dump_ln(get_class($result));
-    $result = $result->diff($dt);
-    _dump_ln(get_class($result));
-    _dump_ln(json_encode($result));
-    _dump_ln((bool) $result->invert);
+    $dateTimeImmutable31 = $calendar->parseDateTimeImmutable($datetime = '2000-01-01 midnight', $formats = null, $timezoneIfParsed = null);
+    $dateTimeImmutable32 = $dateTimeImmutable31->sub(new \DateInterval('PT10H'));
+    $dateTimeImmutableDiff33 = $dateTimeImmutable31->diff($dateTimeImmutable32);
+    _dump_ln($dateTimeImmutable31, json_encode($dateTimeImmutable31));
+    _dump_ln($dateTimeImmutable32, json_encode($dateTimeImmutable32));
+    _dump_ln($dateTimeImmutableDiff33, $calendar->formatIntervalAgo($dateTimeImmutableDiff33));
 
     _dump('');
 };
 _assert_call($fn, [], PHP_VERSION_ID >= 80000
     ? <<<HEREDOC
 "TEST 3"
-"Gzhegow\Calendar\Struct\PHP8\DateTimeImmutable"
-"Gzhegow\Calendar\Struct\PHP8\DateTimeImmutable"
-"Gzhegow\Calendar\Struct\PHP8\DateInterval"
-""PT10H""
-"Gzhegow\Calendar\Struct\PHP8\DateTimeImmutable"
-"Gzhegow\Calendar\Struct\PHP8\DateInterval"
-""P1D""
-TRUE
-"Gzhegow\Calendar\Struct\PHP8\DateTimeImmutable"
-"Gzhegow\Calendar\Struct\PHP8\DateInterval"
-""P1D""
-FALSE
+{ object # Gzhegow\Calendar\Struct\PHP8\DateTimeImmutable } | ""2000-01-01T00:00:00.000+03:00""
+{ object # Gzhegow\Calendar\Struct\PHP8\DateTimeImmutable } | ""2000-01-01T10:00:00.000+03:00""
+{ object # Gzhegow\Calendar\Struct\PHP8\DateInterval } | "через 10 час."
+{ object # Gzhegow\Calendar\Struct\PHP8\DateTimeImmutable } | ""2000-01-01T00:00:00.000+03:00""
+{ object # Gzhegow\Calendar\Struct\PHP8\DateTimeImmutable } | ""2000-01-01T10:00:00.000+03:00""
+{ object # Gzhegow\Calendar\Struct\PHP8\DateInterval } | "через 10 час."
+{ object # Gzhegow\Calendar\Struct\PHP8\DateTimeImmutable } | ""2000-01-01T00:00:00.000+03:00""
+{ object # Gzhegow\Calendar\Struct\PHP8\DateTimeImmutable } | ""1999-12-31T14:00:00.000+03:00""
+{ object # Gzhegow\Calendar\Struct\PHP8\DateInterval } | "10 час. назад"
 ""
 HEREDOC
     : <<<HEREDOC
 "TEST 3"
-"Gzhegow\Calendar\Struct\PHP7\DateTimeImmutable"
-"Gzhegow\Calendar\Struct\PHP7\DateTimeImmutable"
-"Gzhegow\Calendar\Struct\PHP7\DateInterval"
-""PT10H""
-"Gzhegow\Calendar\Struct\PHP7\DateTimeImmutable"
-"Gzhegow\Calendar\Struct\PHP7\DateInterval"
-""P1D""
-TRUE
-"Gzhegow\Calendar\Struct\PHP7\DateTimeImmutable"
-"Gzhegow\Calendar\Struct\PHP7\DateInterval"
-""P1D""
-FALSE
+{ object # Gzhegow\Calendar\Struct\PHP7\DateTimeImmutable } | ""2000-01-01T00:00:00.000+03:00""
+{ object # Gzhegow\Calendar\Struct\PHP7\DateTimeImmutable } | ""2000-01-01T10:00:00.000+03:00""
+{ object # Gzhegow\Calendar\Struct\PHP7\DateInterval } | "через 10 час."
+{ object # Gzhegow\Calendar\Struct\PHP7\DateTimeImmutable } | ""2000-01-01T00:00:00.000+03:00""
+{ object # Gzhegow\Calendar\Struct\PHP7\DateTimeImmutable } | ""2000-01-01T10:00:00.000+03:00""
+{ object # Gzhegow\Calendar\Struct\PHP7\DateInterval } | "через 10 час."
+{ object # Gzhegow\Calendar\Struct\PHP7\DateTimeImmutable } | ""2000-01-01T00:00:00.000+03:00""
+{ object # Gzhegow\Calendar\Struct\PHP7\DateTimeImmutable } | ""1999-12-31T14:00:00.000+03:00""
+{ object # Gzhegow\Calendar\Struct\PHP7\DateInterval } | "10 час. назад"
 ""
 HEREDOC
 );
 
 
 // > TEST
-// > считаем разницу времени
+// > проводим действия над датой
 $fn = function () use ($calendar) {
     _dump_ln('TEST 4');
 
-    $now = $calendar->nowImmutable();
+    $dateTime = $calendar->dateTime();
+    $formatted = $calendar->formatHumanDate($dateTime);
+    _dump_ln($dateTime, json_encode($dateTime), $formatted);
 
-    $past = $now->modify('- 10 hours');
-
-    $result = $calendar->diff($now, $past, $absolute = false);
-    _dump_ln(get_class($result));
-    _dump_ln('"PT10H"' === json_encode($result));
+    $dateTime = $calendar->dateTime();
+    $formatted = $calendar->formatHumanDay($dateTime);
+    _dump_ln($dateTime, json_encode($dateTime), $formatted);
 
     _dump('');
 };
 _assert_call($fn, [], PHP_VERSION_ID >= 80000
     ? <<<HEREDOC
 "TEST 4"
-"Gzhegow\Calendar\Struct\PHP8\DateInterval"
-TRUE
+{ object # Gzhegow\Calendar\Struct\PHP8\DateTime } | ""1970-01-01T00:00:00.000+03:00"" | "Thu, 01 Jan 1970 00:00:00 +0300"
+{ object # Gzhegow\Calendar\Struct\PHP8\DateTime } | ""1970-01-01T00:00:00.000+03:00"" | "Thu, 01 Jan 1970 +0300"
 ""
 HEREDOC
     : <<<HEREDOC
 "TEST 4"
-"Gzhegow\Calendar\Struct\PHP7\DateInterval"
-TRUE
+{ object # Gzhegow\Calendar\Struct\PHP7\DateTime } | ""1970-01-01T00:00:00.000+03:00"" | "Thu, 01 Jan 1970 00:00:00 +0300"
+{ object # Gzhegow\Calendar\Struct\PHP7\DateTime } | ""1970-01-01T00:00:00.000+03:00"" | "Thu, 01 Jan 1970 +0300"
 ""
 HEREDOC
 );

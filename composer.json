@@ -14,6 +14,9 @@
 
     "ext-json": "*"
   },
+  "require-dev": {
+    "ext-intl": "*"
+  },
 
   "autoload": {
     "psr-4": {

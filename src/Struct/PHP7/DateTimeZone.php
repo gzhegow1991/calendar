@@ -19,9 +19,11 @@ class DateTimeZone extends \DateTimeZone implements
         }
 
         if (! is_a($object, \DateTimeZone::class)) {
-            throw new LogicException('The `object` should be instance of: '
-                . \DateTimeZone::class
-                . ' / ' . Lib::debug_dump($object)
+            throw new LogicException(
+                [
+                    'The `object` should be instance of: ' . \DateTimeZone::class,
+                    $object,
+                ]
             );
         }
 

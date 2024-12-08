@@ -2,9 +2,10 @@
 
 namespace Gzhegow\Calendar\Struct\PHP8;
 
-use Gzhegow\Calendar\Lib;
-use Gzhegow\Calendar\CalendarType;
+use Gzhegow\Calendar\Lib\Lib;
 use Gzhegow\Calendar\Calendar;
+use Gzhegow\Calendar\CalendarType;
+use Gzhegow\Calendar\CalendarManager;
 use Gzhegow\Calendar\Exception\LogicException;
 use Gzhegow\Calendar\Exception\RuntimeException;
 
@@ -22,9 +23,11 @@ class DateTime extends \DateTime implements DateTimeInterface,
         }
 
         if (! is_a($object, \DateTimeInterface::class)) {
-            throw new LogicException('The `object` should be instance of: '
-                . \DateTimeInterface::class
-                . ' / ' . Lib::debug_dump($object)
+            throw new LogicException(
+                [
+                    'The `object` should be instance of: ' . \DateTimeInterface::class,
+                    $object,
+                ]
             );
         }
 
@@ -51,32 +54,40 @@ class DateTime extends \DateTime implements DateTimeInterface,
     {
         if (null === Lib::parse_astring($format)) {
             throw new LogicException(
-                'The `format` should be a non-empty string: ' . Lib::debug_dump($format)
+                [
+                    'The `format` should be a non-empty string',
+                    $format,
+                ]
             );
         }
 
         if (null === Lib::parse_astring($datetime)) {
             throw new LogicException(
-                'The `datetime` should be a non-empty string: ' . Lib::debug_dump($datetime)
+                [
+                    'The `datetime` should be a non-empty string',
+                    $datetime,
+                ]
             );
         }
 
         if (null !== $timezone) {
             if (! is_a($timezone, \DateTimeZone::class)) {
-                throw new LogicException('The `object` should be instance of: '
-                    . \DateTimeZone::class
-                    . ' / ' . Lib::debug_dump($timezone)
+                throw new LogicException(
+                    [
+                        'The `object` should be instance of: ' . \DateTimeZone::class,
+                        $timezone,
+                    ]
                 );
             }
         }
 
-        $dt = parent::createFromFormat($format, $datetime, $timezone);
+        $dateTime = parent::createFromFormat($format, $datetime, $timezone);
 
-        $microseconds = str_pad($dt->format('u'), 6, '0');
+        $microseconds = str_pad($dateTime->format('u'), 6, '0');
 
         try {
-            $dt = (new static('now', $dt->getTimezone()))
-                ->setTimestamp($dt->getTimestamp())
+            $dateTime = (new static('now', $dateTime->getTimezone()))
+                ->setTimestamp($dateTime->getTimestamp())
                 ->modify("+ {$microseconds} microseconds")
             ;
         }
@@ -84,7 +95,7 @@ class DateTime extends \DateTime implements DateTimeInterface,
             throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
         }
 
-        return $dt;
+        return $dateTime;
     }
 
 

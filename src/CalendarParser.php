@@ -2,7 +2,7 @@
 
 namespace Gzhegow\Calendar;
 
-use Gzhegow\Calendar\Lib\Lib;
+use Gzhegow\Lib\Lib;
 use Gzhegow\Calendar\Exception\LogicException;
 
 
@@ -142,7 +142,7 @@ class CalendarParser implements CalendarParserInterface
 
     protected function parseDateTimeFromString($string, $dateTimeZoneIfParsed = null) : ?\DateTime
     {
-        $_string = Lib::parse_astring($string);
+        $_string = Lib::parse_string_not_empty($string);
         if (null === $_string) {
             return null;
         }
@@ -170,7 +170,7 @@ class CalendarParser implements CalendarParserInterface
 
     protected function parseDateTimeFromStringByFormats($string, array $formats = null, $dateTimeZoneIfParsed = null) : ?\DateTime
     {
-        $_string = Lib::parse_astring($string);
+        $_string = Lib::parse_string_not_empty($string);
         if (null === $_string) {
             return null;
         }
@@ -195,7 +195,7 @@ class CalendarParser implements CalendarParserInterface
 
     protected function parseDateTimeFromStringByFormat($string, string $format, $dateTimeZoneIfParsed = null) : ?\DateTime
     {
-        $_string = Lib::parse_astring($string);
+        $_string = Lib::parse_string_not_empty($string);
         if (null === $_string) {
             return null;
         }
@@ -255,7 +255,7 @@ class CalendarParser implements CalendarParserInterface
 
     protected function parseDateTimeZoneFromStringTimezone($string) : ?\DateTimeZone
     {
-        $_string = Lib::parse_astring($string);
+        $_string = Lib::parse_string_not_empty($string);
         if (null === $_string) {
             return null;
         }
@@ -337,7 +337,7 @@ class CalendarParser implements CalendarParserInterface
 
     protected function parseDateIntervalFromStringDuration($duration) : ?\DateInterval
     {
-        $_string = Lib::parse_astring($duration);
+        $_string = Lib::parse_string_not_empty($duration);
         if (null === $_string) {
             return null;
         }
@@ -354,7 +354,7 @@ class CalendarParser implements CalendarParserInterface
 
     protected function parseDateIntervalFromStringByFormats($string, array $formats = null) : ?\DateInterval
     {
-        $_string = Lib::parse_astring($string);
+        $_string = Lib::parse_string_not_empty($string);
         if (null === $_string) {
             return null;
         }
@@ -378,7 +378,7 @@ class CalendarParser implements CalendarParserInterface
 
     protected function parseDateIntervalFromStringByFormat($string, string $format) : ?\DateInterval
     {
-        $_string = Lib::parse_astring($string);
+        $_string = Lib::parse_string_not_empty($string);
         if (null === $_string) {
             return null;
         }
@@ -401,7 +401,7 @@ class CalendarParser implements CalendarParserInterface
 
     protected function parseDateIntervalFromStringDatetime($datetime) : ?\DateInterval
     {
-        $_string = Lib::parse_astring($datetime);
+        $_string = Lib::parse_string_not_empty($datetime);
         if (null === $_string) {
             return null;
         }

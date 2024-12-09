@@ -2,7 +2,6 @@
 
 namespace Gzhegow\Calendar\Config;
 
-use Gzhegow\Calendar\Lib;
 
 
 abstract class AbstractConfig

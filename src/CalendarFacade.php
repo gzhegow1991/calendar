@@ -52,14 +52,14 @@ class CalendarFacade implements CalendarFacadeInterface
     }
 
 
-    public function dateTime($from = '', $dateTimeZone = '') : \DateTime
+    public function dateTime($from = '', $dateTimeZone = '', array $formats = null) : \DateTime
     {
-        return $this->manager->dateTime($from, $dateTimeZone);
+        return $this->manager->dateTime($from, $dateTimeZone, $formats);
     }
 
-    public function dateTimeImmutable($from = '', $dateTimeZone = '') : \DateTimeImmutable
+    public function dateTimeImmutable($from = '', $dateTimeZone = '', array $formats = null) : \DateTimeImmutable
     {
-        return $this->manager->dateTimeImmutable($from, $dateTimeZone);
+        return $this->manager->dateTimeImmutable($from, $dateTimeZone, $formats);
     }
 
     public function dateTimeZone($from = '') : \DateTimeZone
@@ -67,9 +67,9 @@ class CalendarFacade implements CalendarFacadeInterface
         return $this->manager->dateTimeZone($from);
     }
 
-    public function dateInterval($from = '') : \DateInterval
+    public function dateInterval($from = '', array $formats = null) : \DateInterval
     {
-        return $this->manager->dateInterval($from);
+        return $this->manager->dateInterval($from, $formats);
     }
 
 

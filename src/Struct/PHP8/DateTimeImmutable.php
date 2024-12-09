@@ -2,7 +2,7 @@
 
 namespace Gzhegow\Calendar\Struct\PHP8;
 
-use Gzhegow\Calendar\Lib\Lib;
+use Gzhegow\Lib\Lib;
 use Gzhegow\Calendar\Calendar;
 use Gzhegow\Calendar\CalendarType;
 use Gzhegow\Calendar\Exception\LogicException;
@@ -51,7 +51,7 @@ class DateTimeImmutable extends \DateTimeImmutable implements DateTimeInterface,
      */
     public static function createFromFormat($format, $datetime, $timezone = null)
     {
-        if (null === Lib::parse_astring($format)) {
+        if (null === Lib::parse_string_not_empty($format)) {
             throw new LogicException(
                 [
                     'The `format` should be a non-empty string',
@@ -60,7 +60,7 @@ class DateTimeImmutable extends \DateTimeImmutable implements DateTimeInterface,
             );
         }
 
-        if (null === Lib::parse_astring($datetime)) {
+        if (null === Lib::parse_string_not_empty($datetime)) {
             throw new LogicException(
                 [
                     'The `datetime` should be a non-empty string',

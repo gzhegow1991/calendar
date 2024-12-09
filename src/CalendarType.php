@@ -1,4 +1,7 @@
 <?php
+/**
+ * @noinspection PhpFullyQualifiedNameUsageInspection
+ */
 
 namespace Gzhegow\Calendar;
 

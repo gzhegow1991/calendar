@@ -4,13 +4,13 @@ namespace Gzhegow\Calendar;
 
 interface CalendarManagerInterface
 {
-    public function dateTime($from = '', $dateTimeZone = '') : ?\DateTime;
+    public function dateTime($from = '', $dateTimeZone = '', array $formats = null) : ?\DateTime;
 
-    public function dateTimeImmutable($from = '', $dateTimeZone = '') : ?\DateTimeImmutable;
+    public function dateTimeImmutable($from = '', $dateTimeZone = '', array $formats = null) : ?\DateTimeImmutable;
 
     public function dateTimeZone($from = '') : ?\DateTimeZone;
 
-    public function dateInterval($from = '') : ?\DateInterval;
+    public function dateInterval($from = '', array $formats = null) : ?\DateInterval;
 
 
     public function now($dateTimeZone = '') : \DateTime;

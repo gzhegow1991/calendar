@@ -2,7 +2,7 @@
 
 namespace Gzhegow\Calendar;
 
-use Gzhegow\Calendar\Lib\Lib;
+use Gzhegow\Lib\Lib;
 use Gzhegow\Calendar\Config\AbstractConfig;
 use Gzhegow\Calendar\Exception\LogicException;
 
@@ -31,15 +31,15 @@ class CalendarManagerConfig extends AbstractConfig
     public function validate()
     {
         $dateTimeDefault = null
-            ?? Lib::parse_astring($this->dateTimeDefault)
+            ?? Lib::parse_string_not_empty($this->dateTimeDefault)
             ?? (is_a($this->dateTimeDefault, \DateTimeInterface::class) ? $this->dateTimeDefault : null);
 
         $dateTimeZoneDefault = null
-            ?? Lib::parse_astring($this->dateTimeZoneDefault)
+            ?? Lib::parse_string_not_empty($this->dateTimeZoneDefault)
             ?? (is_a($this->dateTimeZoneDefault, \DateTimeZone::class) ? $this->dateTimeZoneDefault : null);
 
         $dateIntervalDefault = null
-            ?? Lib::parse_astring($this->dateIntervalDefault)
+            ?? Lib::parse_string_not_empty($this->dateIntervalDefault)
             ?? (is_a($this->dateIntervalDefault, \DateInterval::class) ? $this->dateIntervalDefault : null);
 
         if (null === $dateTimeDefault) {

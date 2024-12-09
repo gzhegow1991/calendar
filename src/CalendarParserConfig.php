@@ -2,7 +2,7 @@
 
 namespace Gzhegow\Calendar;
 
-use Gzhegow\Calendar\Lib\Lib;
+use Gzhegow\Lib\Lib;
 use Gzhegow\Calendar\Config\AbstractConfig;
 use Gzhegow\Calendar\Exception\LogicException;
 
@@ -26,7 +26,7 @@ class CalendarParserConfig extends AbstractConfig
     public function validate()
     {
         foreach ( $this->parseDateTimeFormatsDefault as $format ) {
-            if (null === Lib::parse_astring($format)) {
+            if (null === Lib::parse_string_not_empty($format)) {
                 throw new LogicException(
                     [
                         'Each of `parseDateTimeFormatsDefault` should be non-empty string',
@@ -37,7 +37,7 @@ class CalendarParserConfig extends AbstractConfig
         }
 
         foreach ( $this->parseDateIntervalFormatsDefault as $format ) {
-            if (null === Lib::parse_astring($format)) {
+            if (null === Lib::parse_string_not_empty($format)) {
                 throw new LogicException(
                     [
                         'Each of `parseDateIntervalFormatsDefault` should be non-empty string',

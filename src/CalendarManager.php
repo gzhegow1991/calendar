@@ -38,7 +38,7 @@ class CalendarManager implements CalendarManagerInterface
     }
 
 
-    public function dateTime($from = '', $dateTimeZone = '') : ?\DateTime
+    public function dateTime($from = '', $dateTimeZone = '', array $formats = null) : ?\DateTime
     {
         if (null === $from) {
             return null;
@@ -68,13 +68,13 @@ class CalendarManager implements CalendarManagerInterface
         }
 
         $dateTime = is_object($_from)
-            ? $this->parser->parseDateTime($_from, null, $_dateTimeZone)
+            ? $this->parser->parseDateTime($_from, $formats, $_dateTimeZone)
             : $this->factory->newDateTime($_from, $_dateTimeZone);
 
         return $dateTime;
     }
 
-    public function dateTimeImmutable($from = '', $dateTimeZone = '') : ?\DateTimeImmutable
+    public function dateTimeImmutable($from = '', $dateTimeZone = '', array $formats = null) : ?\DateTimeImmutable
     {
         if (null === $from) {
             return null;
@@ -104,7 +104,7 @@ class CalendarManager implements CalendarManagerInterface
         }
 
         $dateTimeImmutable = is_object($_from)
-            ? $this->parser->parseDateTimeImmutable($_from, null, $_dateTimeZone)
+            ? $this->parser->parseDateTimeImmutable($_from, $formats, $_dateTimeZone)
             : $this->factory->newDateTimeImmutable($_from, $_dateTimeZone);
 
         return $dateTimeImmutable;
@@ -129,7 +129,7 @@ class CalendarManager implements CalendarManagerInterface
         return $timezone;
     }
 
-    public function dateInterval($from = '') : ?\DateInterval
+    public function dateInterval($from = '', array $formats = null) : ?\DateInterval
     {
         if (null === $from) {
             return null;
@@ -142,7 +142,7 @@ class CalendarManager implements CalendarManagerInterface
         }
 
         $interval = is_object($_from)
-            ? $this->parser->parseDateInterval($_from)
+            ? $this->parser->parseDateInterval($_from, $formats)
             : $this->factory->newDateInterval($_from);
 
         return $interval;

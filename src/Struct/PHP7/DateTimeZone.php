@@ -2,7 +2,6 @@
 
 namespace Gzhegow\Calendar\Struct\PHP7;
 
-use Gzhegow\Calendar\Lib;
 use Gzhegow\Calendar\Exception\LogicException;
 
 

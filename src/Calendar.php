@@ -97,14 +97,14 @@ class Calendar
     }
 
 
-    public static function dateTime($from = '', $dateTimeZone = '') : \DateTime
+    public static function dateTime($from = '', $dateTimeZone = '', array $formats = null) : \DateTime
     {
-        return static::$facade->dateTime($from, $dateTimeZone);
+        return static::$facade->dateTime($from, $dateTimeZone, $formats);
     }
 
-    public static function dateTimeImmutable($from = '', $dateTimeZone = '') : \DateTimeImmutable
+    public static function dateTimeImmutable($from = '', $dateTimeZone = '', array $formats = null) : \DateTimeImmutable
     {
-        return static::$facade->dateTimeImmutable($from, $dateTimeZone);
+        return static::$facade->dateTimeImmutable($from, $dateTimeZone, $formats);
     }
 
     public static function dateTimeZone($from = '') : \DateTimeZone
@@ -112,9 +112,9 @@ class Calendar
         return static::$facade->dateTimeZone($from);
     }
 
-    public static function dateInterval($from = '') : \DateInterval
+    public static function dateInterval($from = '', array $formats = null) : \DateInterval
     {
-        return static::$facade->dateInterval($from);
+        return static::$facade->dateInterval($from, $formats);
     }
 
 

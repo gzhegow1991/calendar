@@ -2,7 +2,7 @@
 
 namespace Gzhegow\Calendar\Struct\PHP8;
 
-use Gzhegow\Calendar\Lib\Lib;
+use Gzhegow\Lib\Lib;
 use Gzhegow\Calendar\Exception\LogicException;
 
 
@@ -41,7 +41,7 @@ class DateInterval extends \DateInterval implements
      */
     public static function createFromDateString($datetime)
     {
-        if (null === Lib::parse_astring($datetime)) {
+        if (null === Lib::parse_string_not_empty($datetime)) {
             throw new LogicException(
                 [
                     'The `datetime` should be a non-empty string',

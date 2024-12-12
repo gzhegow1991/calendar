@@ -1,8 +1,12 @@
 <?php
 
-namespace Gzhegow\Calendar;
+namespace Gzhegow\Calendar\Formatter;
 
-class CalendarFormatter implements CalendarFormatterInterface
+use Gzhegow\Calendar\Calendar;
+use Gzhegow\Calendar\CalendarFactoryInterface;
+
+
+class Formatter implements FormatterInterface
 {
     /**
      * @var CalendarFactoryInterface
@@ -10,7 +14,7 @@ class CalendarFormatter implements CalendarFormatterInterface
     protected $factory;
 
     /**
-     * @var CalendarFormatterConfig
+     * @var FormatterConfig
      */
     protected $config;
 
@@ -18,7 +22,7 @@ class CalendarFormatter implements CalendarFormatterInterface
     public function __construct(
         CalendarFactoryInterface $factory,
         //
-        CalendarFormatterConfig $config
+        FormatterConfig $config
     )
     {
         $this->factory = $factory;

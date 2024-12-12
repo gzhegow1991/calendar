@@ -1,8 +1,8 @@
 <?php
 
-namespace Gzhegow\Calendar;
+namespace Gzhegow\Calendar\Formatter;
 
-interface CalendarFormatterInterface
+interface FormatterInterface
 {
     public function formatTimestamp(\DateTimeInterface $dateTime) : string;
 

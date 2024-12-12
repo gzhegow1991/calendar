@@ -1,6 +1,6 @@
 <?php
 
-namespace Gzhegow\Calendar;
+namespace Gzhegow\Calendar\Manager;
 
 use Gzhegow\Lib\Lib;
 use Gzhegow\Calendar\Config\AbstractConfig;
@@ -12,7 +12,7 @@ use Gzhegow\Calendar\Exception\LogicException;
  * @property string|\DateTimeZone      $dateTimeZoneDefault
  * @property string|\DateInterval      $dateIntervalDefault
  */
-class CalendarManagerConfig extends AbstractConfig
+class ManagerConfig extends AbstractConfig
 {
     /**
      * @var string|\DateTimeInterface

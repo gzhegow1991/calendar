@@ -1,8 +1,8 @@
 <?php
 
-namespace Gzhegow\Calendar;
+namespace Gzhegow\Calendar\Parser;
 
-interface CalendarParserInterface
+interface ParserInterface
 {
     public function parseDateTime($from, array $formats = null, $dateTimeZoneIfParsed = null) : ?\DateTime;
 

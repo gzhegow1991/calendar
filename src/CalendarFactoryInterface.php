@@ -4,16 +4,6 @@ namespace Gzhegow\Calendar;
 
 interface CalendarFactoryInterface
 {
-    public function newFacade(CalendarParserInterface $parser, CalendarManagerInterface $manager, CalendarFormatterInterface $formatter) : CalendarFacadeInterface;
-
-
-    public function newParser(CalendarParserConfig $config) : CalendarParserInterface;
-
-    public function newManager(CalendarParserInterface $parser, CalendarManagerConfig $config) : CalendarManagerInterface;
-
-    public function newFormatter(CalendarFormatterConfig $config) : CalendarFormatterInterface;
-
-
     public function newDateTime($from = 'now', \DateTimeZone $dateTimeZone = null) : \DateTime;
 
     public function newDateTimeFromInterface(\DateTimeInterface $object) : \DateTime;

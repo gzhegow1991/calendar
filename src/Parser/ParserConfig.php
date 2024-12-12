@@ -1,8 +1,9 @@
 <?php
 
-namespace Gzhegow\Calendar;
+namespace Gzhegow\Calendar\Parser;
 
 use Gzhegow\Lib\Lib;
+use Gzhegow\Calendar\Calendar;
 use Gzhegow\Calendar\Config\AbstractConfig;
 use Gzhegow\Calendar\Exception\LogicException;
 
@@ -11,7 +12,7 @@ use Gzhegow\Calendar\Exception\LogicException;
  * @property string[] $parseDateTimeFormatsDefault
  * @property string[] $parseDateIntervalFormatsDefault
  */
-class CalendarParserConfig extends AbstractConfig
+class ParserConfig extends AbstractConfig
 {
     protected $parseDateTimeFormatsDefault = [
         Calendar::FORMAT_SQL,

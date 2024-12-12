@@ -1,6 +1,6 @@
 <?php
 
-namespace Gzhegow\Calendar;
+namespace Gzhegow\Calendar\Formatter;
 
 use Gzhegow\Calendar\Config\AbstractConfig;
 
@@ -8,7 +8,7 @@ use Gzhegow\Calendar\Config\AbstractConfig;
 /**
  * @property bool $useIntl
  */
-class CalendarFormatterConfig extends AbstractConfig
+class FormatterConfig extends AbstractConfig
 {
     protected $useIntl = true;
 

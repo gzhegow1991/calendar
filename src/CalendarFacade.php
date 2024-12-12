@@ -2,6 +2,11 @@
 
 namespace Gzhegow\Calendar;
 
+use Gzhegow\Calendar\Formatter\FormatterInterface;
+use Gzhegow\Calendar\Manager\ManagerInterface;
+use Gzhegow\Calendar\Parser\ParserInterface;
+
+
 class CalendarFacade implements CalendarFacadeInterface
 {
     /**
@@ -9,24 +14,24 @@ class CalendarFacade implements CalendarFacadeInterface
      */
     protected $factory;
     /**
-     * @var CalendarParserInterface
+     * @var ParserInterface
      */
     protected $parser;
     /**
-     * @var CalendarManagerInterface
+     * @var ManagerInterface
      */
     protected $manager;
     /**
-     * @var CalendarFormatterInterface
+     * @var FormatterInterface
      */
     protected $formatter;
 
 
     public function __construct(
         CalendarFactoryInterface $factory,
-        CalendarParserInterface $parser,
-        CalendarManagerInterface $manager,
-        CalendarFormatterInterface $formatter
+        ParserInterface $parser,
+        ManagerInterface $manager,
+        FormatterInterface $formatter
     )
     {
         $this->factory = $factory;
@@ -36,17 +41,17 @@ class CalendarFacade implements CalendarFacadeInterface
     }
 
 
-    public function getParser() : CalendarParserInterface
+    public function getParser() : ParserInterface
     {
         return $this->parser;
     }
 
-    public function getManager() : CalendarManagerInterface
+    public function getManager() : ManagerInterface
     {
         return $this->manager;
     }
 
-    public function getFormatter() : CalendarFormatterInterface
+    public function getFormatter() : FormatterInterface
     {
         return $this->formatter;
     }

@@ -1,8 +1,8 @@
 <?php
 
-namespace Gzhegow\Calendar;
+namespace Gzhegow\Calendar\Manager;
 
-interface CalendarManagerInterface
+interface ManagerInterface
 {
     public function dateTime($from = '', $dateTimeZone = '', array $formats = null) : ?\DateTime;
 

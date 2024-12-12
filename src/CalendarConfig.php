@@ -2,34 +2,37 @@
 
 namespace Gzhegow\Calendar;
 
+use Gzhegow\Calendar\Parser\ParserConfig;
+use Gzhegow\Calendar\Manager\ManagerConfig;
 use Gzhegow\Calendar\Config\AbstractConfig;
+use Gzhegow\Calendar\Formatter\FormatterConfig;
 
 
 /**
- * @property CalendarParserConfig    $parser
- * @property CalendarManagerConfig   $manager
- * @property CalendarFormatterConfig $formatter
+ * @property ParserConfig    $parser
+ * @property ManagerConfig   $manager
+ * @property FormatterConfig $formatter
  */
 class CalendarConfig extends AbstractConfig
 {
     /**
-     * @var CalendarParserConfig
+     * @var ParserConfig
      */
     protected $parser;
     /**
-     * @var CalendarParserConfig
+     * @var ParserConfig
      */
     protected $manager;
     /**
-     * @var CalendarFormatterConfig
+     * @var FormatterConfig
      */
     protected $formatter;
 
 
     public function __construct()
     {
-        $this->__sections[ 'parser' ] = $this->parser = new CalendarParserConfig();
-        $this->__sections[ 'manager' ] = $this->manager = new CalendarManagerConfig();
-        $this->__sections[ 'formatter' ] = $this->formatter = new CalendarFormatterConfig();
+        $this->__sections[ 'parser' ] = $this->parser = new ParserConfig();
+        $this->__sections[ 'manager' ] = $this->manager = new ManagerConfig();
+        $this->__sections[ 'formatter' ] = $this->formatter = new FormatterConfig();
     }
 }

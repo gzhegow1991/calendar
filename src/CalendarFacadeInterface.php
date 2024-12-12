@@ -2,13 +2,18 @@
 
 namespace Gzhegow\Calendar;
 
+use Gzhegow\Calendar\Formatter\FormatterInterface;
+use Gzhegow\Calendar\Manager\ManagerInterface;
+use Gzhegow\Calendar\Parser\ParserInterface;
+
+
 interface CalendarFacadeInterface
 {
-    public function getParser() : CalendarParserInterface;
+    public function getParser() : ParserInterface;
 
-    public function getManager() : CalendarManagerInterface;
+    public function getManager() : ManagerInterface;
 
-    public function getFormatter() : CalendarFormatterInterface;
+    public function getFormatter() : FormatterInterface;
 
 
     public function dateTime($from = '', $dateTimeZone = '', array $formats = null) : \DateTime;

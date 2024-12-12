@@ -10,64 +10,6 @@ use Gzhegow\Calendar\Struct\PHP7\DateInterval;
 
 class CalendarFactory implements CalendarFactoryInterface
 {
-    public function newFacade(
-        CalendarParserInterface $parser,
-        CalendarManagerInterface $manager,
-        CalendarFormatterInterface $formatter
-    ) : CalendarFacadeInterface
-    {
-        $facade = new CalendarFacade(
-            $this,
-            $parser,
-            $manager,
-            $formatter
-        );
-
-        return $facade;
-    }
-
-
-    public function newParser(CalendarParserConfig $config) : CalendarParserInterface
-    {
-        $parser = new CalendarParser(
-            $this,
-            //
-            $config
-        );
-
-        return $parser;
-    }
-
-    public function newManager(
-        CalendarParserInterface $parser,
-        //
-        CalendarManagerConfig $config
-    ) : CalendarManagerInterface
-    {
-        $manager = new CalendarManager(
-            $this,
-            $parser,
-            //
-            $config
-        );
-
-        return $manager;
-    }
-
-    public function newFormatter(
-        CalendarFormatterConfig $config
-    ) : CalendarFormatterInterface
-    {
-        $formatter = new CalendarFormatter(
-            $this,
-            //
-            $config
-        );
-
-        return $formatter;
-    }
-
-
     public function newDateTime($from = 'now', \DateTimeZone $dateTimeZone = null) : \DateTime
     {
         if (null === $from) {

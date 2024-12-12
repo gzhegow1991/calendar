@@ -2,6 +2,11 @@
 
 namespace Gzhegow\Calendar;
 
+use Gzhegow\Calendar\Formatter\FormatterInterface;
+use Gzhegow\Calendar\Manager\ManagerInterface;
+use Gzhegow\Calendar\Parser\ParserInterface;
+
+
 class Calendar
 {
     const INTERVAL_MINUTE = 60;
@@ -81,17 +86,17 @@ class Calendar
     ];
 
 
-    public static function getParser() : CalendarParserInterface
+    public static function getParser() : ParserInterface
     {
         return static::$facade->getParser();
     }
 
-    public static function getManager() : CalendarManagerInterface
+    public static function getManager() : ManagerInterface
     {
         return static::$facade->getManager();
     }
 
-    public static function getFormatter() : CalendarFormatterInterface
+    public static function getFormatter() : FormatterInterface
     {
         return static::$facade->getFormatter();
     }

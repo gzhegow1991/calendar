@@ -18,9 +18,6 @@ composer require gzhegow/calendar;
 ```php
 <?php
 
-use Gzhegow\Calendar\Calendar;
-
-
 require_once __DIR__ . '/vendor/autoload.php';
 
 
@@ -100,12 +97,12 @@ $config = new \Gzhegow\Calendar\CalendarConfig();
 $config->configure(function (\Gzhegow\Calendar\CalendarConfig $config) {
     // > можно указать форматы для разбора даты, если таковые не переданы прямо в функцию
     $config->parser->parseDateTimeFormatsDefault = [
-        Calendar::FORMAT_SQL,
-        Calendar::FORMAT_JAVASCRIPT,
+        \Gzhegow\Calendar\Calendar::FORMAT_SQL,
+        \Gzhegow\Calendar\Calendar::FORMAT_JAVASCRIPT,
     ];
     // > можно указать форматы для разбора интервалов, если таковые не переданы прямо в функцию
     $config->parser->parseDateIntervalFormatsDefault = [
-        Calendar::FORMAT_SQL_TIME,
+        \Gzhegow\Calendar\Calendar::FORMAT_SQL_TIME,
     ];
 
     // > можно указать "дату по-умолчанию", которая будет создана, если не передать аргументов вовсе
@@ -141,7 +138,7 @@ $calendar = new \Gzhegow\Calendar\CalendarFacade(
 );
 
 // > сохраняем фасад статически (чтобы вызывать без привязки к контейнеру)
-Calendar::setFacade($calendar);
+\Gzhegow\Calendar\Calendar::setFacade($calendar);
 
 
 // > TEST

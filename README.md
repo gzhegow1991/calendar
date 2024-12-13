@@ -57,15 +57,28 @@ set_exception_handler(function (\Throwable $e) {
 // > добавляем несколько функция для тестирования
 function _dump(...$values) : void
 {
-    echo implode(' | ', array_map([ \Gzhegow\Lib\Lib::class, 'debug_value' ], $values));
+    $lines = [];
+    foreach ( $values as $value ) {
+        $lines[] = \Gzhegow\Lib\Lib::debug_value($value);
+    }
+
+    echo implode(' | ', $lines) . PHP_EOL;
 }
 
-function _dump_ln(...$values) : void
+function _debug($value, ...$values) : void
 {
-    echo implode(' | ', array_map([ \Gzhegow\Lib\Lib::class, 'debug_value' ], $values)) . PHP_EOL;
+    $lines = [];
+    foreach ( $values as $value ) {
+        $lines[] = \Gzhegow\Lib\Lib::debug_type_id($value);
+    }
+
+    echo implode(' | ', $lines) . PHP_EOL;
 }
 
-function _assert_call(\Closure $fn, array $expectResult = [], string $expectOutput = null) : void
+function _assert_call(
+    \Closure $fn,
+    array $expectResult = [], string $expectOutput = null, float $expectMicrotime = null
+) : void
 {
     $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
 
@@ -79,10 +92,14 @@ function _assert_call(\Closure $fn, array $expectResult = [], string $expectOutp
         $expect->output = $expectOutput;
     }
 
+    if (null !== $expectMicrotime) {
+        $expect->microtime = $expectMicrotime;
+    }
+
     $status = \Gzhegow\Lib\Lib::assert_call($trace, $fn, $expect, $error, STDOUT);
 
     if (! $status) {
-        throw new \Gzhegow\Calendar\Exception\LogicException();
+        throw new \Gzhegow\Lib\Exception\LogicException();
     }
 }
 
@@ -144,36 +161,36 @@ $calendar = new \Gzhegow\Calendar\CalendarFacade(
 // > TEST
 // > создаем дату, временную зону и интервал
 $fn = function () use ($calendar) {
-    _dump_ln('TEST 1');
+    _dump('TEST 1');
 
     $result = $calendar->dateTime($datetime = '', $timezone = null);
-    _dump_ln($result, json_encode($result));
+    _dump($result, json_encode($result));
 
     $result = $calendar->dateTime($datetime = '1970-01-01 00:00:00', $timezone = null);
-    _dump_ln($result, json_encode($result));
+    _dump($result, json_encode($result));
 
 
     $result = $calendar->dateTimeImmutable($datetime = '', $timezone = null);
-    _dump_ln($result, json_encode($result));
+    _dump($result, json_encode($result));
 
     $result = $calendar->dateTimeImmutable($datetime = '1970-01-01 00:00:00', $timezone = null);
-    _dump_ln($result, json_encode($result));
+    _dump($result, json_encode($result));
 
 
     $result = $calendar->dateTimeZone($timezone = '');
-    _dump_ln($result, json_encode($result));
+    _dump($result, json_encode($result));
 
     $result = $calendar->dateTimeZone($timezone = 'UTC');
-    _dump_ln($result, json_encode($result));
+    _dump($result, json_encode($result));
 
 
     $result = $calendar->dateInterval($duration = '');
-    _dump_ln($result, json_encode($result));
+    _dump($result, json_encode($result));
 
     $result = $calendar->dateInterval($duration = 'P1D');
-    _dump_ln($result, json_encode($result));
+    _dump($result, json_encode($result));
 
-    _dump('');
+    echo '';
 };
 _assert_call($fn, [], PHP_VERSION_ID >= 80000
     ? <<<HEREDOC
@@ -206,21 +223,21 @@ HEREDOC
 // > TEST
 // > распознаем дату, временную зону и интервал
 $fn = function () use ($calendar) {
-    _dump_ln('TEST 2');
+    _dump('TEST 2');
 
     $result = $calendar->parseDateTime($datetime = '1970-01-01 00:00:00', $formats = [ 'Y-m-d H:i:s' ], $timezoneIfParsed = 'UTC');
-    _dump_ln($result, json_encode($result));
+    _dump($result, json_encode($result));
 
     $result = $calendar->parseDateTimeImmutable($datetime = '1970-01-01 00:00:00', $formats = [ 'Y-m-d H:i:s' ], $timezoneIfParsed = 'UTC');
-    _dump_ln($result, json_encode($result));
+    _dump($result, json_encode($result));
 
     $result = $calendar->parseDateTimeZone($timezone = 'UTC');
-    _dump_ln($result, json_encode($result));
+    _dump($result, json_encode($result));
 
     $result = $calendar->parseDateInterval($interval = 'P0D', $formats = null);
-    _dump_ln($result, json_encode($result));
+    _dump($result, json_encode($result));
 
-    _dump('');
+    echo '';
 };
 _assert_call($fn, [], PHP_VERSION_ID >= 80000
     ? <<<HEREDOC
@@ -245,30 +262,30 @@ HEREDOC
 // > TEST
 // > проводим действия над датой
 $fn = function () use ($calendar) {
-    _dump_ln('TEST 3');
+    _dump('TEST 3');
 
     $dateTimeImmutable11 = $calendar->parseDateTimeImmutable($datetime = '2000-01-01 midnight', $formats = null, $timezoneIfParsed = null);
     $dateTimeImmutable12 = $dateTimeImmutable11->modify('+ 10 hours');
     $dateTimeImmutableDiff13 = $dateTimeImmutable11->diff($dateTimeImmutable12);
-    _dump_ln($dateTimeImmutable11, json_encode($dateTimeImmutable11));
-    _dump_ln($dateTimeImmutable12, json_encode($dateTimeImmutable12));
-    _dump_ln($dateTimeImmutableDiff13, $calendar->formatIntervalAgo($dateTimeImmutableDiff13));
+    _dump($dateTimeImmutable11, json_encode($dateTimeImmutable11));
+    _dump($dateTimeImmutable12, json_encode($dateTimeImmutable12));
+    _dump($dateTimeImmutableDiff13, $calendar->formatIntervalAgo($dateTimeImmutableDiff13));
 
     $dateTimeImmutable21 = $calendar->parseDateTimeImmutable($datetime = '2000-01-01 midnight', $formats = null, $timezoneIfParsed = null);
     $dateTimeImmutable22 = $dateTimeImmutable21->add(new \DateInterval('PT10H'));
     $dateTimeImmutableDiff23 = $dateTimeImmutable21->diff($dateTimeImmutable22);
-    _dump_ln($dateTimeImmutable21, json_encode($dateTimeImmutable21));
-    _dump_ln($dateTimeImmutable22, json_encode($dateTimeImmutable22));
-    _dump_ln($dateTimeImmutableDiff23, $calendar->formatIntervalAgo($dateTimeImmutableDiff23));
+    _dump($dateTimeImmutable21, json_encode($dateTimeImmutable21));
+    _dump($dateTimeImmutable22, json_encode($dateTimeImmutable22));
+    _dump($dateTimeImmutableDiff23, $calendar->formatIntervalAgo($dateTimeImmutableDiff23));
 
     $dateTimeImmutable31 = $calendar->parseDateTimeImmutable($datetime = '2000-01-01 midnight', $formats = null, $timezoneIfParsed = null);
     $dateTimeImmutable32 = $dateTimeImmutable31->sub(new \DateInterval('PT10H'));
     $dateTimeImmutableDiff33 = $dateTimeImmutable31->diff($dateTimeImmutable32);
-    _dump_ln($dateTimeImmutable31, json_encode($dateTimeImmutable31));
-    _dump_ln($dateTimeImmutable32, json_encode($dateTimeImmutable32));
-    _dump_ln($dateTimeImmutableDiff33, $calendar->formatIntervalAgo($dateTimeImmutableDiff33));
+    _dump($dateTimeImmutable31, json_encode($dateTimeImmutable31));
+    _dump($dateTimeImmutable32, json_encode($dateTimeImmutable32));
+    _dump($dateTimeImmutableDiff33, $calendar->formatIntervalAgo($dateTimeImmutableDiff33));
 
-    _dump('');
+    echo '';
 };
 _assert_call($fn, [], PHP_VERSION_ID >= 80000
     ? <<<HEREDOC
@@ -303,17 +320,17 @@ HEREDOC
 // > TEST
 // > проводим действия над датой
 $fn = function () use ($calendar) {
-    _dump_ln('TEST 4');
+    _dump('TEST 4');
 
     $dateTime = $calendar->dateTime();
     $formatted = $calendar->formatHumanDate($dateTime);
-    _dump_ln($dateTime, json_encode($dateTime), $formatted);
+    _dump($dateTime, json_encode($dateTime), $formatted);
 
     $dateTime = $calendar->dateTime();
     $formatted = $calendar->formatHumanDay($dateTime);
-    _dump_ln($dateTime, json_encode($dateTime), $formatted);
+    _dump($dateTime, json_encode($dateTime), $formatted);
 
-    _dump('');
+    echo '';
 };
 _assert_call($fn, [], PHP_VERSION_ID >= 80000
     ? <<<HEREDOC
@@ -328,5 +345,5 @@ HEREDOC
 { object # Gzhegow\Calendar\Struct\PHP7\DateTime } | "\"1970-01-01T00:00:00.000+03:00\"" | "Thu, 01 Jan 1970 +0300"
 ""
 HEREDOC
-);
+); 
 ```

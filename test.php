@@ -26,7 +26,10 @@ set_exception_handler(function (\Throwable $e) {
         echo $current->getMessage() . PHP_EOL;
 
         foreach ( $e->getTrace() as $traceItem ) {
-            echo "{$traceItem['file']} : {$traceItem['line']}" . PHP_EOL;
+            $file = $traceItem[ 'file' ] ?? '{file}';
+            $line = $traceItem[ 'line' ] ?? '{line}';
+
+            echo "{$file} : {$line}" . PHP_EOL;
         }
 
         echo PHP_EOL;
@@ -57,32 +60,14 @@ function _debug(...$values) : void
     echo implode(' | ', $lines) . PHP_EOL;
 }
 
-function _assert_call(
-    \Closure $fn,
-    array $expectResult = [], string $expectOutput = null, float $expectMicrotime = null
+function _assert_output(
+    \Closure $fn, string $expect = null
 ) : void
 {
     $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
 
-    $expect = (object) [];
-
-    if (count($expectResult)) {
-        $expect->result = $expectResult[ 0 ];
-    }
-
-    if (null !== $expectOutput) {
-        $expect->output = $expectOutput;
-    }
-
-    if (null !== $expectMicrotime) {
-        $expect->microtime = $expectMicrotime;
-    }
-
-    $status = \Gzhegow\Lib\Lib::assert_call($trace, $fn, $expect, $error, STDOUT);
-
-    if (! $status) {
-        throw new \Gzhegow\Lib\Exception\LogicException();
-    }
+    \Gzhegow\Lib\Lib::assert_stdout([ STDOUT ]);
+    \Gzhegow\Lib\Lib::assert_output($trace, $fn, $expect);
 }
 
 
@@ -174,7 +159,7 @@ $fn = function () use ($calendar) {
 
     echo '';
 };
-_assert_call($fn, [], PHP_VERSION_ID >= 80000
+_assert_output($fn, PHP_VERSION_ID >= 80000
     ? <<<HEREDOC
 "TEST 1"
 { object # Gzhegow\Calendar\Struct\PHP8\DateTime } | "\"1970-01-01T00:00:00.000+03:00\""
@@ -221,7 +206,7 @@ $fn = function () use ($calendar) {
 
     echo '';
 };
-_assert_call($fn, [], PHP_VERSION_ID >= 80000
+_assert_output($fn, PHP_VERSION_ID >= 80000
     ? <<<HEREDOC
 "TEST 2"
 { object # Gzhegow\Calendar\Struct\PHP8\DateTime } | "\"1970-01-01T00:00:00.000+00:00\""
@@ -269,7 +254,7 @@ $fn = function () use ($calendar) {
 
     echo '';
 };
-_assert_call($fn, [], PHP_VERSION_ID >= 80000
+_assert_output($fn, PHP_VERSION_ID >= 80000
     ? <<<HEREDOC
 "TEST 3"
 { object # Gzhegow\Calendar\Struct\PHP8\DateTimeImmutable } | "\"2000-01-01T00:00:00.000+03:00\""
@@ -314,7 +299,7 @@ $fn = function () use ($calendar) {
 
     echo '';
 };
-_assert_call($fn, [], PHP_VERSION_ID >= 80000
+_assert_output($fn, PHP_VERSION_ID >= 80000
     ? <<<HEREDOC
 "TEST 4"
 { object # Gzhegow\Calendar\Struct\PHP8\DateTime } | "\"1970-01-01T00:00:00.000+03:00\"" | "Thu, 01 Jan 1970 00:00:00 +0300"

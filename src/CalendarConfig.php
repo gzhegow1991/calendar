@@ -2,9 +2,9 @@
 
 namespace Gzhegow\Calendar;
 
+use Gzhegow\Lib\Config\Config;
 use Gzhegow\Calendar\Parser\ParserConfig;
 use Gzhegow\Calendar\Manager\ManagerConfig;
-use Gzhegow\Calendar\Config\AbstractConfig;
 use Gzhegow\Calendar\Formatter\FormatterConfig;
 
 
@@ -13,7 +13,7 @@ use Gzhegow\Calendar\Formatter\FormatterConfig;
  * @property ManagerConfig   $manager
  * @property FormatterConfig $formatter
  */
-class CalendarConfig extends AbstractConfig
+class CalendarConfig extends Config
 {
     /**
      * @var ParserConfig

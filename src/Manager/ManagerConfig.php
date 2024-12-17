@@ -3,7 +3,7 @@
 namespace Gzhegow\Calendar\Manager;
 
 use Gzhegow\Lib\Lib;
-use Gzhegow\Calendar\Config\AbstractConfig;
+use Gzhegow\Lib\Config\Config;
 use Gzhegow\Calendar\Exception\LogicException;
 
 
@@ -12,7 +12,7 @@ use Gzhegow\Calendar\Exception\LogicException;
  * @property string|\DateTimeZone      $dateTimeZoneDefault
  * @property string|\DateInterval      $dateIntervalDefault
  */
-class ManagerConfig extends AbstractConfig
+class ManagerConfig extends Config
 {
     /**
      * @var string|\DateTimeInterface

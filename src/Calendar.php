@@ -326,9 +326,13 @@ class Calendar
     }
 
 
-    public static function setFacade(CalendarFacade $facade) : void
+    public static function setFacade(CalendarFacade $facade) : ?CalendarFacade
     {
+        $last = static::$facade;
+
         static::$facade = $facade;
+
+        return $last;
     }
 
     /**

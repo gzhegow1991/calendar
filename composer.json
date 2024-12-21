@@ -1,6 +1,7 @@
 {
   "name": "gzhegow/calendar",
   "type": "library",
+  "version": "1.4.0",
 
   "authors": [
     {

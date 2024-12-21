@@ -8,7 +8,7 @@ use Gzhegow\Lib\Config\Config;
 /**
  * @property bool $useIntl
  */
-class FormatterConfig extends Config
+class CalendarFormatterConfig extends Config
 {
     protected $useIntl = true;
 

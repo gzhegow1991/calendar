@@ -2,9 +2,10 @@
 
 namespace Gzhegow\Calendar;
 
-use Gzhegow\Calendar\Formatter\FormatterInterface;
-use Gzhegow\Calendar\Manager\ManagerInterface;
-use Gzhegow\Calendar\Parser\ParserInterface;
+use Gzhegow\Calendar\Type\CalendarType;
+use Gzhegow\Calendar\Parser\CalendarParserInterface;
+use Gzhegow\Calendar\Manager\CalendarManagerInterface;
+use Gzhegow\Calendar\Formatter\CalendarFormatterInterface;
 
 
 class CalendarFacade implements CalendarFacadeInterface
@@ -14,46 +15,85 @@ class CalendarFacade implements CalendarFacadeInterface
      */
     protected $factory;
     /**
-     * @var ParserInterface
+     * @var CalendarType
+     */
+    protected $type;
+    /**
+     * @var CalendarParserInterface
      */
     protected $parser;
     /**
-     * @var ManagerInterface
+     * @var CalendarManagerInterface
      */
     protected $manager;
     /**
-     * @var FormatterInterface
+     * @var CalendarFormatterInterface
      */
     protected $formatter;
 
 
     public function __construct(
         CalendarFactoryInterface $factory,
-        ParserInterface $parser,
-        ManagerInterface $manager,
-        FormatterInterface $formatter
+        CalendarType $type,
+        CalendarParserInterface $parser,
+        CalendarManagerInterface $manager,
+        CalendarFormatterInterface $formatter
     )
     {
         $this->factory = $factory;
+        $this->type = $type;
         $this->parser = $parser;
         $this->manager = $manager;
         $this->formatter = $formatter;
     }
 
 
-    public function getParser() : ParserInterface
+    public function getParser() : CalendarParserInterface
     {
         return $this->parser;
     }
 
-    public function getManager() : ManagerInterface
+    public function getManager() : CalendarManagerInterface
     {
         return $this->manager;
     }
 
-    public function getFormatter() : FormatterInterface
+    public function getFormatter() : CalendarFormatterInterface
     {
         return $this->formatter;
+    }
+
+
+    /**
+     * @return class-string<\DateTime>
+     */
+    public function classDateTime() : string
+    {
+        return $this->type->classDateTime();
+    }
+
+    /**
+     * @return class-string<\DateTimeImmutable>
+     */
+    public function classDateTimeImmutable() : string
+    {
+        return $this->type->classDateTimeImmutable();
+    }
+
+    /**
+     * @return class-string<\DateInterval>
+     */
+    public function classDateInterval() : string
+    {
+        return $this->type->classDateInterval();
+    }
+
+    /**
+     * @return class-string<\DateTimeZone>
+     */
+    public function classDateTimeZone() : string
+    {
+        return $this->type->classDateTimeZone();
     }
 
 

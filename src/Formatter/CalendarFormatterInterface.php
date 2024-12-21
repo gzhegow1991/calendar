@@ -2,7 +2,7 @@
 
 namespace Gzhegow\Calendar\Formatter;
 
-interface FormatterInterface
+interface CalendarFormatterInterface
 {
     public function formatTimestamp(\DateTimeInterface $dateTime) : string;
 

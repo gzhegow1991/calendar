@@ -16,7 +16,7 @@ class CalendarFactory implements CalendarFactoryInterface
             throw new LogicException('The `from` should be not null');
         }
 
-        $dateTimeClass = CalendarType::dateTime();
+        $dateTimeClass = Calendar::classDateTime();
 
         try {
             $dateTime = new $dateTimeClass($from, $dateTimeZone);
@@ -37,7 +37,7 @@ class CalendarFactory implements CalendarFactoryInterface
 
     public function newDateTimeFromInterface(\DateTimeInterface $object) : \DateTime
     {
-        $dateTimeClass = CalendarType::dateTime();
+        $dateTimeClass = Calendar::classDateTime();
 
         try {
             /** @see \DateTime::createFromInterface() */
@@ -69,7 +69,7 @@ class CalendarFactory implements CalendarFactoryInterface
 
     public function newDateTimeFromFormat(string $format, string $datetimeStringFormatted, \DateTimeZone $dateTimeZoneIfParsed = null) : \DateTime
     {
-        $dateTimeClass = CalendarType::dateTime();
+        $dateTimeClass = Calendar::classDateTime();
 
         try {
             /** @see \DateTime::createFromFormat() */
@@ -110,7 +110,7 @@ class CalendarFactory implements CalendarFactoryInterface
             throw new LogicException('The `datetime` should be not null');
         }
 
-        $dateTimeClass = CalendarType::dateTimeImmutable();
+        $dateTimeClass = Calendar::classDateTimeImmutable();
 
         try {
             $dateTime = new $dateTimeClass($from, $dateTimeZone);
@@ -131,7 +131,7 @@ class CalendarFactory implements CalendarFactoryInterface
 
     public function newDateTimeImmutableFromInterface(\DateTimeInterface $object) : \DateTimeImmutable
     {
-        $dateTimeImmutableClass = CalendarType::dateTimeImmutable();
+        $dateTimeImmutableClass = Calendar::classDateTimeImmutable();
 
         try {
             /** @see \DateTimeImmutable::createFromInterface() */
@@ -163,7 +163,7 @@ class CalendarFactory implements CalendarFactoryInterface
 
     public function newDateTimeImmutableFromFormat(string $format, string $dateTimeStringFormatted, \DateTimeZone $dateTimeZoneIfParsed = null) : \DateTimeImmutable
     {
-        $dateTimeImmutableClass = CalendarType::dateTimeImmutable();
+        $dateTimeImmutableClass = Calendar::classDateTimeImmutable();
 
         try {
             /** @see \DateTimeImmutable::createFromFormat() */
@@ -204,7 +204,7 @@ class CalendarFactory implements CalendarFactoryInterface
             throw new LogicException('The `from` should be not null');
         }
 
-        $dateTimeZoneClass = CalendarType::dateTimeZone();
+        $dateTimeZoneClass = Calendar::classDateTimeZone();
 
         try {
             $dateTimeZone = new $dateTimeZoneClass($from);
@@ -224,7 +224,7 @@ class CalendarFactory implements CalendarFactoryInterface
 
     public function newDateTimeZoneFromInstance(\DateTimeZone $instance) : \DateTimeZone
     {
-        $dateTimeZoneClass = CalendarType::dateTimeZone();
+        $dateTimeZoneClass = Calendar::classDateTimeZone();
 
         try {
             /** @see DateTimeZone::createFromInstance() */
@@ -261,7 +261,7 @@ class CalendarFactory implements CalendarFactoryInterface
             throw new LogicException('The `from` should be not null');
         }
 
-        $dateIntervalClass = CalendarType::dateInterval();
+        $dateIntervalClass = Calendar::classDateInterval();
 
         try {
             $dateInterval = new $dateIntervalClass($from);
@@ -281,7 +281,7 @@ class CalendarFactory implements CalendarFactoryInterface
 
     public function newDateIntervalFromInstance(\DateInterval $instance) : \DateInterval
     {
-        $dateIntervalClass = CalendarType::dateInterval();
+        $dateIntervalClass = Calendar::classDateInterval();
 
         try {
             /** @see DateInterval::createFromInstance() */
@@ -314,7 +314,7 @@ class CalendarFactory implements CalendarFactoryInterface
 
     public function newDateIntervalFromDateString(string $dateString) : \DateInterval
     {
-        $dateIntervalClass = CalendarType::dateInterval();
+        $dateIntervalClass = Calendar::classDateInterval();
 
         try {
             /** @see DateInterval::createFromDateString() */

@@ -127,13 +127,13 @@ $config->configure(function (\Gzhegow\Calendar\CalendarConfig $config) {
 // \Gzhegow\Calendar\CalendarType::setInstance($calendarType);
 
 // > создаем парсер
-$parser = new \Gzhegow\Calendar\Parser\Parser($factory, $config->parser);
+$parser = new \Gzhegow\Calendar\Parser\CalendarParser($factory, $config->parser);
 
 // > создаем менеджер
-$manager = new \Gzhegow\Calendar\Manager\Manager($factory, $parser, $config->manager);
+$manager = new \Gzhegow\Calendar\Manager\CalendarManager($factory, $parser, $config->manager);
 
 // > создаем форматтер
-$formatter = new \Gzhegow\Calendar\Formatter\Formatter($factory, $config->formatter);
+$formatter = new \Gzhegow\Calendar\Formatter\CalendarFormatter($factory, $config->formatter);
 
 // > создаем фасад
 $calendar = new \Gzhegow\Calendar\CalendarFacade(

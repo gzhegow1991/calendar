@@ -2,9 +2,9 @@
 
 namespace Gzhegow\Calendar;
 
-use Gzhegow\Calendar\Formatter\FormatterInterface;
-use Gzhegow\Calendar\Manager\ManagerInterface;
-use Gzhegow\Calendar\Parser\ParserInterface;
+use Gzhegow\Calendar\Formatter\CalendarFormatterInterface;
+use Gzhegow\Calendar\Manager\CalendarManagerInterface;
+use Gzhegow\Calendar\Parser\CalendarParserInterface;
 
 
 class Calendar
@@ -86,19 +86,52 @@ class Calendar
     ];
 
 
-    public static function getParser() : ParserInterface
+    public static function getParser() : CalendarParserInterface
     {
         return static::$facade->getParser();
     }
 
-    public static function getManager() : ManagerInterface
+    public static function getManager() : CalendarManagerInterface
     {
         return static::$facade->getManager();
     }
 
-    public static function getFormatter() : FormatterInterface
+    public static function getFormatter() : CalendarFormatterInterface
     {
         return static::$facade->getFormatter();
+    }
+
+
+    /**
+     * @return class-string<\DateTime>
+     */
+    public static function classDateTime() : string
+    {
+        return static::$facade->classDateTime();
+    }
+
+    /**
+     * @return class-string<\DateTimeImmutable>
+     */
+    public static function classDateTimeImmutable() : string
+    {
+        return static::$facade->classDateTimeImmutable();
+    }
+
+    /**
+     * @return class-string<\DateInterval>
+     */
+    public static function classDateInterval() : string
+    {
+        return static::$facade->classDateInterval();
+    }
+
+    /**
+     * @return class-string<\DateTimeZone>
+     */
+    public static function classDateTimeZone() : string
+    {
+        return static::$facade->classDateTimeZone();
     }
 
 

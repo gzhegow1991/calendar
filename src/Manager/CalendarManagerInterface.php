@@ -2,7 +2,7 @@
 
 namespace Gzhegow\Calendar\Manager;
 
-interface ManagerInterface
+interface CalendarManagerInterface
 {
     public function dateTime($from = '', $dateTimeZone = '', array $formats = null) : ?\DateTime;
 

@@ -2,7 +2,7 @@
 
 namespace Gzhegow\Calendar\Parser;
 
-interface ParserInterface
+interface CalendarParserInterface
 {
     public function parseDateTime($from, array $formats = null, $dateTimeZoneIfParsed = null) : ?\DateTime;
 

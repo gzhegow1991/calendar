@@ -50,13 +50,15 @@ class DateInterval extends \DateInterval implements
             );
         }
 
-        $dti = parent::createFromDateString($datetime);
+        $intervalFromDateString = parent::createFromDateString($datetime);
+
+        $interval = new static('P0D');
 
         (function ($state) {
             foreach ( $state as $key => $value ) {
                 $this->{$key} = $value;
             }
-        })->call($interval = new static('P0D'), (array) $dti);
+        })->call($interval, (array) $intervalFromDateString);
 
         return $interval;
     }
@@ -64,8 +66,8 @@ class DateInterval extends \DateInterval implements
 
     public function jsonSerialize() : mixed
     {
-        // $dti = new \DateInterval();
-        // var_dump($dti, $var = json_encode($dti));
+        // $interval = new \DateInterval();
+        // var_dump($interval, $var = json_encode($interval));
         //
         // > string(88) "{"y":0,"m":0,"d":0,"h":0,"i":10,"s":0,"f":0,"invert":0,"days":false,"from_string":false}"
         //

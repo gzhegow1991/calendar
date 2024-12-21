@@ -12,7 +12,7 @@ use Gzhegow\Calendar\Exception\LogicException;
  * @property string|\DateTimeZone      $dateTimeZoneDefault
  * @property string|\DateInterval      $dateIntervalDefault
  */
-class ManagerConfig extends Config
+class CalendarManagerConfig extends Config
 {
     /**
      * @var string|\DateTimeInterface

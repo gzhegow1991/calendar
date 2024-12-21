@@ -4,7 +4,6 @@ namespace Gzhegow\Calendar\Struct\PHP7;
 
 use Gzhegow\Lib\Lib;
 use Gzhegow\Calendar\Calendar;
-use Gzhegow\Calendar\CalendarType;
 use Gzhegow\Calendar\Exception\LogicException;
 use Gzhegow\Calendar\Exception\RuntimeException;
 
@@ -33,7 +32,7 @@ class DateTime extends \DateTime implements DateTimeInterface,
         $microseconds = str_pad($object->format('u'), 6, '0');
 
         try {
-            $dt = (new static('now', $object->getTimezone()))
+            $dateTime = (new static('now', $object->getTimezone()))
                 ->setTimestamp($object->getTimestamp())
                 ->modify("+ {$microseconds} microseconds")
             ;
@@ -42,7 +41,7 @@ class DateTime extends \DateTime implements DateTimeInterface,
             throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
         }
 
-        return $dt;
+        return $dateTime;
     }
 
 
@@ -80,13 +79,13 @@ class DateTime extends \DateTime implements DateTimeInterface,
             }
         }
 
-        $dt = parent::createFromFormat($format, $datetime, $timezone);
+        $dateTime = parent::createFromFormat($format, $datetime, $timezone);
 
-        $microseconds = str_pad($dt->format('u'), 6, '0');
+        $microseconds = str_pad($dateTime->format('u'), 6, '0');
 
         try {
-            $dt = (new static('now', $dt->getTimezone()))
-                ->setTimestamp($dt->getTimestamp())
+            $dateTime = (new static('now', $dateTime->getTimezone()))
+                ->setTimestamp($dateTime->getTimestamp())
                 ->modify("+ {$microseconds} microseconds")
             ;
         }
@@ -94,7 +93,7 @@ class DateTime extends \DateTime implements DateTimeInterface,
             throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
         }
 
-        return $dt;
+        return $dateTime;
     }
 
 
@@ -102,8 +101,9 @@ class DateTime extends \DateTime implements DateTimeInterface,
     {
         $interval = parent::diff($targetObject, $absolute);
 
-        $dtiClass = CalendarType::dateInterval();
-        $interval = $dtiClass::{'createFromInstance'}($interval);
+        $intervalClass = Calendar::classDateInterval();
+
+        $interval = $intervalClass::{'createFromInstance'}($interval);
 
         return $interval;
     }

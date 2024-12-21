@@ -2,14 +2,13 @@
 
 namespace Gzhegow\Calendar\Manager;
 
-use Gzhegow\Calendar\Parser\Parser;
-use Gzhegow\Calendar\Manager\ManagerConfig;
-use Gzhegow\Calendar\Parser\ParserInterface;
+use Gzhegow\Calendar\Parser\CalendarParser;
 use Gzhegow\Calendar\Exception\LogicException;
 use Gzhegow\Calendar\CalendarFactoryInterface;
+use Gzhegow\Calendar\Parser\CalendarParserInterface;
 
 
-class Manager implements ManagerInterface
+class CalendarManager implements CalendarManagerInterface
 {
     /**
      * @var CalendarFactoryInterface
@@ -17,21 +16,21 @@ class Manager implements ManagerInterface
     protected $factory;
 
     /**
-     * @var ManagerConfig
+     * @var CalendarManagerConfig
      */
     protected $config;
 
     /**
-     * @var Parser
+     * @var CalendarParser
      */
     protected $parser;
 
 
     public function __construct(
         CalendarFactoryInterface $factory,
-        ParserInterface $parser,
+        CalendarParserInterface $parser,
         //
-        ManagerConfig $config
+        CalendarManagerConfig $config
     )
     {
         $this->factory = $factory;

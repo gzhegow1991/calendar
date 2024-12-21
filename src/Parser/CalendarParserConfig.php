@@ -12,7 +12,7 @@ use Gzhegow\Calendar\Exception\LogicException;
  * @property string[] $parseDateTimeFormatsDefault
  * @property string[] $parseDateIntervalFormatsDefault
  */
-class ParserConfig extends Config
+class CalendarParserConfig extends Config
 {
     protected $parseDateTimeFormatsDefault = [
         Calendar::FORMAT_SQL,

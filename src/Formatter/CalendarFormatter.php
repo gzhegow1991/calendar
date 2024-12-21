@@ -6,7 +6,7 @@ use Gzhegow\Calendar\Calendar;
 use Gzhegow\Calendar\CalendarFactoryInterface;
 
 
-class Formatter implements FormatterInterface
+class CalendarFormatter implements CalendarFormatterInterface
 {
     /**
      * @var CalendarFactoryInterface
@@ -14,7 +14,7 @@ class Formatter implements FormatterInterface
     protected $factory;
 
     /**
-     * @var FormatterConfig
+     * @var CalendarFormatterConfig
      */
     protected $config;
 
@@ -22,7 +22,7 @@ class Formatter implements FormatterInterface
     public function __construct(
         CalendarFactoryInterface $factory,
         //
-        FormatterConfig $config
+        CalendarFormatterConfig $config
     )
     {
         $this->factory = $factory;
@@ -224,7 +224,7 @@ class Formatter implements FormatterInterface
         $milliseconds = $clone->format('u');
         $milliseconds = substr($milliseconds, 0, -3);
 
-        return $formattedJavascript;
+        return "{$formattedJavascript}.{$milliseconds}";
     }
 
 

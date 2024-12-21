@@ -4,7 +4,6 @@ namespace Gzhegow\Calendar\Struct\PHP8;
 
 use Gzhegow\Lib\Lib;
 use Gzhegow\Calendar\Calendar;
-use Gzhegow\Calendar\CalendarType;
 use Gzhegow\Calendar\Exception\LogicException;
 use Gzhegow\Calendar\Exception\RuntimeException;
 
@@ -33,7 +32,7 @@ class DateTimeImmutable extends \DateTimeImmutable implements DateTimeInterface,
         $microseconds = str_pad($object->format('u'), 6, '0');
 
         try {
-            $dt = (new static('now', $object->getTimezone()))
+            $dateTimeImmutable = (new static('now', $object->getTimezone()))
                 ->setTimestamp($object->getTimestamp())
                 ->modify("+ {$microseconds} microseconds")
             ;
@@ -42,7 +41,7 @@ class DateTimeImmutable extends \DateTimeImmutable implements DateTimeInterface,
             throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
         }
 
-        return $dt;
+        return $dateTimeImmutable;
     }
 
 
@@ -80,13 +79,13 @@ class DateTimeImmutable extends \DateTimeImmutable implements DateTimeInterface,
             }
         }
 
-        $dt = parent::createFromFormat($format, $datetime, $timezone);
+        $dateTimeImmutable = parent::createFromFormat($format, $datetime, $timezone);
 
-        $microseconds = str_pad($dt->format('u'), 6, '0');
+        $microseconds = str_pad($dateTimeImmutable->format('u'), 6, '0');
 
         try {
-            $dt = (new static('now', $dt->getTimezone()))
-                ->setTimestamp($dt->getTimestamp())
+            $dateTimeImmutable = (new static('now', $dateTimeImmutable->getTimezone()))
+                ->setTimestamp($dateTimeImmutable->getTimestamp())
                 ->modify("+ {$microseconds} microseconds")
             ;
         }
@@ -94,18 +93,19 @@ class DateTimeImmutable extends \DateTimeImmutable implements DateTimeInterface,
             throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
         }
 
-        return $dt;
+        return $dateTimeImmutable;
     }
 
 
     public function diff($targetObject, $absolute = false) : \DateInterval
     {
-        $dti = parent::diff($targetObject, $absolute);
+        $intervalDiff = parent::diff($targetObject, $absolute);
 
-        $dtiClass = CalendarType::dateInterval();
-        $dti = $dtiClass::{'createFromInstance'}($dti);
+        $intervalClass = Calendar::classDateInterval();
 
-        return $dti;
+        $interval = $intervalClass::{'createFromInstance'}($intervalDiff);
+
+        return $interval;
     }
 
 

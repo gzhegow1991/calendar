@@ -31,15 +31,15 @@ class CalendarManagerConfig extends Config
     public function validate()
     {
         $dateTimeDefault = null
-            ?? Lib::parse_string_not_empty($this->dateTimeDefault)
+            ?? Lib::parse()->string_not_empty($this->dateTimeDefault)
             ?? (is_a($this->dateTimeDefault, \DateTimeInterface::class) ? $this->dateTimeDefault : null);
 
         $dateTimeZoneDefault = null
-            ?? Lib::parse_string_not_empty($this->dateTimeZoneDefault)
+            ?? Lib::parse()->string_not_empty($this->dateTimeZoneDefault)
             ?? (is_a($this->dateTimeZoneDefault, \DateTimeZone::class) ? $this->dateTimeZoneDefault : null);
 
         $dateIntervalDefault = null
-            ?? Lib::parse_string_not_empty($this->dateIntervalDefault)
+            ?? Lib::parse()->string_not_empty($this->dateIntervalDefault)
             ?? (is_a($this->dateIntervalDefault, \DateInterval::class) ? $this->dateIntervalDefault : null);
 
         if (null === $dateTimeDefault) {

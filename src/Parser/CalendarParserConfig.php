@@ -4,7 +4,7 @@ namespace Gzhegow\Calendar\Parser;
 
 use Gzhegow\Lib\Lib;
 use Gzhegow\Calendar\Calendar;
-use Gzhegow\Lib\Config\Config;
+use Gzhegow\Lib\Config\AbstractConfig;
 use Gzhegow\Calendar\Exception\LogicException;
 
 
@@ -12,7 +12,7 @@ use Gzhegow\Calendar\Exception\LogicException;
  * @property string[] $parseDateTimeFormatsDefault
  * @property string[] $parseDateIntervalFormatsDefault
  */
-class CalendarParserConfig extends Config
+class CalendarParserConfig extends AbstractConfig
 {
     protected $parseDateTimeFormatsDefault = [
         Calendar::FORMAT_SQL,

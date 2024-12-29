@@ -2,13 +2,13 @@
 
 namespace Gzhegow\Calendar\Formatter;
 
-use Gzhegow\Lib\Config\Config;
+use Gzhegow\Lib\Config\AbstractConfig;
 
 
 /**
  * @property bool $useIntl
  */
-class CalendarFormatterConfig extends Config
+class CalendarFormatterConfig extends AbstractConfig
 {
     protected $useIntl = true;
 

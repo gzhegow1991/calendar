@@ -152,6 +152,7 @@ $calendar = new \Gzhegow\Calendar\CalendarFacade(
 // > создаем дату, временную зону и интервал
 $fn = function () use ($calendar) {
     _dump('TEST 1');
+    echo PHP_EOL;
 
     $result = $calendar->dateTime($datetime = '', $timezone = null);
     _dump($result, json_encode($result));
@@ -183,6 +184,7 @@ $fn = function () use ($calendar) {
 _assert_output($fn, PHP_VERSION_ID >= 80000
     ? '
 "TEST 1"
+
 { object # Gzhegow\Calendar\Struct\PHP8\DateTime } | "\"1970-01-01T00:00:00.000+03:00\""
 { object # Gzhegow\Calendar\Struct\PHP8\DateTime } | "\"1970-01-01T00:00:00.000+03:00\""
 { object # Gzhegow\Calendar\Struct\PHP8\DateTimeImmutable } | "\"1970-01-01T00:00:00.000+03:00\""
@@ -194,6 +196,7 @@ _assert_output($fn, PHP_VERSION_ID >= 80000
 '
     : '
 "TEST 1"
+
 { object # Gzhegow\Calendar\Struct\PHP7\DateTime } | "\"1970-01-01T00:00:00.000+03:00\""
 { object # Gzhegow\Calendar\Struct\PHP7\DateTime } | "\"1970-01-01T00:00:00.000+03:00\""
 { object # Gzhegow\Calendar\Struct\PHP7\DateTimeImmutable } | "\"1970-01-01T00:00:00.000+03:00\""
@@ -209,6 +212,7 @@ _assert_output($fn, PHP_VERSION_ID >= 80000
 // > распознаем дату, временную зону и интервал
 $fn = function () use ($calendar) {
     _dump('TEST 2');
+    echo PHP_EOL;
 
     $result = $calendar->parseDateTime($datetime = '1970-01-01 00:00:00', $formats = [ 'Y-m-d H:i:s' ], $timezoneIfParsed = 'UTC');
     _dump($result, json_encode($result));
@@ -225,6 +229,7 @@ $fn = function () use ($calendar) {
 _assert_output($fn, PHP_VERSION_ID >= 80000
     ? '
 "TEST 2"
+
 { object # Gzhegow\Calendar\Struct\PHP8\DateTime } | "\"1970-01-01T00:00:00.000+00:00\""
 { object # Gzhegow\Calendar\Struct\PHP8\DateTimeImmutable } | "\"1970-01-01T00:00:00.000+00:00\""
 { object # Gzhegow\Calendar\Struct\PHP8\DateTimeZone } | "\"UTC\""
@@ -232,6 +237,7 @@ _assert_output($fn, PHP_VERSION_ID >= 80000
 '
     : '
 "TEST 2"
+
 { object # Gzhegow\Calendar\Struct\PHP7\DateTime } | "\"1970-01-01T00:00:00.000+00:00\""
 { object # Gzhegow\Calendar\Struct\PHP7\DateTimeImmutable } | "\"1970-01-01T00:00:00.000+00:00\""
 { object # Gzhegow\Calendar\Struct\PHP7\DateTimeZone } | "\"UTC\""
@@ -243,6 +249,7 @@ _assert_output($fn, PHP_VERSION_ID >= 80000
 // > проводим действия над датой
 $fn = function () use ($calendar) {
     _dump('TEST 3');
+    echo PHP_EOL;
 
     $dateTimeImmutable11 = $calendar->parseDateTimeImmutable($datetime = '2000-01-01 midnight', $formats = null, $timezoneIfParsed = null);
     $dateTimeImmutable12 = $dateTimeImmutable11->modify('+ 10 hours');
@@ -268,6 +275,7 @@ $fn = function () use ($calendar) {
 _assert_output($fn, PHP_VERSION_ID >= 80000
     ? '
 "TEST 3"
+
 { object # Gzhegow\Calendar\Struct\PHP8\DateTimeImmutable } | "\"2000-01-01T00:00:00.000+03:00\""
 { object # Gzhegow\Calendar\Struct\PHP8\DateTimeImmutable } | "\"2000-01-01T10:00:00.000+03:00\""
 { object # Gzhegow\Calendar\Struct\PHP8\DateInterval } | "через 10 час."
@@ -280,6 +288,7 @@ _assert_output($fn, PHP_VERSION_ID >= 80000
 '
     : '
 "TEST 3"
+
 { object # Gzhegow\Calendar\Struct\PHP7\DateTimeImmutable } | "\"2000-01-01T00:00:00.000+03:00\""
 { object # Gzhegow\Calendar\Struct\PHP7\DateTimeImmutable } | "\"2000-01-01T10:00:00.000+03:00\""
 { object # Gzhegow\Calendar\Struct\PHP7\DateInterval } | "через 10 час."
@@ -296,6 +305,7 @@ _assert_output($fn, PHP_VERSION_ID >= 80000
 // > проводим действия над датой
 $fn = function () use ($calendar) {
     _dump('TEST 4');
+    echo PHP_EOL;
 
     $dateTime = $calendar->dateTime();
     $formatted = $calendar->formatHumanDate($dateTime);
@@ -308,11 +318,13 @@ $fn = function () use ($calendar) {
 _assert_output($fn, PHP_VERSION_ID >= 80000
     ? '
 "TEST 4"
+
 { object # Gzhegow\Calendar\Struct\PHP8\DateTime } | "\"1970-01-01T00:00:00.000+03:00\"" | "Thu, 01 Jan 1970 00:00:00 +0300"
 { object # Gzhegow\Calendar\Struct\PHP8\DateTime } | "\"1970-01-01T00:00:00.000+03:00\"" | "Thu, 01 Jan 1970 +0300"
 '
     : '
 "TEST 4"
+
 { object # Gzhegow\Calendar\Struct\PHP7\DateTime } | "\"1970-01-01T00:00:00.000+03:00\"" | "Thu, 01 Jan 1970 00:00:00 +0300"
 { object # Gzhegow\Calendar\Struct\PHP7\DateTime } | "\"1970-01-01T00:00:00.000+03:00\"" | "Thu, 01 Jan 1970 +0300"
 '); 

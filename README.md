@@ -38,7 +38,7 @@ function _debug(...$values) : string
 {
     $lines = [];
     foreach ( $values as $value ) {
-        $lines[] = \Gzhegow\Lib\Lib::debug()->type_id($value);
+        $lines[] = \Gzhegow\Lib\Lib::debug()->type($value);
     }
 
     $ret = implode(' | ', $lines) . PHP_EOL;
@@ -179,8 +179,6 @@ $fn = function () use ($calendar) {
 
     $result = $calendar->dateInterval($duration = 'P1D');
     _dump($result, json_encode($result));
-
-    echo '';
 };
 _assert_output($fn, PHP_VERSION_ID >= 80000
     ? '
@@ -223,8 +221,6 @@ $fn = function () use ($calendar) {
 
     $result = $calendar->parseDateInterval($interval = 'P0D', $formats = null);
     _dump($result, json_encode($result));
-
-    echo '';
 };
 _assert_output($fn, PHP_VERSION_ID >= 80000
     ? '
@@ -268,8 +264,6 @@ $fn = function () use ($calendar) {
     _dump($dateTimeImmutable31, json_encode($dateTimeImmutable31));
     _dump($dateTimeImmutable32, json_encode($dateTimeImmutable32));
     _dump($dateTimeImmutableDiff33, $calendar->formatIntervalAgo($dateTimeImmutableDiff33));
-
-    echo '';
 };
 _assert_output($fn, PHP_VERSION_ID >= 80000
     ? '
@@ -310,8 +304,6 @@ $fn = function () use ($calendar) {
     $dateTime = $calendar->dateTime();
     $formatted = $calendar->formatHumanDay($dateTime);
     _dump($dateTime, json_encode($dateTime), $formatted);
-
-    echo '';
 };
 _assert_output($fn, PHP_VERSION_ID >= 80000
     ? '

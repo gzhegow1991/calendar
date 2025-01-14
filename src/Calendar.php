@@ -2,9 +2,9 @@
 
 namespace Gzhegow\Calendar;
 
-use Gzhegow\Calendar\Formatter\CalendarFormatterInterface;
-use Gzhegow\Calendar\Manager\CalendarManagerInterface;
 use Gzhegow\Calendar\Parser\CalendarParserInterface;
+use Gzhegow\Calendar\Manager\CalendarManagerInterface;
+use Gzhegow\Calendar\Formatter\CalendarFormatterInterface;
 
 
 class Calendar
@@ -326,7 +326,7 @@ class Calendar
     }
 
 
-    public static function setFacade(CalendarFacade $facade) : ?CalendarFacade
+    public static function setFacade(CalendarFacadeInterface $facade) : ?CalendarFacadeInterface
     {
         $last = static::$facade;
 
@@ -336,7 +336,7 @@ class Calendar
     }
 
     /**
-     * @var CalendarFacade
+     * @var CalendarFacadeInterface
      */
     protected static $facade;
 }

@@ -43,6 +43,7 @@ interface CalendarFacadeInterface
 
     public function parseDateInterval($from, array $formats = null) : ?\DateInterval;
 
+
     public function formatTimestamp(\DateTimeInterface $dateTime) : string;
 
     public function formatTimestampUTC(\DateTimeInterface $dateTime) : string;

@@ -8,7 +8,7 @@ use Gzhegow\Calendar\Manager\CalendarManagerInterface;
 use Gzhegow\Calendar\Formatter\CalendarFormatterInterface;
 
 
-class CalendarFacade implements CalendarFacadeInterface
+class CalendarFacade implements CalendarInterface
 {
     /**
      * @var CalendarFactoryInterface

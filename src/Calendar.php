@@ -326,7 +326,7 @@ class Calendar
     }
 
 
-    public static function setFacade(CalendarFacadeInterface $facade) : ?CalendarFacadeInterface
+    public static function setFacade(CalendarInterface $facade) : ?CalendarInterface
     {
         $last = static::$facade;
 
@@ -336,7 +336,7 @@ class Calendar
     }
 
     /**
-     * @var CalendarFacadeInterface
+     * @var CalendarInterface
      */
     protected static $facade;
 }

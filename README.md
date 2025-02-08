@@ -62,11 +62,11 @@ function _dump(...$values) : string
     return $ret;
 }
 
-function _dump_array($value, int $maxLevel = null, bool $multiline = false) : string
+function _dump_array($value, int $maxLevel = null, array $options = []) : string
 {
-    $content = $multiline
-        ? \Gzhegow\Lib\Lib::debug()->array_multiline($value, $maxLevel)
-        : \Gzhegow\Lib\Lib::debug()->array($value, $maxLevel);
+    $content = \Gzhegow\Lib\Lib::debug()
+        ->array($value, $maxLevel, $options)
+    ;
 
     $ret = $content . PHP_EOL;
 
@@ -75,22 +75,58 @@ function _dump_array($value, int $maxLevel = null, bool $multiline = false) : st
     return $ret;
 }
 
-function _assert_output(
-    \Closure $fn, string $expect = null
+function _dump_array_multiline($value, int $maxLevel = null, array $options = []) : string
+{
+    $content = \Gzhegow\Lib\Lib::debug()
+        ->array_multiline($value, $maxLevel, $options)
+    ;
+
+    $ret = $content . PHP_EOL;
+
+    echo $ret;
+
+    return $ret;
+}
+
+function _assert_return(
+    \Closure $fn, array $fnArgs = [],
+    $expectedReturn = null
 ) : void
 {
     $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
 
-    \Gzhegow\Lib\Lib::assert()->output($trace, $fn, $expect);
+    \Gzhegow\Lib\Lib::test()->assertReturn(
+        $trace,
+        $fn, $fnArgs,
+        $expectedReturn
+    );
+}
+
+function _assert_stdout(
+    \Closure $fn, array $fnArgs = [],
+    string $expectedStdout = null
+) : void
+{
+    $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
+
+    \Gzhegow\Lib\Lib::test()->assertStdout($trace,
+        $fn, $fnArgs,
+        $expectedStdout
+    );
 }
 
 function _assert_microtime(
-    \Closure $fn, float $expectMax = null, float $expectMin = null
+    \Closure $fn, array $fnArgs = [],
+    float $expectedMicrotimeMax = null, float $expectedMicrotimeMin = null
 ) : void
 {
     $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
 
-    \Gzhegow\Lib\Lib::assert()->microtime($trace, $fn, $expectMax, $expectMin);
+    \Gzhegow\Lib\Lib::test()->assertMicrotime(
+        $trace,
+        $fn, $fnArgs,
+        $expectedMicrotimeMax, $expectedMicrotimeMin
+    );
 }
 
 
@@ -181,7 +217,7 @@ $fn = function () use ($calendar) {
     $result = $calendar->dateInterval($duration = 'P1D');
     _dump($result, json_encode($result));
 };
-_assert_output($fn, PHP_VERSION_ID >= 80000
+_assert_stdout($fn, [], PHP_VERSION_ID >= 80000
     ? '
 "TEST 1"
 
@@ -226,7 +262,7 @@ $fn = function () use ($calendar) {
     $result = $calendar->parseDateInterval($interval = 'P0D', $formats = null);
     _dump($result, json_encode($result));
 };
-_assert_output($fn, PHP_VERSION_ID >= 80000
+_assert_stdout($fn, [], PHP_VERSION_ID >= 80000
     ? '
 "TEST 2"
 
@@ -272,7 +308,7 @@ $fn = function () use ($calendar) {
     _dump($dateTimeImmutable32, json_encode($dateTimeImmutable32));
     _dump($dateTimeImmutableDiff33, $calendar->formatIntervalAgo($dateTimeImmutableDiff33));
 };
-_assert_output($fn, PHP_VERSION_ID >= 80000
+_assert_stdout($fn, [], PHP_VERSION_ID >= 80000
     ? '
 "TEST 3"
 
@@ -315,7 +351,7 @@ $fn = function () use ($calendar) {
     $formatted = $calendar->formatHumanDay($dateTime);
     _dump($dateTime, json_encode($dateTime), $formatted);
 };
-_assert_output($fn, PHP_VERSION_ID >= 80000
+_assert_stdout($fn, [], PHP_VERSION_ID >= 80000
     ? '
 "TEST 4"
 

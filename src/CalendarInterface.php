@@ -2,12 +2,12 @@
 
 namespace Gzhegow\Calendar;
 
-use Gzhegow\Calendar\Formatter\CalendarFormatterInterface;
-use Gzhegow\Calendar\Manager\CalendarManagerInterface;
 use Gzhegow\Calendar\Parser\CalendarParserInterface;
+use Gzhegow\Calendar\Manager\CalendarManagerInterface;
+use Gzhegow\Calendar\Formatter\CalendarFormatterInterface;
 
 
-interface CalendarFacadeInterface
+interface CalendarInterface
 {
     public function getParser() : CalendarParserInterface;
 

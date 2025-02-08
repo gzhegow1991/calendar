@@ -11,7 +11,7 @@ trait CalendarAwareTrait
     protected $calendar;
 
 
-    public function setCalendar(?CalendarFacadeInterface $calendar) : void
+    public function setCalendar(?CalendarInterface $calendar) : void
     {
         $this->calendar = $calendar;
     }

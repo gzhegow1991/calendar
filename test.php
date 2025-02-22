@@ -16,72 +16,14 @@ ini_set('memory_limit', '32M');
 
 
 // > добавляем несколько функция для тестирования
-function _debug(...$values) : string
+function _values($separator = null, ...$values) : string
 {
-    $lines = [];
-    foreach ( $values as $value ) {
-        $lines[] = \Gzhegow\Lib\Lib::debug()->type($value);
-    }
-
-    $ret = implode(' | ', $lines) . PHP_EOL;
-
-    echo $ret;
-
-    return $ret;
+    return \Gzhegow\Lib\Lib::debug()->values($separator, [], ...$values);
 }
 
-function _dump(...$values) : string
+function _print(...$values) : void
 {
-    $lines = [];
-    foreach ( $values as $value ) {
-        $lines[] = \Gzhegow\Lib\Lib::debug()->value($value);
-    }
-
-    $ret = implode(' | ', $lines) . PHP_EOL;
-
-    echo $ret;
-
-    return $ret;
-}
-
-function _dump_array($value, int $maxLevel = null, array $options = []) : string
-{
-    $content = \Gzhegow\Lib\Lib::debug()
-        ->array($value, $maxLevel, $options)
-    ;
-
-    $ret = $content . PHP_EOL;
-
-    echo $ret;
-
-    return $ret;
-}
-
-function _dump_array_multiline($value, int $maxLevel = null, array $options = []) : string
-{
-    $content = \Gzhegow\Lib\Lib::debug()
-        ->array_multiline($value, $maxLevel, $options)
-    ;
-
-    $ret = $content . PHP_EOL;
-
-    echo $ret;
-
-    return $ret;
-}
-
-function _assert_return(
-    \Closure $fn, array $fnArgs = [],
-    $expectedReturn = null
-) : void
-{
-    $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
-
-    \Gzhegow\Lib\Lib::test()->assertReturn(
-        $trace,
-        $fn, $fnArgs,
-        $expectedReturn
-    );
+    echo _values(' | ', ...$values) . PHP_EOL;
 }
 
 function _assert_stdout(
@@ -91,23 +33,10 @@ function _assert_stdout(
 {
     $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
 
-    \Gzhegow\Lib\Lib::test()->assertStdout($trace,
-        $fn, $fnArgs,
-        $expectedStdout
-    );
-}
-
-function _assert_microtime(
-    \Closure $fn, array $fnArgs = [],
-    float $expectedMicrotimeMax = null, float $expectedMicrotimeMin = null
-) : void
-{
-    $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
-
-    \Gzhegow\Lib\Lib::test()->assertMicrotime(
+    \Gzhegow\Lib\Lib::test()->assertStdout(
         $trace,
         $fn, $fnArgs,
-        $expectedMicrotimeMax, $expectedMicrotimeMin
+        $expectedStdout
     );
 }
 
@@ -169,35 +98,35 @@ $calendar = new \Gzhegow\Calendar\CalendarFacade(
 // > TEST
 // > создаем дату, временную зону и интервал
 $fn = function () use ($calendar) {
-    _dump('TEST 1');
+    _print('TEST 1');
     echo PHP_EOL;
 
     $result = $calendar->dateTime($datetime = '', $timezone = null);
-    _dump($result, json_encode($result));
+    _print($result, json_encode($result));
 
     $result = $calendar->dateTime($datetime = '1970-01-01 00:00:00', $timezone = null);
-    _dump($result, json_encode($result));
+    _print($result, json_encode($result));
 
 
     $result = $calendar->dateTimeImmutable($datetime = '', $timezone = null);
-    _dump($result, json_encode($result));
+    _print($result, json_encode($result));
 
     $result = $calendar->dateTimeImmutable($datetime = '1970-01-01 00:00:00', $timezone = null);
-    _dump($result, json_encode($result));
+    _print($result, json_encode($result));
 
 
     $result = $calendar->dateTimeZone($timezone = '');
-    _dump($result, json_encode($result));
+    _print($result, json_encode($result));
 
     $result = $calendar->dateTimeZone($timezone = 'UTC');
-    _dump($result, json_encode($result));
+    _print($result, json_encode($result));
 
 
     $result = $calendar->dateInterval($duration = '');
-    _dump($result, json_encode($result));
+    _print($result, json_encode($result));
 
     $result = $calendar->dateInterval($duration = 'P1D');
-    _dump($result, json_encode($result));
+    _print($result, json_encode($result));
 };
 _assert_stdout($fn, [], PHP_VERSION_ID >= 80000
     ? '
@@ -229,20 +158,20 @@ _assert_stdout($fn, [], PHP_VERSION_ID >= 80000
 // > TEST
 // > распознаем дату, временную зону и интервал
 $fn = function () use ($calendar) {
-    _dump('TEST 2');
+    _print('TEST 2');
     echo PHP_EOL;
 
     $result = $calendar->parseDateTime($datetime = '1970-01-01 00:00:00', $formats = [ 'Y-m-d H:i:s' ], $timezoneIfParsed = 'UTC');
-    _dump($result, json_encode($result));
+    _print($result, json_encode($result));
 
     $result = $calendar->parseDateTimeImmutable($datetime = '1970-01-01 00:00:00', $formats = [ 'Y-m-d H:i:s' ], $timezoneIfParsed = 'UTC');
-    _dump($result, json_encode($result));
+    _print($result, json_encode($result));
 
     $result = $calendar->parseDateTimeZone($timezone = 'UTC');
-    _dump($result, json_encode($result));
+    _print($result, json_encode($result));
 
     $result = $calendar->parseDateInterval($interval = 'P0D', $formats = null);
-    _dump($result, json_encode($result));
+    _print($result, json_encode($result));
 };
 _assert_stdout($fn, [], PHP_VERSION_ID >= 80000
     ? '
@@ -266,29 +195,29 @@ _assert_stdout($fn, [], PHP_VERSION_ID >= 80000
 // > TEST
 // > проводим действия над датой
 $fn = function () use ($calendar) {
-    _dump('TEST 3');
+    _print('TEST 3');
     echo PHP_EOL;
 
     $dateTimeImmutable11 = $calendar->parseDateTimeImmutable($datetime = '2000-01-01 midnight', $formats = null, $timezoneIfParsed = null);
     $dateTimeImmutable12 = $dateTimeImmutable11->modify('+ 10 hours');
     $dateTimeImmutableDiff13 = $dateTimeImmutable11->diff($dateTimeImmutable12);
-    _dump($dateTimeImmutable11, json_encode($dateTimeImmutable11));
-    _dump($dateTimeImmutable12, json_encode($dateTimeImmutable12));
-    _dump($dateTimeImmutableDiff13, $calendar->formatIntervalAgo($dateTimeImmutableDiff13));
+    _print($dateTimeImmutable11, json_encode($dateTimeImmutable11));
+    _print($dateTimeImmutable12, json_encode($dateTimeImmutable12));
+    _print($dateTimeImmutableDiff13, $calendar->formatIntervalAgo($dateTimeImmutableDiff13));
 
     $dateTimeImmutable21 = $calendar->parseDateTimeImmutable($datetime = '2000-01-01 midnight', $formats = null, $timezoneIfParsed = null);
     $dateTimeImmutable22 = $dateTimeImmutable21->add(new \DateInterval('PT10H'));
     $dateTimeImmutableDiff23 = $dateTimeImmutable21->diff($dateTimeImmutable22);
-    _dump($dateTimeImmutable21, json_encode($dateTimeImmutable21));
-    _dump($dateTimeImmutable22, json_encode($dateTimeImmutable22));
-    _dump($dateTimeImmutableDiff23, $calendar->formatIntervalAgo($dateTimeImmutableDiff23));
+    _print($dateTimeImmutable21, json_encode($dateTimeImmutable21));
+    _print($dateTimeImmutable22, json_encode($dateTimeImmutable22));
+    _print($dateTimeImmutableDiff23, $calendar->formatIntervalAgo($dateTimeImmutableDiff23));
 
     $dateTimeImmutable31 = $calendar->parseDateTimeImmutable($datetime = '2000-01-01 midnight', $formats = null, $timezoneIfParsed = null);
     $dateTimeImmutable32 = $dateTimeImmutable31->sub(new \DateInterval('PT10H'));
     $dateTimeImmutableDiff33 = $dateTimeImmutable31->diff($dateTimeImmutable32);
-    _dump($dateTimeImmutable31, json_encode($dateTimeImmutable31));
-    _dump($dateTimeImmutable32, json_encode($dateTimeImmutable32));
-    _dump($dateTimeImmutableDiff33, $calendar->formatIntervalAgo($dateTimeImmutableDiff33));
+    _print($dateTimeImmutable31, json_encode($dateTimeImmutable31));
+    _print($dateTimeImmutable32, json_encode($dateTimeImmutable32));
+    _print($dateTimeImmutableDiff33, $calendar->formatIntervalAgo($dateTimeImmutableDiff33));
 };
 _assert_stdout($fn, [], PHP_VERSION_ID >= 80000
     ? '
@@ -322,16 +251,16 @@ _assert_stdout($fn, [], PHP_VERSION_ID >= 80000
 // > TEST
 // > проводим действия над датой
 $fn = function () use ($calendar) {
-    _dump('TEST 4');
+    _print('TEST 4');
     echo PHP_EOL;
 
     $dateTime = $calendar->dateTime();
     $formatted = $calendar->formatHumanDate($dateTime);
-    _dump($dateTime, json_encode($dateTime), $formatted);
+    _print($dateTime, json_encode($dateTime), $formatted);
 
     $dateTime = $calendar->dateTime();
     $formatted = $calendar->formatHumanDay($dateTime);
-    _dump($dateTime, json_encode($dateTime), $formatted);
+    _print($dateTime, json_encode($dateTime), $formatted);
 };
 _assert_stdout($fn, [], PHP_VERSION_ID >= 80000
     ? '

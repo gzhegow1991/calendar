@@ -1,6 +1,6 @@
 <?php
 
-namespace Gzhegow\Calendar\Struct\PHP8;
+namespace Gzhegow\Calendar\Struct;
 
 use Gzhegow\Lib\Lib;
 use Gzhegow\Calendar\Calendar;
@@ -8,13 +8,10 @@ use Gzhegow\Calendar\Exception\LogicException;
 use Gzhegow\Calendar\Exception\RuntimeException;
 
 
-class DateTimeImmutable extends \DateTimeImmutable implements DateTimeInterface,
+class DateTime extends \DateTime implements DateTimeInterface,
     \JsonSerializable
 {
-    /**
-     * @return static
-     */
-    public static function createFromInterface($object) : \DateTimeImmutable
+    public static function createFromInterface($object) : \DateTime
     {
         if (is_a($object, static::class)) {
             return clone $object;
@@ -32,7 +29,7 @@ class DateTimeImmutable extends \DateTimeImmutable implements DateTimeInterface,
         $microseconds = str_pad($object->format('u'), 6, '0');
 
         try {
-            $dateTimeImmutable = (new static('now', $object->getTimezone()))
+            $dateTime = (new static('now', $object->getTimezone()))
                 ->setTimestamp($object->getTimestamp())
                 ->modify("+ {$microseconds} microseconds")
             ;
@@ -41,14 +38,10 @@ class DateTimeImmutable extends \DateTimeImmutable implements DateTimeInterface,
             throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
         }
 
-        return $dateTimeImmutable;
+        return $dateTime;
     }
 
-
-    /**
-     * @return static
-     */
-    public static function createFromFormat($format, $datetime, $timezone = null)
+    public static function createFromFormat($format, $datetime, $timezone = null) : \DateTime|false
     {
         if (null === Lib::parse()->string_not_empty($format)) {
             throw new LogicException(
@@ -79,13 +72,13 @@ class DateTimeImmutable extends \DateTimeImmutable implements DateTimeInterface,
             }
         }
 
-        $dateTimeImmutable = parent::createFromFormat($format, $datetime, $timezone);
+        $dateTime = parent::createFromFormat($format, $datetime, $timezone);
 
-        $microseconds = str_pad($dateTimeImmutable->format('u'), 6, '0');
+        $microseconds = str_pad($dateTime->format('u'), 6, '0');
 
         try {
-            $dateTimeImmutable = (new static('now', $dateTimeImmutable->getTimezone()))
-                ->setTimestamp($dateTimeImmutable->getTimestamp())
+            $dateTime = (new static('now', $dateTime->getTimezone()))
+                ->setTimestamp($dateTime->getTimestamp())
                 ->modify("+ {$microseconds} microseconds")
             ;
         }
@@ -93,17 +86,17 @@ class DateTimeImmutable extends \DateTimeImmutable implements DateTimeInterface,
             throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
         }
 
-        return $dateTimeImmutable;
+        return $dateTime;
     }
 
 
     public function diff($targetObject, $absolute = false) : \DateInterval
     {
-        $intervalDiff = parent::diff($targetObject, $absolute);
+        $interval = parent::diff($targetObject, $absolute);
 
         $intervalClass = Calendar::classDateInterval();
 
-        $interval = $intervalClass::{'createFromInstance'}($intervalDiff);
+        $interval = $intervalClass::{'createFromInstance'}($interval);
 
         return $interval;
     }

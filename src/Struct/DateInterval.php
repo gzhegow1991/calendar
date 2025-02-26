@@ -1,6 +1,6 @@
 <?php
 
-namespace Gzhegow\Calendar\Struct\PHP8;
+namespace Gzhegow\Calendar\Struct;
 
 use Gzhegow\Lib\Lib;
 use Gzhegow\Calendar\Exception\LogicException;
@@ -9,10 +9,7 @@ use Gzhegow\Calendar\Exception\LogicException;
 class DateInterval extends \DateInterval implements
     \JsonSerializable
 {
-    /**
-     * @return static
-     */
-    public static function createFromInstance($object)
+    public static function createFromInstance($object) : \DateInterval
     {
         if (is_a($object, static::class)) {
             return clone $object;
@@ -27,19 +24,31 @@ class DateInterval extends \DateInterval implements
             );
         }
 
-        (function ($state) {
-            foreach ( $state as $key => $value ) {
-                $this->{$key} = $value;
-            }
-        })->call($interval = new static('P0D'), (array) $object);
+        $instance = new static('P0D');
 
-        return $interval;
+        $newState = (array) $object;
+
+        // > gzhegow, the `days` property is explained in docs, but dont exists
+        // > since PHP 8.2 it triggers deprecation warning ignoring that property is public
+        // > btw, ReflectionClass returns that \DateInterval has no properties at all, so...
+        if (PHP_VERSION_ID >= 80200) {
+            unset($newState[ 'days' ]);
+        }
+
+        $fn = (function ($newState) {
+            foreach ( $newState as $key => $value ) {
+                if (property_exists($this, $key)) {
+                    $this->{$key} = $value;
+                }
+            }
+        })->bindTo($instance, $instance);
+
+        call_user_func($fn, $newState);
+
+        return $instance;
     }
 
-    /**
-     * @return static
-     */
-    public static function createFromDateString($datetime)
+    public static function createFromDateString($datetime) : \DateInterval|false
     {
         if (null === Lib::parse()->string_not_empty($datetime)) {
             throw new LogicException(

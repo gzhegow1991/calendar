@@ -1,6 +1,6 @@
 <?php
 
-namespace Gzhegow\Calendar\Struct\PHP8;
+namespace Gzhegow\Calendar\Struct;
 
 use Gzhegow\Calendar\Exception\LogicException;
 
@@ -8,10 +8,7 @@ use Gzhegow\Calendar\Exception\LogicException;
 class DateTimeZone extends \DateTimeZone implements
     \JsonSerializable
 {
-    /**
-     * @return static
-     */
-    public static function createFromInstance($object)
+    public static function createFromInstance($object) : \DateTimeZone
     {
         if (is_a($object, static::class)) {
             return clone $object;
@@ -26,13 +23,19 @@ class DateTimeZone extends \DateTimeZone implements
             );
         }
 
-        (function ($state) {
-            foreach ( $state as $key => $value ) {
-                $this->{$key} = $value;
-            }
-        })->call($tz = new static('UTC'), (array) $object);
+        $instance = new static('UTC');
 
-        return $tz;
+        $newState = (array) $object;
+
+        (function ($newState) {
+            foreach ( $newState as $key => $value ) {
+                if (property_exists($this, $key)) {
+                    $this->{$key} = $value;
+                }
+            }
+        })->call($instance, $newState);
+
+        return $instance;
     }
 
 

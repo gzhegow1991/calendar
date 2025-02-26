@@ -150,14 +150,14 @@ _assert_stdout($fn, [], PHP_VERSION_ID >= 80000
     ? '
 "TEST 1"
 
-{ object # Gzhegow\Calendar\Struct\PHP8\DateTime } | "\"1970-01-01T00:00:00.000+03:00\""
-{ object # Gzhegow\Calendar\Struct\PHP8\DateTime } | "\"1970-01-01T00:00:00.000+03:00\""
-{ object # Gzhegow\Calendar\Struct\PHP8\DateTimeImmutable } | "\"1970-01-01T00:00:00.000+03:00\""
-{ object # Gzhegow\Calendar\Struct\PHP8\DateTimeImmutable } | "\"1970-01-01T00:00:00.000+03:00\""
-{ object # Gzhegow\Calendar\Struct\PHP8\DateTimeZone } | "\"Europe\/Minsk\""
-{ object # Gzhegow\Calendar\Struct\PHP8\DateTimeZone } | "\"UTC\""
-{ object # Gzhegow\Calendar\Struct\PHP8\DateInterval } | "\"P0D\""
-{ object # Gzhegow\Calendar\Struct\PHP8\DateInterval } | "\"P1D\""
+{ object # Gzhegow\Calendar\Struct\DateTime } | "\"1970-01-01T00:00:00.000+03:00\""
+{ object # Gzhegow\Calendar\Struct\DateTime } | "\"1970-01-01T00:00:00.000+03:00\""
+{ object # Gzhegow\Calendar\Struct\DateTimeImmutable } | "\"1970-01-01T00:00:00.000+03:00\""
+{ object # Gzhegow\Calendar\Struct\DateTimeImmutable } | "\"1970-01-01T00:00:00.000+03:00\""
+{ object # Gzhegow\Calendar\Struct\DateTimeZone } | "\"Europe\/Minsk\""
+{ object # Gzhegow\Calendar\Struct\DateTimeZone } | "\"UTC\""
+{ object # Gzhegow\Calendar\Struct\DateInterval } | "\"P0D\""
+{ object # Gzhegow\Calendar\Struct\DateInterval } | "\"P1D\""
 '
     : '
 "TEST 1"
@@ -195,10 +195,10 @@ _assert_stdout($fn, [], PHP_VERSION_ID >= 80000
     ? '
 "TEST 2"
 
-{ object # Gzhegow\Calendar\Struct\PHP8\DateTime } | "\"1970-01-01T00:00:00.000+00:00\""
-{ object # Gzhegow\Calendar\Struct\PHP8\DateTimeImmutable } | "\"1970-01-01T00:00:00.000+00:00\""
-{ object # Gzhegow\Calendar\Struct\PHP8\DateTimeZone } | "\"UTC\""
-{ object # Gzhegow\Calendar\Struct\PHP8\DateInterval } | "\"P0D\""
+{ object # Gzhegow\Calendar\Struct\DateTime } | "\"1970-01-01T00:00:00.000+00:00\""
+{ object # Gzhegow\Calendar\Struct\DateTimeImmutable } | "\"1970-01-01T00:00:00.000+00:00\""
+{ object # Gzhegow\Calendar\Struct\DateTimeZone } | "\"UTC\""
+{ object # Gzhegow\Calendar\Struct\DateInterval } | "\"P0D\""
 '
     : '
 "TEST 2"
@@ -241,15 +241,15 @@ _assert_stdout($fn, [], PHP_VERSION_ID >= 80000
     ? '
 "TEST 3"
 
-{ object # Gzhegow\Calendar\Struct\PHP8\DateTimeImmutable } | "\"2000-01-01T00:00:00.000+03:00\""
-{ object # Gzhegow\Calendar\Struct\PHP8\DateTimeImmutable } | "\"2000-01-01T10:00:00.000+03:00\""
-{ object # Gzhegow\Calendar\Struct\PHP8\DateInterval } | "через 10 час."
-{ object # Gzhegow\Calendar\Struct\PHP8\DateTimeImmutable } | "\"2000-01-01T00:00:00.000+03:00\""
-{ object # Gzhegow\Calendar\Struct\PHP8\DateTimeImmutable } | "\"2000-01-01T10:00:00.000+03:00\""
-{ object # Gzhegow\Calendar\Struct\PHP8\DateInterval } | "через 10 час."
-{ object # Gzhegow\Calendar\Struct\PHP8\DateTimeImmutable } | "\"2000-01-01T00:00:00.000+03:00\""
-{ object # Gzhegow\Calendar\Struct\PHP8\DateTimeImmutable } | "\"1999-12-31T14:00:00.000+03:00\""
-{ object # Gzhegow\Calendar\Struct\PHP8\DateInterval } | "10 час. назад"
+{ object # Gzhegow\Calendar\Struct\DateTimeImmutable } | "\"2000-01-01T00:00:00.000+03:00\""
+{ object # Gzhegow\Calendar\Struct\DateTimeImmutable } | "\"2000-01-01T10:00:00.000+03:00\""
+{ object # Gzhegow\Calendar\Struct\DateInterval } | "через 10 час."
+{ object # Gzhegow\Calendar\Struct\DateTimeImmutable } | "\"2000-01-01T00:00:00.000+03:00\""
+{ object # Gzhegow\Calendar\Struct\DateTimeImmutable } | "\"2000-01-01T10:00:00.000+03:00\""
+{ object # Gzhegow\Calendar\Struct\DateInterval } | "через 10 час."
+{ object # Gzhegow\Calendar\Struct\DateTimeImmutable } | "\"2000-01-01T00:00:00.000+03:00\""
+{ object # Gzhegow\Calendar\Struct\DateTimeImmutable } | "\"1999-12-31T14:00:00.000+03:00\""
+{ object # Gzhegow\Calendar\Struct\DateInterval } | "10 час. назад"
 '
     : '
 "TEST 3"
@@ -284,8 +284,8 @@ _assert_stdout($fn, [], PHP_VERSION_ID >= 80000
     ? '
 "TEST 4"
 
-{ object # Gzhegow\Calendar\Struct\PHP8\DateTime } | "\"1970-01-01T00:00:00.000+03:00\"" | "Thu, 01 Jan 1970 00:00:00 +0300"
-{ object # Gzhegow\Calendar\Struct\PHP8\DateTime } | "\"1970-01-01T00:00:00.000+03:00\"" | "Thu, 01 Jan 1970 +0300"
+{ object # Gzhegow\Calendar\Struct\DateTime } | "\"1970-01-01T00:00:00.000+03:00\"" | "Thu, 01 Jan 1970 00:00:00 +0300"
+{ object # Gzhegow\Calendar\Struct\DateTime } | "\"1970-01-01T00:00:00.000+03:00\"" | "Thu, 01 Jan 1970 +0300"
 '
     : '
 "TEST 4"

@@ -27,13 +27,26 @@ class DateInterval extends \DateInterval implements
             );
         }
 
-        (function ($state) {
-            foreach ( $state as $key => $value ) {
-                $this->{$key} = $value;
-            }
-        })->call($interval = new static('P0D'), (array) $object);
+        $instance = new static('P0D');
 
-        return $interval;
+        $newState = (array) $object;
+
+        // > gzhegow, the `days` property is explained in docs, but dont exists
+        // > since PHP 8.2 it triggers deprecation warning ignoring that property is public
+        // > btw, ReflectionClass returns that \DateInterval has no properties at all, so...
+        if (PHP_VERSION_ID >= 80200) {
+            unset($newState[ 'days' ]);
+        }
+
+        (function ($newState) {
+            foreach ( $newState as $key => $value ) {
+                if (property_exists($this, $key)) {
+                    $this->{$key} = $value;
+                }
+            }
+        })->call($instance, $newState);
+
+        return $instance;
     }
 
     /**

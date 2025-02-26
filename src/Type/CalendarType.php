@@ -14,7 +14,7 @@ class CalendarType implements CalendarTypeInterface
     public function classDateTime() : string
     {
         return PHP_VERSION_ID >= 80000
-            ? \Gzhegow\Calendar\Struct\PHP8\DateTime::class
+            ? \Gzhegow\Calendar\Struct\DateTime::class
             : \Gzhegow\Calendar\Struct\PHP7\DateTime::class;
     }
 
@@ -24,7 +24,7 @@ class CalendarType implements CalendarTypeInterface
     public function classDateTimeImmutable() : string
     {
         return PHP_VERSION_ID >= 80000
-            ? \Gzhegow\Calendar\Struct\PHP8\DateTimeImmutable::class
+            ? \Gzhegow\Calendar\Struct\DateTimeImmutable::class
             : \Gzhegow\Calendar\Struct\PHP7\DateTimeImmutable::class;
     }
 
@@ -34,7 +34,7 @@ class CalendarType implements CalendarTypeInterface
     public function classDateInterval() : string
     {
         return PHP_VERSION_ID >= 80000
-            ? \Gzhegow\Calendar\Struct\PHP8\DateInterval::class
+            ? \Gzhegow\Calendar\Struct\DateInterval::class
             : \Gzhegow\Calendar\Struct\PHP7\DateInterval::class;
     }
 
@@ -44,7 +44,7 @@ class CalendarType implements CalendarTypeInterface
     public function classDateTimeZone() : string
     {
         return PHP_VERSION_ID >= 80000
-            ? \Gzhegow\Calendar\Struct\PHP8\DateTimeZone::class
+            ? \Gzhegow\Calendar\Struct\DateTimeZone::class
             : \Gzhegow\Calendar\Struct\PHP7\DateTimeZone::class;
     }
 }

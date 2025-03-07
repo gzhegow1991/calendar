@@ -2,7 +2,7 @@
 
 namespace Gzhegow\Calendar\Exception;
 
-interface ExceptionInterface
+interface ExceptionInterface extends \Throwable
 {
 
 }

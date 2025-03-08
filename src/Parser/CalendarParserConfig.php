@@ -26,8 +26,10 @@ class CalendarParserConfig extends AbstractConfig
 
     public function validate()
     {
+        $theType = Lib::type();
+
         foreach ( $this->parseDateTimeFormatsDefault as $format ) {
-            if (null === Lib::parse()->string_not_empty($format)) {
+            if (! $theType->string_not_empty($var, $format)) {
                 throw new LogicException(
                     [
                         'Each of `parseDateTimeFormatsDefault` should be non-empty string',
@@ -38,7 +40,7 @@ class CalendarParserConfig extends AbstractConfig
         }
 
         foreach ( $this->parseDateIntervalFormatsDefault as $format ) {
-            if (null === Lib::parse()->string_not_empty($format)) {
+            if (! $theType->string_not_empty($var, $format)) {
                 throw new LogicException(
                     [
                         'Each of `parseDateIntervalFormatsDefault` should be non-empty string',

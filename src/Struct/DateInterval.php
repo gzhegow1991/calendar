@@ -50,16 +50,13 @@ class DateInterval extends \DateInterval implements
 
     public static function createFromDateString($datetime) : \DateInterval|false
     {
-        if (null === Lib::parse()->string_not_empty($datetime)) {
+        if (! Lib::type()->string_not_empty($_datetime, $datetime)) {
             throw new LogicException(
-                [
-                    'The `datetime` should be a non-empty string',
-                    $datetime,
-                ]
+                [ 'The `datetime` should be a non-empty string', $datetime ]
             );
         }
 
-        $intervalFromDateString = parent::createFromDateString($datetime);
+        $intervalFromDateString = parent::createFromDateString($_datetime);
 
         $interval = new static('P0D');
 

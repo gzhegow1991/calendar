@@ -62,10 +62,7 @@ class CalendarManager implements CalendarManagerInterface
 
             if (null === $_dateTimeZone) {
                 throw new LogicException(
-                    [
-                        'Invalid `dateTimeZone` passed',
-                        $dateTimeZone,
-                    ]
+                    [ 'Invalid `dateTimeZone` passed', $dateTimeZone ]
                 );
             }
         }
@@ -98,10 +95,7 @@ class CalendarManager implements CalendarManagerInterface
 
             if (null === $_dateTimeZone) {
                 throw new LogicException(
-                    [
-                        'Invalid `dateTimeZone` passed',
-                        $dateTimeZone,
-                    ]
+                    [ 'Invalid `dateTimeZone` passed', $dateTimeZone ]
                 );
             }
         }

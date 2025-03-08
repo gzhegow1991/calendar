@@ -43,21 +43,15 @@ class DateTimeImmutable extends \DateTimeImmutable implements DateTimeInterface,
 
     public static function createFromFormat($format, $datetime, $timezone = null) : \DateTimeImmutable|false
     {
-        if (null === Lib::parse()->string_not_empty($format)) {
+        if (! Lib::type()->string_not_empty($_format, $format)) {
             throw new LogicException(
-                [
-                    'The `format` should be a non-empty string',
-                    $format,
-                ]
+                [ 'The `format` should be a non-empty string', $format ]
             );
         }
 
-        if (null === Lib::parse()->string_not_empty($datetime)) {
+        if (! Lib::type()->string_not_empty($_datetime, $datetime)) {
             throw new LogicException(
-                [
-                    'The `datetime` should be a non-empty string',
-                    $datetime,
-                ]
+                [ 'The `datetime` should be a non-empty string', $datetime ]
             );
         }
 
@@ -72,7 +66,7 @@ class DateTimeImmutable extends \DateTimeImmutable implements DateTimeInterface,
             }
         }
 
-        $dateTimeImmutable = parent::createFromFormat($format, $datetime, $timezone);
+        $dateTimeImmutable = parent::createFromFormat($_format, $_datetime, $timezone);
 
         $microseconds = str_pad($dateTimeImmutable->format('u'), 6, '0');
 

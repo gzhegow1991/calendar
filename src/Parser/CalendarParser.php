@@ -62,12 +62,7 @@ class CalendarParser implements CalendarParserInterface
             return $dateTime;
         }
 
-        throw new LogicException(
-            [
-                'Unable to parse DateTime',
-                $from,
-            ]
-        );
+        return null;
     }
 
     public function parseDateTimeImmutable($from, array $formats = null, $dateTimeZoneIfParsed = null) : ?\DateTimeImmutable
@@ -93,19 +88,13 @@ class CalendarParser implements CalendarParserInterface
             return $dateTimeImmutable;
         }
 
-        throw new LogicException(
-            [
-                'Unable to parse DateTimeImmutable',
-                $from,
-            ]
-        );
+        return null;
     }
 
 
     protected function parseDateTimeFromNum($num, $dateTimeZoneIfParsed = null) : ?\DateTime
     {
-        $_num = Lib::parse()->num($num);
-        if (null === $_num) {
+        if (! Lib::type()->num($_num, $num)) {
             return null;
         }
 
@@ -145,8 +134,7 @@ class CalendarParser implements CalendarParserInterface
 
     protected function parseDateTimeFromString($string, $dateTimeZoneIfParsed = null) : ?\DateTime
     {
-        $_string = Lib::parse()->string_not_empty($string);
-        if (null === $_string) {
+        if (! Lib::type()->string_not_empty($_string, $string)) {
             return null;
         }
 
@@ -173,8 +161,7 @@ class CalendarParser implements CalendarParserInterface
 
     protected function parseDateTimeFromStringByFormats($string, array $formats = null, $dateTimeZoneIfParsed = null) : ?\DateTime
     {
-        $_string = Lib::parse()->string_not_empty($string);
-        if (null === $_string) {
+        if (! Lib::type()->string_not_empty($_string, $string)) {
             return null;
         }
 
@@ -198,8 +185,7 @@ class CalendarParser implements CalendarParserInterface
 
     protected function parseDateTimeFromStringByFormat($string, string $format, $dateTimeZoneIfParsed = null) : ?\DateTime
     {
-        $_string = Lib::parse()->string_not_empty($string);
-        if (null === $_string) {
+        if (! Lib::type()->string_not_empty($_string, $string)) {
             return null;
         }
 
@@ -248,23 +234,17 @@ class CalendarParser implements CalendarParserInterface
             return $dateTimeZone;
         }
 
-        throw new LogicException(
-            [
-                'Unable to parse DateTimeZone',
-                $from,
-            ]
-        );
+        return null;
     }
 
-    protected function parseDateTimeZoneFromStringTimezone($string) : ?\DateTimeZone
+    protected function parseDateTimeZoneFromStringTimezone($timezone) : ?\DateTimeZone
     {
-        $_string = Lib::parse()->string_not_empty($string);
-        if (null === $_string) {
+        if (! Lib::type()->string_not_empty($_timezone, $timezone)) {
             return null;
         }
 
         try {
-            $dateTimeZone = $this->factory->newDateTimeZone($_string);
+            $dateTimeZone = $this->factory->newDateTimeZone($_timezone);
         }
         catch ( \Throwable $e ) {
             return null;
@@ -296,18 +276,12 @@ class CalendarParser implements CalendarParserInterface
             return $dateInterval;
         }
 
-        throw new LogicException(
-            [
-                'Unable to parse DateInterval',
-                $from,
-            ]
-        );
+        return null;
     }
 
     protected function parseDateIntervalFromInt($int) : ?\DateInterval
     {
-        $_int = Lib::parse()->int($int);
-        if (null === $_int) {
+        if (! Lib::type()->int($_int, $int)) {
             return null;
         }
 
@@ -340,13 +314,12 @@ class CalendarParser implements CalendarParserInterface
 
     protected function parseDateIntervalFromStringDuration($duration) : ?\DateInterval
     {
-        $_string = Lib::parse()->string_not_empty($duration);
-        if (null === $_string) {
+        if (! Lib::type()->string_not_empty($_duration, $duration)) {
             return null;
         }
 
         try {
-            $dateInterval = $this->factory->newDateInterval($_string);
+            $dateInterval = $this->factory->newDateInterval($_duration);
         }
         catch ( \Throwable $e ) {
             return null;
@@ -357,8 +330,7 @@ class CalendarParser implements CalendarParserInterface
 
     protected function parseDateIntervalFromStringByFormats($string, array $formats = null) : ?\DateInterval
     {
-        $_string = Lib::parse()->string_not_empty($string);
-        if (null === $_string) {
+        if (! Lib::type()->string_not_empty($_string, $string)) {
             return null;
         }
 
@@ -381,8 +353,7 @@ class CalendarParser implements CalendarParserInterface
 
     protected function parseDateIntervalFromStringByFormat($string, string $format) : ?\DateInterval
     {
-        $_string = Lib::parse()->string_not_empty($string);
-        if (null === $_string) {
+        if (! Lib::type()->string_not_empty($_string, $string)) {
             return null;
         }
 
@@ -404,13 +375,12 @@ class CalendarParser implements CalendarParserInterface
 
     protected function parseDateIntervalFromStringDatetime($datetime) : ?\DateInterval
     {
-        $_string = Lib::parse()->string_not_empty($datetime);
-        if (null === $_string) {
+        if (! Lib::type()->string_not_empty($_datetime, $datetime)) {
             return null;
         }
 
         try {
-            $dateInterval = $this->factory->newDateIntervalFromDateString($_string);
+            $dateInterval = $this->factory->newDateIntervalFromDateString($_datetime);
         }
         catch ( \Throwable $e ) {
             return null;

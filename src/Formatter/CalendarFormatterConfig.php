@@ -13,7 +13,7 @@ class CalendarFormatterConfig extends AbstractConfig
     protected $useIntl = true;
 
 
-    public function validate(array $context = []) : bool
+    protected function validation(array $context = []) : bool
     {
         $this->useIntl = (bool) $this->useIntl;
 

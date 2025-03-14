@@ -57,6 +57,7 @@ class CalendarFacade implements CalendarInterface
         $this->formatter = $formatter;
 
         $this->config = $config;
+        $this->config->validate();
     }
 
 

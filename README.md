@@ -13,7 +13,7 @@
 composer require gzhegow/calendar;
 ```
 
-## Пример
+## Примеры и тесты
 
 ```php
 <?php

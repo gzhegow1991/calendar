@@ -31,8 +31,10 @@ class CalendarConfig extends AbstractConfig
 
     public function __construct()
     {
-        $this->__sections[ 'parser' ] = $this->parser = new CalendarParserConfig();
-        $this->__sections[ 'manager' ] = $this->manager = new CalendarManagerConfig();
-        $this->__sections[ 'formatter' ] = $this->formatter = new CalendarFormatterConfig();
+        $this->parser = new CalendarParserConfig();
+        $this->manager = new CalendarManagerConfig();
+        $this->formatter = new CalendarFormatterConfig();
+
+        parent::__construct();
     }
 }

@@ -18,6 +18,7 @@ class CalendarFacade implements CalendarInterface
      * @var CalendarType
      */
     protected $type;
+
     /**
      * @var CalendarParserInterface
      */
@@ -31,20 +32,31 @@ class CalendarFacade implements CalendarInterface
      */
     protected $formatter;
 
+    /**
+     * @var CalendarConfig
+     */
+    protected $config;
+
 
     public function __construct(
         CalendarFactoryInterface $factory,
         CalendarType $type,
+        //
         CalendarParserInterface $parser,
         CalendarManagerInterface $manager,
-        CalendarFormatterInterface $formatter
+        CalendarFormatterInterface $formatter,
+        //
+        CalendarConfig $config
     )
     {
         $this->factory = $factory;
         $this->type = $type;
+
         $this->parser = $parser;
         $this->manager = $manager;
         $this->formatter = $formatter;
+
+        $this->config = $config;
     }
 
 

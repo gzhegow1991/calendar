@@ -49,6 +49,16 @@ $factory = new \Gzhegow\Calendar\CalendarFactory();
 // > создаем конфигурацию
 $config = new \Gzhegow\Calendar\CalendarConfig();
 $config->configure(function (\Gzhegow\Calendar\CalendarConfig $config) {
+    // > использовать ли INTL, если такое расширение подключено (в целях тестирования установлено в FALSE)
+    $config->formatter->useIntl = false;
+
+    // > можно указать "дату по-умолчанию", которая будет создана, если не передать аргументов вовсе
+    $config->manager->dateTimeDefault = '1970-01-01 midnight';
+    // > можно указать "временную зону по-умолчанию", которая будет установлена, если при разборе даты не удалось определить временную зону
+    $config->manager->dateTimeZoneDefault = 'Europe/Minsk';
+    // > можно указать "интервал по-умолчанию", который будет создаваться, если не передать аргументов
+    $config->manager->dateIntervalDefault = 'P0D';
+
     // > можно указать форматы для разбора даты, если таковые не переданы прямо в функцию
     $config->parser->parseDateTimeFormatsDefault = [
         \Gzhegow\Calendar\Calendar::FORMAT_SQL,
@@ -58,17 +68,11 @@ $config->configure(function (\Gzhegow\Calendar\CalendarConfig $config) {
     $config->parser->parseDateIntervalFormatsDefault = [
         \Gzhegow\Calendar\Calendar::FORMAT_SQL_TIME,
     ];
-
-    // > можно указать "дату по-умолчанию", которая будет создана, если не передать аргументов вовсе
-    $config->manager->dateTimeDefault = '1970-01-01 midnight';
-    // > можно указать "временную зону по-умолчанию", которая будет установлена, если при разборе даты не удалось определить временную зону
-    $config->manager->dateTimeZoneDefault = 'Europe/Minsk';
-    // > можно указать "интервал по-умолчанию", который будет создаваться, если не передать аргументов
-    $config->manager->dateIntervalDefault = 'P0D';
-
-    // > использовать ли INTL, если такое расширение подключено (в целях тестирования установлено в FALSE)
-    $config->formatter->useIntl = false;
 });
+$configFormatter = new \Gzhegow\Calendar\Formatter\CalendarFormatterConfig();
+$configManager = new \Gzhegow\Calendar\Manager\CalendarManagerConfig();
+$configParser = new \Gzhegow\Calendar\Parser\CalendarParserConfig();
+
 
 // > можно изменить классы дат на свои собственные реализации
 $type = new \Gzhegow\Calendar\Type\CalendarType();
@@ -86,9 +90,12 @@ $formatter = new \Gzhegow\Calendar\Formatter\CalendarFormatter($factory, $config
 $calendar = new \Gzhegow\Calendar\CalendarFacade(
     $factory,
     $type,
+    //
     $parser,
     $manager,
-    $formatter
+    $formatter,
+    //
+    $config
 );
 
 // > сохраняем фасад статически (чтобы вызывать без привязки к контейнеру)

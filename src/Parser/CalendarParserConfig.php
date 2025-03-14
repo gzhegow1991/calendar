@@ -24,7 +24,7 @@ class CalendarParserConfig extends AbstractConfig
     ];
 
 
-    public function validate()
+    public function validate(array $context = []) : bool
     {
         $theType = Lib::type();
 
@@ -49,5 +49,7 @@ class CalendarParserConfig extends AbstractConfig
                 );
             }
         }
+
+        return true;
     }
 }

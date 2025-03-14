@@ -28,7 +28,7 @@ class CalendarManagerConfig extends AbstractConfig
     protected $dateIntervalDefault = 'P0D';
 
 
-    public function validate()
+    public function validate(array $context = []) : bool
     {
         $dateTimeDefault = null
             ?? Lib::parse()->string_not_empty($this->dateTimeDefault)
@@ -68,5 +68,7 @@ class CalendarManagerConfig extends AbstractConfig
                 ]
             );
         }
+
+        return true;
     }
 }

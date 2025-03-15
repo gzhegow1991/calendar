@@ -4,7 +4,6 @@ namespace Gzhegow\Calendar\Parser;
 
 use Gzhegow\Lib\Lib;
 use Gzhegow\Calendar\Calendar;
-use Gzhegow\Calendar\Exception\LogicException;
 use Gzhegow\Calendar\CalendarFactoryInterface;
 use Gzhegow\Calendar\Manager\CalendarManagerInterface;
 

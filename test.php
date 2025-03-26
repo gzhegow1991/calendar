@@ -69,9 +69,6 @@ $config->configure(function (\Gzhegow\Calendar\CalendarConfig $config) {
         \Gzhegow\Calendar\Calendar::FORMAT_SQL_TIME,
     ];
 });
-$configFormatter = new \Gzhegow\Calendar\Formatter\CalendarFormatterConfig();
-$configManager = new \Gzhegow\Calendar\Manager\CalendarManagerConfig();
-$configParser = new \Gzhegow\Calendar\Parser\CalendarParserConfig();
 
 
 // > можно изменить классы дат на свои собственные реализации

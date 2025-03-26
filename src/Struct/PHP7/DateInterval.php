@@ -3,12 +3,122 @@
 namespace Gzhegow\Calendar\Struct\PHP7;
 
 use Gzhegow\Lib\Lib;
+use Gzhegow\Calendar\Calendar;
 use Gzhegow\Calendar\Exception\LogicException;
 
 
 class DateInterval extends \DateInterval implements
     \JsonSerializable
 {
+    public function __construct($duration)
+    {
+        $theStr = Lib::str();
+
+        if (! (is_string($duration) && ('' !== $duration))) {
+            throw new LogicException(
+                [ 'The `duration` should be non-empty string', $duration ]
+            );
+        }
+
+        $regex = '/(\d+\.\d+)([YMWDHS])/';
+
+        $hasDecimalValue = preg_match_all($regex, $duration, $matches);
+
+        $decimalValueFrac = null;
+        $decimalLetter = null;
+        if ($hasDecimalValue) {
+            if (count($matches[ 0 ]) > 1) {
+                throw new LogicException(
+                    [
+                        'The `duration` can contain only one decimal separator in smallest period (according ISO 8601)',
+                        $duration,
+                    ]
+                );
+            }
+
+            $decimalSubstr = $matches[ 0 ][ 0 ];
+            $decimalValue = $matches[ 1 ][ 0 ];
+            $decimalLetter = $matches[ 2 ][ 0 ];
+
+            if (! $theStr->ends($duration, $decimalSubstr, false)) {
+                throw new LogicException(
+                    [
+                        'The `duration` can contain only one decimal separator in smallest period (according ISO 8601)',
+                        $duration,
+                    ]
+                );
+            }
+
+            $decimalValueFloat = (float) $decimalValue;
+            $decimalValueFloor = floor($decimalValue);
+
+            $decimalValueFrac = $decimalValueFloat - $decimalValueFloor;
+
+            $duration = str_replace($decimalValue, $decimalValueFloor, $duration);
+        }
+
+        parent::__construct($duration);
+
+        if ($hasDecimalValue) {
+            $now = new \DateTime('now');
+            $nowModified = clone $now;
+
+            $nowModified->add($this);
+
+            $seconds = null;
+            switch ( $decimalLetter ):
+                case 'Y':
+                    $seconds = floor($decimalValueFrac * Calendar::INTERVAL_YEAR);
+
+                    break;
+
+                case 'W':
+                    $seconds = floor($decimalValueFrac * Calendar::INTERVAL_WEEK);
+
+                    break;
+
+                case 'D':
+                    $seconds = floor($decimalValueFrac * Calendar::INTERVAL_DAY);
+
+                    break;
+
+                case 'H':
+                    $seconds = floor($decimalValueFrac * Calendar::INTERVAL_HOUR);
+
+                    break;
+
+                case 'M':
+                    if (false === strpos($duration, 'T')) {
+                        $seconds = ceil($decimalValueFrac * Calendar::INTERVAL_MONTH);
+
+                    } else {
+                        $seconds = ceil($decimalValueFrac * Calendar::INTERVAL_MINUTE);
+                    }
+
+                    break;
+
+            endswitch;
+
+            if (null !== $seconds) {
+                $nowModified->modify("+{$seconds} seconds");
+            }
+
+            $interval = $nowModified->diff($now);
+
+            $this->y = $interval->y;
+            $this->m = $interval->m;
+            $this->d = $interval->d;
+            $this->h = $interval->h;
+            $this->i = $interval->i;
+            $this->s = $interval->s;
+
+            if ($decimalLetter === 'S') {
+                $this->f = $decimalValueFrac;
+            }
+        }
+    }
+
+
     /**
      * @return static
      */
@@ -74,6 +184,29 @@ class DateInterval extends \DateInterval implements
     }
 
 
+    public function getISO8601Duration() : string
+    {
+        $search = [ 'M0S', 'H0M', 'DT0H', 'M0D', 'P0Y', 'Y0M', 'P0M' ];
+        $replace = [ 'M', 'H', 'DT', 'M', 'P', 'Y', 'P' ];
+
+        if ($this->f) {
+            $fString = sprintf('%.6f', $this->f);
+            $fString = substr($fString, 2);
+            $fString = rtrim($fString, '0.');
+
+            $result = $this->format("P%yY%mM%dDT%hH%iM%s.{$fString}S");
+
+        } else {
+            $result = $this->format('P%yY%mM%dDT%hH%iM%sS');
+        }
+
+        $result = str_replace($search, $replace, $result);
+        $result = rtrim($result, 'PT') ?: 'P0D';
+
+        return $result;
+    }
+
+
     public function jsonSerialize() // : mixed
     {
         // $interval = new \DateInterval();
@@ -85,13 +218,6 @@ class DateInterval extends \DateInterval implements
         //
         // > string(5) "PT10M"
 
-        $search = [ 'S0F', 'M0S', 'H0M', 'DT0H', 'M0D', 'P0Y', 'Y0M', 'P0M' ];
-        $replace = [ 'S', 'M', 'H', 'DT', 'M', 'P', 'Y', 'P' ];
-
-        $result = $this->format('P%yY%mM%dDT%hH%iM%sS%fF');
-        $result = str_replace($search, $replace, $result);
-        $result = rtrim($result, 'PT') ?: 'P0D';
-
-        return $result ?: null;
+        return $this->getISO8601Duration();
     }
 }

@@ -96,13 +96,27 @@ $configParser = new \Gzhegow\Calendar\Parser\CalendarParserConfig();
 $type = new \Gzhegow\Calendar\Type\CalendarType();
 
 // > создаем парсер
-$parser = new \Gzhegow\Calendar\Parser\CalendarParser($factory, $config->parser);
+$parser = new \Gzhegow\Calendar\Parser\CalendarParser(
+    $factory,
+    //
+    $config->parser
+);
 
 // > создаем менеджер
-$manager = new \Gzhegow\Calendar\Manager\CalendarManager($factory, $parser, $config->manager);
+$manager = new \Gzhegow\Calendar\Manager\CalendarManager(
+    $factory,
+    //
+    $parser,
+    //
+    $config->manager
+);
 
 // > создаем форматтер
-$formatter = new \Gzhegow\Calendar\Formatter\CalendarFormatter($factory, $config->formatter);
+$formatter = new \Gzhegow\Calendar\Formatter\CalendarFormatter(
+    $factory,
+    //
+    $config->formatter
+);
 
 // > создаем фасад
 $calendar = new \Gzhegow\Calendar\CalendarFacade(
@@ -126,31 +140,37 @@ $fn = function () use ($calendar) {
     _print('TEST 1');
     echo PHP_EOL;
 
-    $result = $calendar->dateTime($datetime = '', $timezone = null);
+    $result = $calendar->dateTime($from = '', $dateTimeZone = null);
     _print($result, json_encode($result));
 
-    $result = $calendar->dateTime($datetime = '1970-01-01 00:00:00', $timezone = null);
+    $result = $calendar->dateTime($from = '1970-01-01 00:00:00', $dateTimeZone = null);
+    _print($result, json_encode($result));
+    echo PHP_EOL;
+
+
+    $result = $calendar->dateTimeImmutable($from = '', $dateTimeZone = null);
     _print($result, json_encode($result));
 
+    $result = $calendar->dateTimeImmutable($from = '1970-01-01 00:00:00', $dateTimeZone = null);
+    _print($result, json_encode($result));
+    echo PHP_EOL;
 
-    $result = $calendar->dateTimeImmutable($datetime = '', $timezone = null);
+
+    $result = $calendar->dateTimeZone($from = '');
     _print($result, json_encode($result));
 
-    $result = $calendar->dateTimeImmutable($datetime = '1970-01-01 00:00:00', $timezone = null);
+    $result = $calendar->dateTimeZone($from = 'UTC');
+    _print($result, json_encode($result));
+    echo PHP_EOL;
+
+
+    $result = $calendar->dateInterval($from = '');
     _print($result, json_encode($result));
 
-
-    $result = $calendar->dateTimeZone($timezone = '');
+    $result = $calendar->dateInterval($from = 'P1D');
     _print($result, json_encode($result));
 
-    $result = $calendar->dateTimeZone($timezone = 'UTC');
-    _print($result, json_encode($result));
-
-
-    $result = $calendar->dateInterval($duration = '');
-    _print($result, json_encode($result));
-
-    $result = $calendar->dateInterval($duration = 'P1D');
+    $result = $calendar->dateInterval($from = 'P1.5D');
     _print($result, json_encode($result));
 };
 _assert_stdout($fn, [], PHP_VERSION_ID >= 80000
@@ -159,26 +179,33 @@ _assert_stdout($fn, [], PHP_VERSION_ID >= 80000
 
 { object # Gzhegow\Calendar\Struct\DateTime } | "\"1970-01-01T00:00:00.000+03:00\""
 { object # Gzhegow\Calendar\Struct\DateTime } | "\"1970-01-01T00:00:00.000+03:00\""
+
 { object # Gzhegow\Calendar\Struct\DateTimeImmutable } | "\"1970-01-01T00:00:00.000+03:00\""
 { object # Gzhegow\Calendar\Struct\DateTimeImmutable } | "\"1970-01-01T00:00:00.000+03:00\""
+
 { object # Gzhegow\Calendar\Struct\DateTimeZone } | "\"Europe\/Minsk\""
 { object # Gzhegow\Calendar\Struct\DateTimeZone } | "\"UTC\""
+
 { object # Gzhegow\Calendar\Struct\DateInterval } | "\"P0D\""
 { object # Gzhegow\Calendar\Struct\DateInterval } | "\"P1D\""
+{ object # Gzhegow\Calendar\Struct\DateInterval } | "\"P1DT12H\""
 '
     : '
 "TEST 1"
 
 { object # Gzhegow\Calendar\Struct\PHP7\DateTime } | "\"1970-01-01T00:00:00.000+03:00\""
 { object # Gzhegow\Calendar\Struct\PHP7\DateTime } | "\"1970-01-01T00:00:00.000+03:00\""
+
 { object # Gzhegow\Calendar\Struct\PHP7\DateTimeImmutable } | "\"1970-01-01T00:00:00.000+03:00\""
 { object # Gzhegow\Calendar\Struct\PHP7\DateTimeImmutable } | "\"1970-01-01T00:00:00.000+03:00\""
+
 { object # Gzhegow\Calendar\Struct\PHP7\DateTimeZone } | "\"Europe\/Minsk\""
 { object # Gzhegow\Calendar\Struct\PHP7\DateTimeZone } | "\"UTC\""
+
 { object # Gzhegow\Calendar\Struct\PHP7\DateInterval } | "\"P0D\""
 { object # Gzhegow\Calendar\Struct\PHP7\DateInterval } | "\"P1D\""
+{ object # Gzhegow\Calendar\Struct\PHP7\DateInterval } | "\"P1DT12H\""
 ');
-
 
 // > TEST
 // > распознаем дату, временную зону и интервал
@@ -186,16 +213,31 @@ $fn = function () use ($calendar) {
     _print('TEST 2');
     echo PHP_EOL;
 
-    $result = $calendar->parseDateTime($datetime = '1970-01-01 00:00:00', $formats = [ 'Y-m-d H:i:s' ], $timezoneIfParsed = 'UTC');
+    $result = $calendar->parseDateTime($from = '1970-01-01 00:00:00', $formats = [ 'Y-m-d H:i:s' ], $dateTimeZoneIfParsed = 'UTC');
     _print($result, json_encode($result));
 
-    $result = $calendar->parseDateTimeImmutable($datetime = '1970-01-01 00:00:00', $formats = [ 'Y-m-d H:i:s' ], $timezoneIfParsed = 'UTC');
+    $result = $calendar->parseDateTimeFromNumeric($from = 1.5, $dateTimeZoneIfParsed = 'UTC');
+    _print($result, json_encode($result));
+    echo PHP_EOL;
+
+
+    $result = $calendar->parseDateTimeImmutable($from = '1970-01-01 00:00:00', $formats = [ 'Y-m-d H:i:s' ], $dateTimeZoneIfParsed = 'UTC');
     _print($result, json_encode($result));
 
-    $result = $calendar->parseDateTimeZone($timezone = 'UTC');
+    $result = $calendar->parseDateTimeImmutableFromNumeric($from = 1.5, $dateTimeZoneIfParsed = 'UTC');
+    _print($result, json_encode($result));
+    echo PHP_EOL;
+
+
+    $result = $calendar->parseDateTimeZone($from = 'UTC');
+    _print($result, json_encode($result));
+    echo PHP_EOL;
+
+
+    $result = $calendar->parseDateInterval($from = 'P0D', $formats = null);
     _print($result, json_encode($result));
 
-    $result = $calendar->parseDateInterval($interval = 'P0D', $formats = null);
+    $result = $calendar->parseDateIntervalFromNumeric($from = 1.5);
     _print($result, json_encode($result));
 };
 _assert_stdout($fn, [], PHP_VERSION_ID >= 80000
@@ -203,17 +245,29 @@ _assert_stdout($fn, [], PHP_VERSION_ID >= 80000
 "TEST 2"
 
 { object # Gzhegow\Calendar\Struct\DateTime } | "\"1970-01-01T00:00:00.000+00:00\""
+{ object # Gzhegow\Calendar\Struct\DateTime } | "\"1970-01-01T00:00:01.500+00:00\""
+
 { object # Gzhegow\Calendar\Struct\DateTimeImmutable } | "\"1970-01-01T00:00:00.000+00:00\""
+{ object # Gzhegow\Calendar\Struct\DateTimeImmutable } | "\"1970-01-01T00:00:01.500+00:00\""
+
 { object # Gzhegow\Calendar\Struct\DateTimeZone } | "\"UTC\""
+
 { object # Gzhegow\Calendar\Struct\DateInterval } | "\"P0D\""
+{ object # Gzhegow\Calendar\Struct\DateInterval } | "\"PT1.5S\""
 '
     : '
 "TEST 2"
 
 { object # Gzhegow\Calendar\Struct\PHP7\DateTime } | "\"1970-01-01T00:00:00.000+00:00\""
+{ object # Gzhegow\Calendar\Struct\PHP7\DateTime } | "\"1970-01-01T00:00:01.500+00:00\""
+
 { object # Gzhegow\Calendar\Struct\PHP7\DateTimeImmutable } | "\"1970-01-01T00:00:00.000+00:00\""
+{ object # Gzhegow\Calendar\Struct\PHP7\DateTimeImmutable } | "\"1970-01-01T00:00:01.500+00:00\""
+
 { object # Gzhegow\Calendar\Struct\PHP7\DateTimeZone } | "\"UTC\""
+
 { object # Gzhegow\Calendar\Struct\PHP7\DateInterval } | "\"P0D\""
+{ object # Gzhegow\Calendar\Struct\PHP7\DateInterval } | "\"PT1.5S\""
 ');
 
 

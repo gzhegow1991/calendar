@@ -21,19 +21,21 @@ class CalendarManager implements CalendarManagerInterface
     protected $config;
 
     /**
-     * @var CalendarParser
+     * @var CalendarParserInterface
      */
     protected $parser;
 
 
     public function __construct(
         CalendarFactoryInterface $factory,
+        //
         CalendarParserInterface $parser,
         //
         CalendarManagerConfig $config
     )
     {
         $this->factory = $factory;
+
         $this->parser = $parser;
 
         $this->config = $config;

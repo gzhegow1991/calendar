@@ -158,19 +158,37 @@ class CalendarFacade implements CalendarInterface
         return $this->parser->parseDateTime($from, $formats, $dateTimeZoneIfParsed);
     }
 
+    public function parseDateTimeFromNumeric($from, $dateTimeZoneIfParsed = null) : ?\DateTime
+    {
+        return $this->parser->parseDateTimeFromNumeric($from, $dateTimeZoneIfParsed);
+    }
+
+
     public function parseDateTimeImmutable($from, array $formats = null, $dateTimeZoneIfParsed = null) : ?\DateTimeImmutable
     {
         return $this->parser->parseDateTimeImmutable($from, $formats, $dateTimeZoneIfParsed);
     }
+
+    public function parseDateTimeImmutableFromNumeric($from, $dateTimeZoneIfParsed = null) : ?\DateTimeImmutable
+    {
+        return $this->parser->parseDateTimeImmutableFromNumeric($from, $dateTimeZoneIfParsed);
+    }
+
 
     public function parseDateTimeZone($from) : ?\DateTimeZone
     {
         return $this->parser->parseDateTimeZone($from);
     }
 
+
     public function parseDateInterval($from, array $formats = null) : ?\DateInterval
     {
         return $this->parser->parseDateInterval($from, $formats);
+    }
+
+    public function parseDateIntervalFromNumeric($from) : ?\DateInterval
+    {
+        return $this->parser->parseDateIntervalFromNumeric($from);
     }
 
 

@@ -8,10 +8,23 @@ use Gzhegow\Calendar\Struct\PHP7\DateTimeZone;
 use Gzhegow\Calendar\Struct\PHP7\DateInterval;
 
 
+/**
+ * @template-covariant TDateTime of \DateTime
+ * @template-covariant TDateTimeImmutable of \DateTimeImmutable
+ * @template-covariant TDateInterval of \DateInterval
+ * @template-covariant TDateTimeZone of \DateTimeZone
+ */
 class CalendarFactory implements CalendarFactoryInterface
 {
+    /**
+     * @return TDateTime
+     */
     public function newDateTime($from = 'now', \DateTimeZone $dateTimeZone = null) : \DateTime
     {
+        /**
+         * @var class-string<TDateTime> $dateTimeClass
+         */
+
         if (null === $from) {
             throw new LogicException('The `from` should be not null');
         }
@@ -35,8 +48,15 @@ class CalendarFactory implements CalendarFactoryInterface
         return $dateTime;
     }
 
+    /**
+     * @return TDateTime
+     */
     public function newDateTimeFromInterface(\DateTimeInterface $object) : \DateTime
     {
+        /**
+         * @var class-string<TDateTime> $dateTimeClass
+         */
+
         $dateTimeClass = Calendar::classDateTime();
 
         try {
@@ -67,8 +87,15 @@ class CalendarFactory implements CalendarFactoryInterface
         return $dateTime;
     }
 
+    /**
+     * @return TDateTime
+     */
     public function newDateTimeFromFormat(string $format, string $datetimeStringFormatted, \DateTimeZone $dateTimeZoneIfParsed = null) : \DateTime
     {
+        /**
+         * @var class-string<TDateTime> $dateTimeClass
+         */
+
         $dateTimeClass = Calendar::classDateTime();
 
         try {
@@ -104,21 +131,28 @@ class CalendarFactory implements CalendarFactoryInterface
     }
 
 
+    /**
+     * @return TDateTimeImmutable
+     */
     public function newDateTimeImmutable($from = 'now', \DateTimeZone $dateTimeZone = null) : \DateTimeImmutable
     {
+        /**
+         * @var class-string<TDateTimeImmutable> $dateTimeImmutableClass
+         */
+
         if (null === $from) {
             throw new LogicException('The `datetime` should be not null');
         }
 
-        $dateTimeClass = Calendar::classDateTimeImmutable();
+        $dateTimeImmutableClass = Calendar::classDateTimeImmutable();
 
         try {
-            $dateTime = new $dateTimeClass($from, $dateTimeZone);
+            $dateTime = new $dateTimeImmutableClass($from, $dateTimeZone);
         }
         catch ( \Throwable $previous ) {
             throw new LogicException(
                 [
-                    'Unable to create instance of: ' . $dateTimeClass,
+                    'Unable to create instance of: ' . $dateTimeImmutableClass,
                     $from,
                     $dateTimeZone,
                 ],
@@ -129,8 +163,15 @@ class CalendarFactory implements CalendarFactoryInterface
         return $dateTime;
     }
 
+    /**
+     * @return TDateTimeImmutable
+     */
     public function newDateTimeImmutableFromInterface(\DateTimeInterface $object) : \DateTimeImmutable
     {
+        /**
+         * @var class-string<TDateTimeImmutable> $dateTimeImmutableClass
+         */
+
         $dateTimeImmutableClass = Calendar::classDateTimeImmutable();
 
         try {
@@ -161,8 +202,15 @@ class CalendarFactory implements CalendarFactoryInterface
         return $dateTime;
     }
 
+    /**
+     * @return TDateTimeImmutable
+     */
     public function newDateTimeImmutableFromFormat(string $format, string $dateTimeStringFormatted, \DateTimeZone $dateTimeZoneIfParsed = null) : \DateTimeImmutable
     {
+        /**
+         * @var class-string<TDateTimeImmutable> $dateTimeImmutableClass
+         */
+
         $dateTimeImmutableClass = Calendar::classDateTimeImmutable();
 
         try {
@@ -198,8 +246,15 @@ class CalendarFactory implements CalendarFactoryInterface
     }
 
 
+    /**
+     * @return TDateTimeZone
+     */
     public function newDateTimeZone($from = 'UTC') : \DateTimeZone
     {
+        /**
+         * @var class-string<TDateTimeZone> $dateTimeZoneClass
+         */
+
         if (null === $from) {
             throw new LogicException('The `from` should be not null');
         }
@@ -222,8 +277,15 @@ class CalendarFactory implements CalendarFactoryInterface
         return $dateTimeZone;
     }
 
+    /**
+     * @return TDateTimeZone
+     */
     public function newDateTimeZoneFromInstance(\DateTimeZone $instance) : \DateTimeZone
     {
+        /**
+         * @var class-string<TDateTimeZone> $dateTimeZoneClass
+         */
+
         $dateTimeZoneClass = Calendar::classDateTimeZone();
 
         try {
@@ -255,8 +317,15 @@ class CalendarFactory implements CalendarFactoryInterface
     }
 
 
+    /**
+     * @return TDateInterval
+     */
     public function newDateInterval($from = 'P0D') : \DateInterval
     {
+        /**
+         * @var class-string<TDateInterval> $dateIntervalClass
+         */
+
         if (null === $from) {
             throw new LogicException('The `from` should be not null');
         }
@@ -279,8 +348,15 @@ class CalendarFactory implements CalendarFactoryInterface
         return $dateInterval;
     }
 
+    /**
+     * @return TDateInterval
+     */
     public function newDateIntervalFromInstance(\DateInterval $instance) : \DateInterval
     {
+        /**
+         * @var class-string<TDateInterval> $dateIntervalClass
+         */
+
         $dateIntervalClass = Calendar::classDateInterval();
 
         try {
@@ -312,8 +388,15 @@ class CalendarFactory implements CalendarFactoryInterface
         return $dateInterval;
     }
 
+    /**
+     * @return TDateInterval
+     */
     public function newDateIntervalFromDateString(string $dateString) : \DateInterval
     {
+        /**
+         * @var class-string<TDateInterval> $dateIntervalClass
+         */
+
         $dateIntervalClass = Calendar::classDateInterval();
 
         try {

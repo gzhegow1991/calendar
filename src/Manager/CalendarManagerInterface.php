@@ -21,4 +21,14 @@ interface CalendarManagerInterface
     public function nowMidnight($dateTimeZone = '') : \DateTime;
 
     public function nowMidnightImmutable($dateTimeZone = '') : \DateTimeImmutable;
+
+
+    public function epoch($dateTimeZone = '') : \DateTime;
+
+    public function epochImmutable($dateTimeZone = '') : \DateTimeImmutable;
+
+
+    public function epochMidnight($dateTimeZone = '') : \DateTime;
+
+    public function epochMidnightImmutable($dateTimeZone = '') : \DateTimeImmutable;
 }

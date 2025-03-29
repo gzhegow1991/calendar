@@ -2,7 +2,6 @@
 
 namespace Gzhegow\Calendar\Manager;
 
-use Gzhegow\Calendar\Parser\CalendarParser;
 use Gzhegow\Calendar\Exception\LogicException;
 use Gzhegow\Calendar\CalendarFactoryInterface;
 use Gzhegow\Calendar\Parser\CalendarParserInterface;
@@ -173,6 +172,36 @@ class CalendarManager implements CalendarManagerInterface
     public function nowMidnightImmutable($dateTimeZone = '') : \DateTimeImmutable
     {
         $dateTimeImmutable = $this->dateTimeImmutable('now midnight', $dateTimeZone);
+
+        return $dateTimeImmutable;
+    }
+
+
+    public function epoch($dateTimeZone = '') : \DateTime
+    {
+        $dateTime = $this->dateTime('1970-01-01', $dateTimeZone);
+
+        return $dateTime;
+    }
+
+    public function epochImmutable($dateTimeZone = '') : \DateTimeImmutable
+    {
+        $dateTimeImmutable = $this->dateTimeImmutable('1970-01-01', $dateTimeZone);
+
+        return $dateTimeImmutable;
+    }
+
+
+    public function epochMidnight($dateTimeZone = '') : \DateTime
+    {
+        $dateTime = $this->dateTime('1970-01-01 midnight', $dateTimeZone);
+
+        return $dateTime;
+    }
+
+    public function epochMidnightImmutable($dateTimeZone = '') : \DateTimeImmutable
+    {
+        $dateTimeImmutable = $this->dateTimeImmutable('1970-01-01 midnight', $dateTimeZone);
 
         return $dateTimeImmutable;
     }

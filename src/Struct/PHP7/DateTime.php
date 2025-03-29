@@ -6,7 +6,6 @@ use Gzhegow\Lib\Lib;
 use Gzhegow\Calendar\Calendar;
 use Gzhegow\Calendar\Exception\LogicException;
 use Gzhegow\Calendar\Exception\RuntimeException;
-use Gzhegow\Calendar\Struct\DateTimeInterface as DateTimeInterfacePHP8;
 
 
 class DateTime extends \DateTime implements
@@ -100,8 +99,13 @@ class DateTime extends \DateTime implements
     }
 
 
-    public function diff($targetObject, $absolute = false) : \DateInterval
+    /**
+     * @return \DateInterval
+     */
+    public function diff($targetObject, $absolute = null)
     {
+        $absolute = $absolute ?? false;
+
         $interval = parent::diff($targetObject, $absolute);
 
         $intervalClass = Calendar::classDateInterval();
@@ -120,6 +124,27 @@ class DateTime extends \DateTime implements
     public function getMicroseconds() : string
     {
         return $this->format('u');
+    }
+
+
+    /**
+     * @param string|\DateTimeZone $timezone
+     *
+     * @return static
+     */
+    public function setTimezone($timezone) // : \DateTime
+    {
+        $tz = Calendar::parseDateTimeZone($timezone);
+
+        if (null === $tz) {
+            throw new LogicException(
+                [ 'The `timezone` should be valid timezone', $timezone ]
+            );
+        }
+
+        $dt = $this->setTimezone($tz);
+
+        return $dt;
     }
 
 

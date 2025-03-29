@@ -99,8 +99,13 @@ class DateTimeImmutable extends \DateTimeImmutable implements
     }
 
 
-    public function diff($targetObject, $absolute = false) : \DateInterval
+    /**
+     * @return \DateInterval
+     */
+    public function diff($targetObject, $absolute = null)
     {
+        $absolute = $absolute ?? false;
+
         $interval = parent::diff($targetObject, $absolute);
 
         $intervalClass = Calendar::classDateInterval();
@@ -119,6 +124,27 @@ class DateTimeImmutable extends \DateTimeImmutable implements
     public function getMicroseconds() : string
     {
         return $this->format('u');
+    }
+
+
+    /**
+     * @param string|\DateTimeZone $timezone
+     *
+     * @return static
+     */
+    public function setTimezone($timezone) // : \DateTimeImmutable
+    {
+        $tz = Calendar::parseDateTimeZone($timezone);
+
+        if (null === $tz) {
+            throw new LogicException(
+                [ 'The `timezone` should be valid timezone', $timezone ]
+            );
+        }
+
+        $dt = $this->setTimezone($tz);
+
+        return $dt;
     }
 
 

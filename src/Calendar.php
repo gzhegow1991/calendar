@@ -2,11 +2,13 @@
 
 namespace Gzhegow\Calendar;
 
-use Gzhegow\Calendar\Parser\CalendarParserInterface;
-use Gzhegow\Calendar\Manager\CalendarManagerInterface;
-use Gzhegow\Calendar\Formatter\CalendarFormatterInterface;
 
-
+/**
+ * @template-covariant TDateTime of \DateTime
+ * @template-covariant TDateTimeImmutable of \DateTimeImmutable
+ * @template-covariant TDateInterval of \DateInterval
+ * @template-covariant TDateTimeZone of \DateTimeZone
+ */
 class Calendar
 {
     const INTERVAL_MINUTE = 60;
@@ -86,116 +88,205 @@ class Calendar
     ];
 
 
-    public static function getParser() : CalendarParserInterface
+    /**
+     * @param class-string<TDateTime>|null $className
+     *
+     * @return class-string<TDateTime>
+     */
+    public static function classDateTime(string $className = null) : string
     {
-        return static::$facade->getParser();
+        return static::$facade->classDateTime($className);
     }
 
-    public static function getManager() : CalendarManagerInterface
+    /**
+     * @param class-string<TDateTimeImmutable>|null $className
+     *
+     * @return class-string<TDateTimeImmutable>
+     */
+    public static function classDateTimeImmutable(string $className = null) : string
     {
-        return static::$facade->getManager();
+        return static::$facade->classDateTimeImmutable($className);
     }
 
-    public static function getFormatter() : CalendarFormatterInterface
+    /**
+     * @param class-string<TDateInterval>|null $className
+     *
+     * @return class-string<TDateInterval>
+     */
+    public static function classDateInterval(string $className = null) : string
     {
-        return static::$facade->getFormatter();
+        return static::$facade->classDateInterval($className);
+    }
+
+    /**
+     * @param class-string<TDateTimeZone>|null $className
+     *
+     * @return class-string<TDateTimeZone>
+     */
+    public static function classDateTimeZone(string $className = null) : string
+    {
+        return static::$facade->classDateTimeZone($className);
     }
 
 
     /**
-     * @return class-string<\DateTime>
+     * @return TDateTime
      */
-    public static function classDateTime() : string
-    {
-        return static::$facade->classDateTime();
-    }
-
-    /**
-     * @return class-string<\DateTimeImmutable>
-     */
-    public static function classDateTimeImmutable() : string
-    {
-        return static::$facade->classDateTimeImmutable();
-    }
-
-    /**
-     * @return class-string<\DateInterval>
-     */
-    public static function classDateInterval() : string
-    {
-        return static::$facade->classDateInterval();
-    }
-
-    /**
-     * @return class-string<\DateTimeZone>
-     */
-    public static function classDateTimeZone() : string
-    {
-        return static::$facade->classDateTimeZone();
-    }
-
-
     public static function dateTime($from = '', $dateTimeZone = '', array $formats = null) : \DateTime
     {
         return static::$facade->dateTime($from, $dateTimeZone, $formats);
     }
 
+    /**
+     * @return TDateTimeImmutable
+     */
     public static function dateTimeImmutable($from = '', $dateTimeZone = '', array $formats = null) : \DateTimeImmutable
     {
         return static::$facade->dateTimeImmutable($from, $dateTimeZone, $formats);
     }
 
+    /**
+     * @return TDateTimeZone
+     */
     public static function dateTimeZone($from = '') : \DateTimeZone
     {
         return static::$facade->dateTimeZone($from);
     }
 
+    /**
+     * @return TDateInterval
+     */
     public static function dateInterval($from = '', array $formats = null) : \DateInterval
     {
         return static::$facade->dateInterval($from, $formats);
     }
 
 
+    /**
+     * @return TDateTime
+     */
     public static function now($dateTimeZone = '') : \DateTime
     {
         return static::$facade->now($dateTimeZone);
     }
 
+    /**
+     * @return TDateTimeImmutable
+     */
     public static function nowImmutable($dateTimeZone = '') : \DateTimeImmutable
     {
         return static::$facade->nowImmutable($dateTimeZone);
     }
 
 
+    /**
+     * @return TDateTime
+     */
     public static function nowMidnight($dateTimeZone = '') : \DateTime
     {
         return static::$facade->nowMidnight($dateTimeZone);
     }
 
+    /**
+     * @return TDateTimeImmutable
+     */
     public static function nowMidnightImmutable($dateTimeZone = '') : \DateTimeImmutable
     {
         return static::$facade->nowMidnightImmutable($dateTimeZone);
     }
 
 
+    /**
+     * @return TDateTime
+     */
+    public static function epoch($dateTimeZone = '') : \DateTime
+    {
+        return static::$facade->now($dateTimeZone);
+    }
+
+    /**
+     * @return TDateTimeImmutable
+     */
+    public static function epochImmutable($dateTimeZone = '') : \DateTimeImmutable
+    {
+        return static::$facade->nowImmutable($dateTimeZone);
+    }
+
+
+    /**
+     * @return TDateTime
+     */
+    public static function epochMidnight($dateTimeZone = '') : \DateTime
+    {
+        return static::$facade->nowMidnight($dateTimeZone);
+    }
+
+    /**
+     * @return TDateTimeImmutable
+     */
+    public static function epochMidnightImmutable($dateTimeZone = '') : \DateTimeImmutable
+    {
+        return static::$facade->nowMidnightImmutable($dateTimeZone);
+    }
+
+
+    /**
+     * @return TDateTime|null
+     */
     public static function parseDateTime($from, array $formats = null, $dateTimeZoneIfParsed = null) : ?\DateTime
     {
         return static::$facade->parseDateTime($from, $formats, $dateTimeZoneIfParsed);
     }
 
+    /**
+     * @return TDateTime|null
+     */
+    public function parseDateTimeFromNumeric($from, $dateTimeZoneIfParsed = null) : ?\DateTime
+    {
+        return static::$facade->parseDateTimeFromNumeric($from, $dateTimeZoneIfParsed);
+    }
+
+
+    /**
+     * @return TDateTimeImmutable|null
+     */
     public static function parseDateTimeImmutable($from, array $formats = null, $dateTimeZoneIfParsed = null) : ?\DateTimeImmutable
     {
         return static::$facade->parseDateTimeImmutable($from, $formats, $dateTimeZoneIfParsed);
     }
 
+    /**
+     * @return TDateTimeImmutable|null
+     */
+    public function parseDateTimeImmutableFromNumeric($from, $dateTimeZoneIfParsed = null) : ?\DateTimeImmutable
+    {
+        return static::$facade->parseDateTimeImmutableFromNumeric($from, $dateTimeZoneIfParsed);
+    }
+
+
+    /**
+     * @return TDateTimeZone|null
+     */
     public static function parseDateTimeZone($from) : ?\DateTimeZone
     {
         return static::$facade->parseDateTimeZone($from);
     }
 
+
+    /**
+     * @return TDateInterval|null
+     */
     public static function parseDateInterval($from, array $formats = null) : ?\DateInterval
     {
         return static::$facade->parseDateInterval($from, $formats);
+    }
+
+    /**
+     * @return TDateInterval|null
+     */
+    public function parseDateIntervalFromNumeric($from) : ?\DateInterval
+    {
+        return static::$facade->parseDateIntervalFromNumeric($from);
     }
 
 

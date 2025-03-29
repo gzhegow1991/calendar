@@ -2,12 +2,17 @@
 
 namespace Gzhegow\Calendar;
 
-use Gzhegow\Calendar\Type\CalendarType;
 use Gzhegow\Calendar\Parser\CalendarParserInterface;
 use Gzhegow\Calendar\Manager\CalendarManagerInterface;
 use Gzhegow\Calendar\Formatter\CalendarFormatterInterface;
 
 
+/**
+ * @template-covariant TDateTime of \DateTime
+ * @template-covariant TDateTimeImmutable of \DateTimeImmutable
+ * @template-covariant TDateInterval of \DateInterval
+ * @template-covariant TDateTimeZone of \DateTimeZone
+ */
 class CalendarFacade implements CalendarInterface
 {
     /**
@@ -61,131 +66,202 @@ class CalendarFacade implements CalendarInterface
     }
 
 
-    public function getParser() : CalendarParserInterface
+    /**
+     * @param class-string<TDateTime>|null $className
+     *
+     * @return class-string<TDateTime>
+     */
+    public function classDateTime(string $className = null) : string
     {
-        return $this->parser;
+        return $this->type->classDateTime($className);
     }
 
-    public function getManager() : CalendarManagerInterface
+    /**
+     * @param class-string<TDateTimeImmutable>|null $className
+     *
+     * @return class-string<TDateTimeImmutable>
+     */
+    public function classDateTimeImmutable(string $className = null) : string
     {
-        return $this->manager;
+        return $this->type->classDateTimeImmutable($className);
     }
 
-    public function getFormatter() : CalendarFormatterInterface
+    /**
+     * @param class-string<TDateInterval>|null $className
+     *
+     * @return class-string<TDateInterval>
+     */
+    public function classDateInterval(string $className = null) : string
     {
-        return $this->formatter;
+        return $this->type->classDateInterval($className);
+    }
+
+    /**
+     * @param class-string<TDateTimeZone>|null $className
+     *
+     * @return class-string<TDateTimeZone>
+     */
+    public function classDateTimeZone(string $className = null) : string
+    {
+        return $this->type->classDateTimeZone($className);
     }
 
 
     /**
-     * @return class-string<\DateTime>
+     * @return TDateTime
      */
-    public function classDateTime() : string
-    {
-        return $this->type->classDateTime();
-    }
-
-    /**
-     * @return class-string<\DateTimeImmutable>
-     */
-    public function classDateTimeImmutable() : string
-    {
-        return $this->type->classDateTimeImmutable();
-    }
-
-    /**
-     * @return class-string<\DateInterval>
-     */
-    public function classDateInterval() : string
-    {
-        return $this->type->classDateInterval();
-    }
-
-    /**
-     * @return class-string<\DateTimeZone>
-     */
-    public function classDateTimeZone() : string
-    {
-        return $this->type->classDateTimeZone();
-    }
-
-
     public function dateTime($from = '', $dateTimeZone = '', array $formats = null) : \DateTime
     {
         return $this->manager->dateTime($from, $dateTimeZone, $formats);
     }
 
+    /**
+     * @return TDateTimeImmutable
+     */
     public function dateTimeImmutable($from = '', $dateTimeZone = '', array $formats = null) : \DateTimeImmutable
     {
         return $this->manager->dateTimeImmutable($from, $dateTimeZone, $formats);
     }
 
+    /**
+     * @return TDateTimeZone
+     */
     public function dateTimeZone($from = '') : \DateTimeZone
     {
         return $this->manager->dateTimeZone($from);
     }
 
+    /**
+     * @return TDateInterval
+     */
     public function dateInterval($from = '', array $formats = null) : \DateInterval
     {
         return $this->manager->dateInterval($from, $formats);
     }
 
 
+    /**
+     * @return TDateTime
+     */
     public function now($dateTimeZone = '') : \DateTime
     {
         return $this->manager->now($dateTimeZone);
     }
 
+    /**
+     * @return TDateTimeImmutable
+     */
     public function nowImmutable($dateTimeZone = '') : \DateTimeImmutable
     {
         return $this->manager->nowImmutable($dateTimeZone);
     }
 
 
+    /**
+     * @return TDateTime
+     */
     public function nowMidnight($dateTimeZone = '') : \DateTime
     {
         return $this->manager->nowMidnight($dateTimeZone);
     }
 
+    /**
+     * @return TDateTimeImmutable
+     */
     public function nowMidnightImmutable($dateTimeZone = '') : \DateTimeImmutable
     {
         return $this->manager->nowMidnightImmutable($dateTimeZone);
     }
 
 
+    /**
+     * @return TDateTime
+     */
+    public function epoch($dateTimeZone = '') : \DateTime
+    {
+        return $this->manager->epoch($dateTimeZone);
+    }
+
+    /**
+     * @return TDateTimeImmutable
+     */
+    public function epochImmutable($dateTimeZone = '') : \DateTimeImmutable
+    {
+        return $this->manager->epochImmutable($dateTimeZone);
+    }
+
+
+    /**
+     * @return TDateTime
+     */
+    public function epochMidnight($dateTimeZone = '') : \DateTime
+    {
+        return $this->manager->epochMidnight($dateTimeZone);
+    }
+
+    /**
+     * @return TDateTimeImmutable
+     */
+    public function epochMidnightImmutable($dateTimeZone = '') : \DateTimeImmutable
+    {
+        return $this->manager->epochMidnightImmutable($dateTimeZone);
+    }
+
+
+    /**
+     * @return TDateTime|null
+     */
     public function parseDateTime($from, array $formats = null, $dateTimeZoneIfParsed = null) : ?\DateTime
     {
         return $this->parser->parseDateTime($from, $formats, $dateTimeZoneIfParsed);
     }
 
+    /**
+     * @return TDateTime|null
+     */
     public function parseDateTimeFromNumeric($from, $dateTimeZoneIfParsed = null) : ?\DateTime
     {
         return $this->parser->parseDateTimeFromNumeric($from, $dateTimeZoneIfParsed);
     }
 
 
+    /**
+     * @return TDateTimeImmutable|null
+     */
     public function parseDateTimeImmutable($from, array $formats = null, $dateTimeZoneIfParsed = null) : ?\DateTimeImmutable
     {
         return $this->parser->parseDateTimeImmutable($from, $formats, $dateTimeZoneIfParsed);
     }
 
+    /**
+     * @return TDateTimeImmutable|null
+     */
     public function parseDateTimeImmutableFromNumeric($from, $dateTimeZoneIfParsed = null) : ?\DateTimeImmutable
     {
         return $this->parser->parseDateTimeImmutableFromNumeric($from, $dateTimeZoneIfParsed);
     }
 
 
+    /**
+     * @return TDateTimeZone|null
+     */
     public function parseDateTimeZone($from) : ?\DateTimeZone
     {
         return $this->parser->parseDateTimeZone($from);
     }
 
 
+    /**
+     * @return TDateInterval|null
+     */
     public function parseDateInterval($from, array $formats = null) : ?\DateInterval
     {
         return $this->parser->parseDateInterval($from, $formats);
     }
 
+    /**
+     * @return TDateInterval|null
+     */
     public function parseDateIntervalFromNumeric($from) : ?\DateInterval
     {
         return $this->parser->parseDateIntervalFromNumeric($from);

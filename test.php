@@ -74,7 +74,19 @@ $config->configure(function (\Gzhegow\Calendar\CalendarConfig $config) {
 
 
 // > можно изменить классы дат на свои собственные реализации
-$type = new \Gzhegow\Calendar\Type\CalendarType();
+$type = new \Gzhegow\Calendar\CalendarType();
+// if (PHP_VERSION_ID >= 80000) {
+//     $type->classDateTime(\Gzhegow\Calendar\Struct\DateTime::class);
+//     $type->classDateTimeImmutable(\Gzhegow\Calendar\Struct\DateTimeImmutable::class);
+//     $type->classDateInterval(\Gzhegow\Calendar\Struct\DateInterval::class);
+//     $type->classDateTimeZone(\Gzhegow\Calendar\Struct\DateTimeZone::class);
+//
+// } else {
+//     $type->classDateTime(\Gzhegow\Calendar\Struct\PHP7\DateTime::class);
+//     $type->classDateTimeImmutable(\Gzhegow\Calendar\Struct\PHP7\DateTimeImmutable::class);
+//     $type->classDateInterval(\Gzhegow\Calendar\Struct\PHP7\DateInterval::class);
+//     $type->classDateTimeZone(\Gzhegow\Calendar\Struct\PHP7\DateTimeZone::class);
+// }
 
 // > создаем парсер
 $parser = new \Gzhegow\Calendar\Parser\CalendarParser(
@@ -110,9 +122,33 @@ $calendar = new \Gzhegow\Calendar\CalendarFacade(
     //
     $config
 );
+// if (PHP_VERSION_ID >= 80000) {
+//     $calendar->classDateTime(\Gzhegow\Calendar\Struct\DateTime::class);
+//     $calendar->classDateTimeImmutable(\Gzhegow\Calendar\Struct\DateTimeImmutable::class);
+//     $calendar->classDateInterval(\Gzhegow\Calendar\Struct\DateInterval::class);
+//     $calendar->classDateTimeZone(\Gzhegow\Calendar\Struct\DateTimeZone::class);
+//
+// } else {
+//     $calendar->classDateTime(\Gzhegow\Calendar\Struct\PHP7\DateTime::class);
+//     $calendar->classDateTimeImmutable(\Gzhegow\Calendar\Struct\PHP7\DateTimeImmutable::class);
+//     $calendar->classDateInterval(\Gzhegow\Calendar\Struct\PHP7\DateInterval::class);
+//     $calendar->classDateTimeZone(\Gzhegow\Calendar\Struct\PHP7\DateTimeZone::class);
+// }
 
 // > сохраняем фасад статически (чтобы вызывать без привязки к контейнеру)
 \Gzhegow\Calendar\Calendar::setFacade($calendar);
+// if (PHP_VERSION_ID >= 80000) {
+//     \Gzhegow\Calendar\Calendar::classDateTime(\Gzhegow\Calendar\Struct\DateTime::class);
+//     \Gzhegow\Calendar\Calendar::classDateTimeImmutable(\Gzhegow\Calendar\Struct\DateTimeImmutable::class);
+//     \Gzhegow\Calendar\Calendar::classDateInterval(\Gzhegow\Calendar\Struct\DateInterval::class);
+//     \Gzhegow\Calendar\Calendar::classDateTimeZone(\Gzhegow\Calendar\Struct\DateTimeZone::class);
+//
+// } else {
+//     \Gzhegow\Calendar\Calendar::classDateTime(\Gzhegow\Calendar\Struct\PHP7\DateTime::class);
+//     \Gzhegow\Calendar\Calendar::classDateTimeImmutable(\Gzhegow\Calendar\Struct\PHP7\DateTimeImmutable::class);
+//     \Gzhegow\Calendar\Calendar::classDateInterval(\Gzhegow\Calendar\Struct\PHP7\DateInterval::class);
+//     \Gzhegow\Calendar\Calendar::classDateTimeZone(\Gzhegow\Calendar\Struct\PHP7\DateTimeZone::class);
+// }
 
 
 // > TEST
@@ -195,6 +231,7 @@ $fn = function () use ($calendar) {
     echo PHP_EOL;
 
     $result = $calendar->parseDateTime($from = '1970-01-01 00:00:00', $formats = [ 'Y-m-d H:i:s' ], $dateTimeZoneIfParsed = 'UTC');
+    $result->getMicroseconds();
     _print($result, json_encode($result));
 
     $result = $calendar->parseDateTimeFromNumeric($from = 1.5, $dateTimeZoneIfParsed = 'UTC');

@@ -197,31 +197,14 @@ class CalendarFacade implements CalendarInterface
         return $this->formatter->formatTimestamp($dateTime);
     }
 
-    public function formatTimestampUTC(\DateTimeInterface $dateTime) : string
-    {
-        return $this->formatter->formatTimestampUTC($dateTime);
-    }
-
-
     public function formatMilliseconds(\DateTimeInterface $dateTime) : string
     {
         return $this->formatter->formatMilliseconds($dateTime);
     }
 
-    public function formatMillisecondsUTC(\DateTimeInterface $dateTime) : string
-    {
-        return $this->formatter->formatMillisecondsUTC($dateTime);
-    }
-
-
     public function formatMicroseconds(\DateTimeInterface $dateTime) : string
     {
         return $this->formatter->formatMicroseconds($dateTime);
-    }
-
-    public function formatMicrosecondsUTC(\DateTimeInterface $dateTime) : string
-    {
-        return $this->formatter->formatMicrosecondsUTC($dateTime);
     }
 
 
@@ -230,31 +213,14 @@ class CalendarFacade implements CalendarInterface
         return $this->formatter->formatSql($dateTime);
     }
 
-    public function formatSqlUTC(\DateTimeInterface $dateTime) : string
-    {
-        return $this->formatter->formatSqlUTC($dateTime);
-    }
-
-
     public function formatSqlMicroseconds(\DateTimeInterface $dateTime) : string
     {
         return $this->formatter->formatSqlMicroseconds($dateTime);
     }
 
-    public function formatSqlMicrosecondsUTC(\DateTimeInterface $dateTime) : string
-    {
-        return $this->formatter->formatSqlMicrosecondsUTC($dateTime);
-    }
-
-
     public function formatSqlMilliseconds(\DateTimeInterface $dateTime) : string
     {
         return $this->formatter->formatSqlMilliseconds($dateTime);
-    }
-
-    public function formatSqlMillisecondsUTC(\DateTimeInterface $dateTime) : string
-    {
-        return $this->formatter->formatSqlMillisecondsUTC($dateTime);
     }
 
 
@@ -263,58 +229,44 @@ class CalendarFacade implements CalendarInterface
         return $this->formatter->formatJavascript($dateTime);
     }
 
-    public function formatJavascriptUTC(\DateTimeInterface $dateTime) : string
-    {
-        return $this->formatter->formatJavascriptUTC($dateTime);
-    }
-
-
     public function formatJavascriptMilliseconds(\DateTimeInterface $dateTime) : string
     {
         return $this->formatter->formatJavascriptMilliseconds($dateTime);
     }
-
-    public function formatJavascriptMillisecondsUTC(\DateTimeInterface $dateTime) : string
-    {
-        return $this->formatter->formatJavascriptMillisecondsUTC($dateTime);
-    }
-
 
     public function formatJavascriptMicroseconds(\DateTimeInterface $dateTime) : string
     {
         return $this->formatter->formatJavascriptMicroseconds($dateTime);
     }
 
-    public function formatJavascriptMicrosecondsUTC(\DateTimeInterface $dateTime) : string
+
+    public function formatAgo(
+        \DateTimeInterface $dateTime,
+        \DateTimeInterface $dateTimeFrom = null
+    ) : string
     {
-        return $this->formatter->formatJavascriptMicrosecondsUTC($dateTime);
+        return $this->formatter->formatAgo($dateTime, $dateTimeFrom);
     }
 
 
-    public function formatHumanDate(\DateTimeInterface $dateTime) : string
+    public function formatDateHuman(\DateTimeInterface $dateTime) : string
     {
-        return $this->formatter->formatHumanDate($dateTime);
+        return $this->formatter->formatDateHuman($dateTime);
     }
 
-    public function formatHumanDay(\DateTimeInterface $dateTime) : string
+    public function formatDateHumanDay(\DateTimeInterface $dateTime) : string
     {
-        return $this->formatter->formatHumanDay($dateTime);
+        return $this->formatter->formatDateHumanDay($dateTime);
     }
 
 
-    public function formatIntervalISO(\DateInterval $dateInterval) : string
+    public function formatIntervalISO8601(\DateInterval $dateInterval) : string
     {
-        return $this->formatter->formatIntervalISO($dateInterval);
+        return $this->formatter->formatIntervalISO8601($dateInterval);
     }
 
     public function formatIntervalAgo(\DateInterval $dateInterval) : string
     {
         return $this->formatter->formatIntervalAgo($dateInterval);
-    }
-
-
-    public function formatAgo(\DateTimeInterface $dateTime, \DateTimeInterface $dateTimeFrom = null) : string
-    {
-        return $this->formatter->formatAgo($dateTime, $dateTimeFrom);
     }
 }

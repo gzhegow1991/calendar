@@ -180,17 +180,34 @@ class DateInterval extends \DateInterval implements
     }
 
 
+    public function getSeconds() : int
+    {
+        $now = new \DateTimeImmutable();
+        $new = $now->add($this);
+
+        return $new->getTimestamp() - $now->getTimestamp();
+    }
+
+    public function getMicroseconds() : int
+    {
+        $microseconds = sprintf('%.6f', $this->f);
+        $microseconds = substr($microseconds, 2);
+        $microseconds = rtrim($microseconds, '0.');
+        $microseconds = (int) $microseconds;
+
+        return $microseconds;
+    }
+
+
     public function getISO8601Duration() : string
     {
         $search = [ 'M0S', 'H0M', 'DT0H', 'M0D', 'P0Y', 'Y0M', 'P0M' ];
         $replace = [ 'M', 'H', 'DT', 'M', 'P', 'Y', 'P' ];
 
         if ($this->f) {
-            $fString = sprintf('%.6f', $this->f);
-            $fString = substr($fString, 2);
-            $fString = rtrim($fString, '0.');
+            $fInt = $this->getMicroseconds();
 
-            $result = $this->format("P%yY%mM%dDT%hH%iM%s.{$fString}S");
+            $result = $this->format("P%yY%mM%dDT%hH%iM%s.{$fInt}S");
 
         } else {
             $result = $this->format('P%yY%mM%dDT%hH%iM%sS');

@@ -69,8 +69,10 @@ $factory = new \Gzhegow\Calendar\CalendarFactory();
 // > создаем конфигурацию
 $config = new \Gzhegow\Calendar\CalendarConfig();
 $config->configure(function (\Gzhegow\Calendar\CalendarConfig $config) {
-    // > использовать ли INTL, если такое расширение подключено (в целях тестирования установлено в FALSE)
-    $config->formatter->useIntl = false;
+    // > можно использовать собственный форматтер для некоторых функций работы с датами
+    $config->formatter->dateTimeFormatter = new \Gzhegow\Calendar\Formatter\DateTime\DateTimeFormatter();
+    // > можно использовать собственный форматтер для некоторых функций работы с интервалами
+    $config->formatter->dateIntervalFormatter = new \Gzhegow\Calendar\Formatter\DateInterval\DateIntervalFormatter();
 
     // > можно указать "дату по-умолчанию", которая будет создана, если не передать аргументов вовсе
     $config->manager->dateTimeDefault = '1970-01-01 midnight';
@@ -333,11 +335,11 @@ $fn = function () use ($calendar) {
     echo PHP_EOL;
 
     $dateTime = $calendar->dateTime();
-    $formatted = $calendar->formatHumanDate($dateTime);
+    $formatted = $calendar->formatDateHuman($dateTime);
     _print($dateTime, json_encode($dateTime), $formatted);
 
     $dateTime = $calendar->dateTime();
-    $formatted = $calendar->formatHumanDay($dateTime);
+    $formatted = $calendar->formatDateHumanDay($dateTime);
     _print($dateTime, json_encode($dateTime), $formatted);
 };
 _assert_stdout($fn, [], PHP_VERSION_ID >= 80000
@@ -352,5 +354,5 @@ _assert_stdout($fn, [], PHP_VERSION_ID >= 80000
 
 { object # Gzhegow\Calendar\Struct\PHP7\DateTime } | "\"1970-01-01T00:00:00.000+03:00\"" | "Thu, 01 Jan 1970 00:00:00 +0300"
 { object # Gzhegow\Calendar\Struct\PHP7\DateTime } | "\"1970-01-01T00:00:00.000+03:00\"" | "Thu, 01 Jan 1970 +0300"
-'); 
+');
 ```

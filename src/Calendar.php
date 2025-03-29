@@ -204,31 +204,14 @@ class Calendar
         return static::$facade->formatTimestamp($dateTime);
     }
 
-    public static function formatTimestampUTC(\DateTimeInterface $dateTime) : string
-    {
-        return static::$facade->formatTimestampUTC($dateTime);
-    }
-
-
     public static function formatMilliseconds(\DateTimeInterface $dateTime) : string
     {
         return static::$facade->formatMilliseconds($dateTime);
     }
 
-    public static function formatMillisecondsUTC(\DateTimeInterface $dateTime) : string
-    {
-        return static::$facade->formatMillisecondsUTC($dateTime);
-    }
-
-
     public static function formatMicroseconds(\DateTimeInterface $dateTime) : string
     {
         return static::$facade->formatMicroseconds($dateTime);
-    }
-
-    public static function formatMicrosecondsUTC(\DateTimeInterface $dateTime) : string
-    {
-        return static::$facade->formatMicrosecondsUTC($dateTime);
     }
 
 
@@ -237,31 +220,14 @@ class Calendar
         return static::$facade->formatSql($dateTime);
     }
 
-    public static function formatSqlUTC(\DateTimeInterface $dateTime) : string
-    {
-        return static::$facade->formatSqlUTC($dateTime);
-    }
-
-
     public static function formatSqlMicroseconds(\DateTimeInterface $dateTime) : string
     {
         return static::$facade->formatSqlMicroseconds($dateTime);
     }
 
-    public static function formatSqlMicrosecondsUTC(\DateTimeInterface $dateTime) : string
-    {
-        return static::$facade->formatSqlMicrosecondsUTC($dateTime);
-    }
-
-
     public static function formatSqlMilliseconds(\DateTimeInterface $dateTime) : string
     {
         return static::$facade->formatSqlMilliseconds($dateTime);
-    }
-
-    public static function formatSqlMillisecondsUTC(\DateTimeInterface $dateTime) : string
-    {
-        return static::$facade->formatSqlMillisecondsUTC($dateTime);
     }
 
 
@@ -270,59 +236,42 @@ class Calendar
         return static::$facade->formatJavascript($dateTime);
     }
 
-    public static function formatJavascriptUTC(\DateTimeInterface $dateTime) : string
-    {
-        return static::$facade->formatJavascriptUTC($dateTime);
-    }
-
-
     public static function formatJavascriptMilliseconds(\DateTimeInterface $dateTime) : string
     {
         return static::$facade->formatJavascriptMilliseconds($dateTime);
     }
-
-    public static function formatJavascriptMillisecondsUTC(\DateTimeInterface $dateTime) : string
-    {
-        return static::$facade->formatJavascriptMillisecondsUTC($dateTime);
-    }
-
 
     public static function formatJavascriptMicroseconds(\DateTimeInterface $dateTime) : string
     {
         return static::$facade->formatJavascriptMicroseconds($dateTime);
     }
 
-    public static function formatJavascriptMicrosecondsUTC(\DateTimeInterface $dateTime) : string
+
+    public static function formatAgo(\DateTimeInterface $dateTime, \DateTimeInterface $dateTimeFrom = null) : string
     {
-        return static::$facade->formatJavascriptMicrosecondsUTC($dateTime);
+        return static::$facade->formatAgo($dateTime, $dateTimeFrom);
     }
 
 
     public static function formatHumanDate(\DateTimeInterface $dateTime) : string
     {
-        return static::$facade->formatHumanDate($dateTime);
+        return static::$facade->formatDateHuman($dateTime);
     }
 
     public static function formatHumanDay(\DateTimeInterface $dateTime) : string
     {
-        return static::$facade->formatHumanDay($dateTime);
+        return static::$facade->formatDateHumanDay($dateTime);
     }
 
 
     public static function formatIntervalISO(\DateInterval $dateInterval) : string
     {
-        return static::$facade->formatIntervalISO($dateInterval);
+        return static::$facade->formatIntervalISO8601($dateInterval);
     }
 
     public static function formatIntervalAgo(\DateInterval $dateInterval) : string
     {
         return static::$facade->formatIntervalAgo($dateInterval);
-    }
-
-
-    public static function formatAgo(\DateTimeInterface $dateTime, \DateTimeInterface $dateTimeFrom = null) : string
-    {
-        return static::$facade->formatAgo($dateTime, $dateTimeFrom);
     }
 
 

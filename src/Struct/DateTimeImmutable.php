@@ -8,7 +8,9 @@ use Gzhegow\Calendar\Exception\LogicException;
 use Gzhegow\Calendar\Exception\RuntimeException;
 
 
-class DateTimeImmutable extends \DateTimeImmutable implements DateTimeInterface,
+class DateTimeImmutable extends \DateTimeImmutable implements
+    DateTimeInterface,
+    //
     \JsonSerializable
 {
     public static function createFromInterface($object) : \DateTimeImmutable
@@ -26,11 +28,13 @@ class DateTimeImmutable extends \DateTimeImmutable implements DateTimeInterface,
             );
         }
 
+        $seconds = $object->getTimestamp();
+
         $microseconds = str_pad($object->format('u'), 6, '0');
 
         try {
             $dateTimeImmutable = (new static('now', $object->getTimezone()))
-                ->setTimestamp($object->getTimestamp())
+                ->setTimestamp($seconds)
                 ->modify("+ {$microseconds} microseconds")
             ;
         }
@@ -43,13 +47,15 @@ class DateTimeImmutable extends \DateTimeImmutable implements DateTimeInterface,
 
     public static function createFromFormat($format, $datetime, $timezone = null) : \DateTimeImmutable|false
     {
-        if (! Lib::type()->string_not_empty($_format, $format)) {
+        $theType = Lib::type();
+
+        if (! $theType->string_not_empty($_format, $format)) {
             throw new LogicException(
                 [ 'The `format` should be a non-empty string', $format ]
             );
         }
 
-        if (! Lib::type()->string_not_empty($_datetime, $datetime)) {
+        if (! $theType->string_not_empty($_datetime, $datetime)) {
             throw new LogicException(
                 [ 'The `datetime` should be a non-empty string', $datetime ]
             );
@@ -66,13 +72,17 @@ class DateTimeImmutable extends \DateTimeImmutable implements DateTimeInterface,
             }
         }
 
-        $dateTimeImmutable = parent::createFromFormat($_format, $_datetime, $timezone);
+        $dateTimeImmutablePhp = \DateTimeImmutable::createFromFormat(
+            $_format,
+            $_datetime,
+            $timezone
+        );
 
-        $microseconds = str_pad($dateTimeImmutable->format('u'), 6, '0');
+        $microseconds = str_pad($dateTimeImmutablePhp->format('u'), 6, '0');
 
         try {
-            $dateTimeImmutable = (new static('now', $dateTimeImmutable->getTimezone()))
-                ->setTimestamp($dateTimeImmutable->getTimestamp())
+            $dateTimeImmutablePhp = (new static('now', $dateTimeImmutablePhp->getTimezone()))
+                ->setTimestamp($dateTimeImmutablePhp->getTimestamp())
                 ->modify("+ {$microseconds} microseconds")
             ;
         }
@@ -80,7 +90,7 @@ class DateTimeImmutable extends \DateTimeImmutable implements DateTimeInterface,
             throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
         }
 
-        return $dateTimeImmutable;
+        return $dateTimeImmutablePhp;
     }
 
 
@@ -93,6 +103,17 @@ class DateTimeImmutable extends \DateTimeImmutable implements DateTimeInterface,
         $interval = $intervalClass::{'createFromInstance'}($intervalDiff);
 
         return $interval;
+    }
+
+
+    public function getMilliseconds() : string
+    {
+        return $this->format('v');
+    }
+
+    public function getMicroseconds() : string
+    {
+        return $this->format('u');
     }
 
 

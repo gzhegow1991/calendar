@@ -6,9 +6,12 @@ use Gzhegow\Lib\Lib;
 use Gzhegow\Calendar\Calendar;
 use Gzhegow\Calendar\Exception\LogicException;
 use Gzhegow\Calendar\Exception\RuntimeException;
+use Gzhegow\Calendar\Struct\PHP7\DateTimeInterface as DateTimeInterfacePHP7;
 
 
-class DateTime extends \DateTime implements DateTimeInterface,
+class DateTime extends \DateTime implements
+    DateTimeInterface,
+    //
     \JsonSerializable
 {
     public static function createFromInterface($object) : \DateTime
@@ -26,11 +29,13 @@ class DateTime extends \DateTime implements DateTimeInterface,
             );
         }
 
+        $seconds = $object->getTimestamp();
+
         $microseconds = str_pad($object->format('u'), 6, '0');
 
         try {
             $dateTime = (new static('now', $object->getTimezone()))
-                ->setTimestamp($object->getTimestamp())
+                ->setTimestamp($seconds)
                 ->modify("+ {$microseconds} microseconds")
             ;
         }
@@ -43,13 +48,15 @@ class DateTime extends \DateTime implements DateTimeInterface,
 
     public static function createFromFormat($format, $datetime, $timezone = null) : \DateTime|false
     {
-        if (! Lib::type()->string_not_empty($_format, $format)) {
+        $theType = Lib::type();
+
+        if (! $theType->string_not_empty($_format, $format)) {
             throw new LogicException(
                 [ 'The `format` should be a non-empty string', $format ]
             );
         }
 
-        if (! Lib::type()->string_not_empty($_datetime, $datetime)) {
+        if (! $theType->string_not_empty($_datetime, $datetime)) {
             throw new LogicException(
                 [ 'The `datetime` should be a non-empty string', $datetime ]
             );
@@ -66,13 +73,17 @@ class DateTime extends \DateTime implements DateTimeInterface,
             }
         }
 
-        $dateTime = parent::createFromFormat($_format, $_datetime, $timezone);
+        $dateTimePhp = \DateTime::createFromFormat(
+            $_format,
+            $_datetime,
+            $timezone
+        );
 
-        $microseconds = str_pad($dateTime->format('u'), 6, '0');
+        $microseconds = str_pad($dateTimePhp->format('u'), 6, '0');
 
         try {
-            $dateTime = (new static('now', $dateTime->getTimezone()))
-                ->setTimestamp($dateTime->getTimestamp())
+            $dateTimePhp = (new static('now', $dateTimePhp->getTimezone()))
+                ->setTimestamp($dateTimePhp->getTimestamp())
                 ->modify("+ {$microseconds} microseconds")
             ;
         }
@@ -80,7 +91,7 @@ class DateTime extends \DateTime implements DateTimeInterface,
             throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
         }
 
-        return $dateTime;
+        return $dateTimePhp;
     }
 
 
@@ -93,6 +104,17 @@ class DateTime extends \DateTime implements DateTimeInterface,
         $interval = $intervalClass::{'createFromInstance'}($interval);
 
         return $interval;
+    }
+
+
+    public function getMilliseconds() : string
+    {
+        return $this->format('v');
+    }
+
+    public function getMicroseconds() : string
+    {
+        return $this->format('u');
     }
 
 
